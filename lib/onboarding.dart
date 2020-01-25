@@ -1,8 +1,9 @@
+import 'package:cms/model/sharedData.dart';
 import 'package:flutter/material.dart';
 import 'util.dart';
 import 'package:cms/register.dart';
 import 'package:cms/home.dart';
-import 'package:cms/login.dart';
+import 'package:cms/log.dart';
 
 class Onboarding extends StatefulWidget {
   Onboarding({Key key}) : super(key: key);
@@ -11,16 +12,27 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int log=0;
+  int log=0;SharedData sharedData=new SharedData();
+  var user;
 
   @override
   void initState() {
     super.initState();
+    _getUserData();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  _getUserData() async{
+    this.user=await SharedData().getUserData();
+    if(user['name'] != null){
+      setState(() {
+        this.log = 1;
+      });
+    }
   }
 
   @override
@@ -93,7 +105,7 @@ class _OnboardingState extends State<Onboarding> {
   }
   Widget Login()=>RaisedButton(
     onPressed: () {
-      Route route=MaterialPageRoute(builder: (context) => Login());
+      Route route=MaterialPageRoute(builder: (context) => Log());
       Navigator.push(context, route);
     },
     textColor: Colors.white,

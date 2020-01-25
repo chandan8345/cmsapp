@@ -1,3 +1,4 @@
+import 'package:cms/model/auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -5,16 +6,16 @@ import 'package:connectivity/connectivity.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:fancy_dialog/fancy_dialog.dart';
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'dart:convert';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import 'package:cms/login.dart';
+import 'package:cms/log.dart';
+import 'package:cms/model/Others.dart';
+ import 'custom_dropdown.dart' as custom;
 
 class register extends StatefulWidget {
-  register({Key key,this.message,this.body,this.name,this.email,this.address,this.mobile,this.image}) : super(key: key);
-  var message,body;
-  String name,email,mobile,address;
-  File image;
+  // register({Key key,this.message,this.body,this.name,this.email,this.address,this.mobile,this.image}) : super(key: key);
+  // var message,body;
+  // String name,email,mobile,address;
+  // File image;
 
   @override
   _registerState createState() => _registerState();
@@ -25,17 +26,41 @@ class _registerState extends State<register> {
   TextEditingController nameCtrl=new TextEditingController();
   TextEditingController emailCtrl=new TextEditingController();
   TextEditingController mobileCtrl=new TextEditingController();
-  TextEditingController addressCtrl=new TextEditingController();
-  TextEditingController passwordCtrl=new TextEditingController();
-  String name,email,mobile,address;
-  var cr;
-  var netStatus=0;List posts;
+  TextEditingController studentidCtrl=new TextEditingController();
+  TextEditingController departmentCtrl=new TextEditingController();
+  TextEditingController semesterCtrl=new TextEditingController();
+  String name,email,mobile,studentid,departmentid,semesterid;
+  var cr,netStatus=0,message,body;List posts,department,semester;
   ProgressDialog pr;
-  String POST_URL='http://flatbasha.com/register';
-  var message,body;
-  static Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  static Pattern pattern =r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp regex = new RegExp(pattern);
+  Auth auth=new Auth();
+  String POST_URL;
+  
+    @override
+  void initState(){
+    super.initState();
+    _Others();
+    //_checkConection();
+  }
+
+  _Others()async{
+    Others others=new Others();
+    this.department=await others.getDepartment();
+    this.semester=await others.getSemester();
+    setState((){
+    });
+  }
+
+  _submit() async{
+   if(_formKey.currentState.validate()){
+      _formKey.currentState.save();
+      auth.registerUser();
+      }
+  }
+
+
+
 
   File image;
 
@@ -47,60 +72,53 @@ class _registerState extends State<register> {
     });
   }
 
-  Future _sumbit(file) async{
-    var fileContent = file.readAsBytesSync();
-    var fileContentBase64 = base64.encode(fileContent);
-    var dio=new Dio();
-    try{
-      FormData formData = new FormData.fromMap(<String, dynamic>{
-        "name" : name,
-        "email" : email,
-        "address" : address,
-        "mobile" : mobile,
-        "password" : mobile,
-        "image" : fileContentBase64
-      });
-      Response response = await dio.post(POST_URL,data: formData);
-      pr.hide();
-      if(response.toString() == "Already exist this Member"){
-        String res="Already exist this Member";
-        alertError("Notice", res);
-      }else{
-        alertSucess("Notice", response.toString());
-      }
-    }catch(e){
-      print(e.toString());
-      pr.hide();
-      alertError("Notice", "Already Registered, please try again.");
-    }
-  }
+  // Future _sumbit(file) async{
+  //   var fileContent = file.readAsBytesSync();
+  //   var fileContentBase64 = base64.encode(fileContent);
+  //   var dio=new Dio();
+  //   try{
+  //     FormData formData = new FormData.fromMap(<String, dynamic>{
+  //       "name" : name,
+  //       "email" : email,
+  //       "address" : address,
+  //       "mobile" : mobile,
+  //       "password" : mobile,
+  //       "image" : fileContentBase64
+  //     });
+  //     Response response = await dio.post(POST_URL,data: formData);
+  //     pr.hide();
+  //     if(response.toString() == "Already exist this Member"){
+  //       String res="Already exist this Member";
+  //       alertError("Notice", res);
+  //     }else{
+  //       alertSucess("Notice", response.toString());
+  //     }
+  //   }catch(e){
+  //     print(e.toString());
+  //     pr.hide();
+  //     alertError("Notice", "Already Registered, please try again.");
+  //   }
+  // }
 
-
-  @override
-  void initState(){
-    super.initState();
-    //_checkConection();
-  }
-
-  _validate(){
-    _checkConection();
-    if(_formKey.currentState.validate()){
-      _formKey.currentState.save();
-      if(netStatus != 0){
-        pr.show();
-        _sumbit(image);
-      }else{
-        if(pr.isShowing()){
-          pr.hide();
-        }
-        setState(() {
-          this.message="Internet Connection";
-          this.body="Please check your mobile data or wifi connection";
-        });
-        showMessage(message, body);
-      }
-    }
-  }
+  // _validate(){
+  //   _checkConection();
+  //   if(_formKey.currentState.validate()){
+  //     _formKey.currentState.save();
+  //     if(netStatus != 0){
+  //       pr.show();
+  //       _sumbit(image);
+  //     }else{
+  //       if(pr.isShowing()){
+  //         pr.hide();
+  //       }
+  //       setState(() {
+  //         this.message="Internet Connection";
+  //         this.body="Please check your mobile data or wifi connection";
+  //       });
+  //       showMessage(message, body);
+  //     }
+  //   }
+  // }
 
   void alertSucess(String title,String body){
     showDialog(
@@ -180,7 +198,7 @@ class _registerState extends State<register> {
         children: <Widget>[
           Padding(
             padding:
-            EdgeInsets.only(top: MediaQuery.of(context).size.height / 7.0),
+            EdgeInsets.only(top: MediaQuery.of(context).size.height / 10.0),
           ),
           Column(
             children: <Widget>[
@@ -242,6 +260,34 @@ class _registerState extends State<register> {
                       Padding(
                         padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
                         child: TextFormField(
+                          controller: studentidCtrl,
+                          decoration: new InputDecoration(
+                            labelText: 'Student ID',
+                            fillColor: Colors.white,
+                            prefixText: '',
+                            icon: Icon(Icons.account_balance_wallet),
+                            border: UnderlineInputBorder(),
+                            //fillColor: Colors.green
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter student id';
+                            }else {
+                              return null;
+                            }
+                          },
+                          keyboardType: TextInputType.phone,
+                          style: new TextStyle(
+                            fontFamily: "Poppins",
+                          ),
+                          onSaved: (String val){
+                            this.studentid=val;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
+                        child: TextFormField(
                           controller: mobileCtrl,
                           decoration: new InputDecoration(
                             labelText: 'Mobile',
@@ -276,7 +322,7 @@ class _registerState extends State<register> {
                           decoration: new InputDecoration(
                             labelText: 'Email',
                             fillColor: Colors.white,
-                            icon: Icon(Icons.email),
+                            icon: Icon(Icons.alternate_email),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
@@ -299,28 +345,62 @@ class _registerState extends State<register> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20,right: 20, bottom:20, top: 0),
-                        child: TextFormField(
-                          controller: addressCtrl,
+                        padding: EdgeInsets.only(left: 20,right: 20, bottom:0, top: 0),
+                        child:DropdownButtonFormField(
                           decoration: new InputDecoration(
-                            labelText: 'Location',
+                            labelText: 'Department',
                             fillColor: Colors.white,
-                            icon: Icon(Icons.location_on),
-                            border:UnderlineInputBorder(),
+                            icon: Icon(Icons.import_contacts),
+                            border: UnderlineInputBorder(),
+                            //fillColor: Colors.green
                           ),
-                          //fillColor: Colors.green
-                          validator:(value) {
+                          value: departmentid,
+                          items: (department != null)?department.map((array){
+                            return DropdownMenuItem(
+                              value: array['id'].toString(),
+                              child: Text(array['name']),
+                            );
+                          }).toList():null,
+                          onChanged: (value){
+                            setState(() {
+                              this.departmentid=value;
+                            });
+                          },
+                          validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please enter your address';
+                              return 'Please enter your department';
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.text,
-                          style: new TextStyle(
-                            fontFamily: "Poppins",
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20,right: 20, bottom:10, top: 0),
+                        child: DropdownButtonFormField(
+                          decoration: new InputDecoration(
+                            labelText: 'Semester',
+                            fillColor: Colors.white,
+                            icon: Icon(Icons.school),
+                            border: UnderlineInputBorder(),
+                            //fillColor: Colors.green
                           ),
-                          onSaved: (String val){
-                            this.address=val;
+                          onChanged: (value){
+                            setState(() {
+                              this.semesterid=value;
+                            });
+                          },
+                          value: semesterid,
+                          items: (semester != null)?semester.map((array){
+                            return DropdownMenuItem(
+                              value: array['id'].toString(),
+                              child: Text(array['name']),
+                            );
+                          }).toList():null,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter your department';
+                            }
+                            return null;
                           },
                         ),
                       ),
@@ -331,7 +411,7 @@ class _registerState extends State<register> {
                             child:
                             InkWell(
                               onTap: (){
-                                Route route=MaterialPageRoute(builder: (context) => Login());
+                                Route route=MaterialPageRoute(builder: (context) => Log());
                                 Navigator.push(context, route);
                               },
                               child: Text("Already Register? Go to Sign in Page"),
@@ -381,7 +461,7 @@ class _registerState extends State<register> {
                       roundedRectButton("Choose Photo", signInGradients, false),
                     ),
                     InkWell(
-                      onTap: _validate,
+                      onTap: _submit,
                       child:
                       roundedRectButton("Register", signUpGradients, false),
                     ),
