@@ -1,21 +1,17 @@
-import 'package:cms/model/auth.dart';
+import 'package:cms/controller/auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:fancy_dialog/fancy_dialog.dart';
 import 'dart:io';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cms/log.dart';
-import 'package:cms/model/Others.dart';
- import 'custom_dropdown.dart' as custom;
+import 'package:cms/controller/Others.dart';
+import 'package:image_picker/image_picker.dart';
 
 class register extends StatefulWidget {
-  // register({Key key,this.message,this.body,this.name,this.email,this.address,this.mobile,this.image}) : super(key: key);
-  // var message,body;
-  // String name,email,mobile,address;
-  // File image;
+  register({Key key}) : super(key: key);
 
   @override
   _registerState createState() => _registerState();
@@ -29,14 +25,15 @@ class _registerState extends State<register> {
   TextEditingController studentidCtrl=new TextEditingController();
   TextEditingController departmentCtrl=new TextEditingController();
   TextEditingController semesterCtrl=new TextEditingController();
-  String name,email,mobile,studentid,departmentid,semesterid;
-  var cr,netStatus=0,message,body;List posts,department,semester;
+  TextEditingController passCtrl=new TextEditingController();
+  String name,email,mobile,password,studentid;
+  String department,semester;
+  var cr,netStatus=0,message,body;List posts,departments,semesters;
   ProgressDialog pr;
   static Pattern pattern =r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp regex = new RegExp(pattern);
-  Auth auth=new Auth();
-  String POST_URL;
-  
+  File image;
+
     @override
   void initState(){
     super.initState();
@@ -44,31 +41,43 @@ class _registerState extends State<register> {
     //_checkConection();
   }
 
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
   _Others()async{
     Others others=new Others();
-    this.department=await others.getDepartment();
-    this.semester=await others.getSemester();
+    this.departments=await others.getDepartment();
+    this.semesters=await others.getSemester();
     setState((){
     });
   }
 
-  _submit() async{
+  Future _submit() async{
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
-      auth.registerUser();
+      pr.show();
+      bool result;
+      if(image != null){
+        result =await Auth().registerUser(name,studentid,mobile,email,password,department,semester,image);
+        pr.hide();
+      if(result == true){
+        alertSucess("Notice", "User created successfully...");
+      }else{
+        alertError("Notice", "Something went wrong...");
       }
+      }else{
+        getImage();
+      }
+    }
   }
 
 
-
-
-  File image;
-
   Future getImage() async {
-    //var img= await ImagePicker.pickImage(source: ImageSource.gallery);
-
+    var img= await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      //this.image = img;
+      this.image = img;
     });
   }
 
@@ -119,72 +128,6 @@ class _registerState extends State<register> {
   //     }
   //   }
   // }
-
-  void alertSucess(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.SUCCESS,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  Future<int> _checkConection() async{
-    try{
-      cr = await (Connectivity().checkConnectivity());
-      setState(() {
-        if (cr == ConnectivityResult.none) {
-          this.netStatus=0;
-          if(pr.isShowing()){
-            pr.hide();
-          }
-        }if(cr== ConnectivityResult.wifi){
-          this.netStatus=1;
-        }if(cr == ConnectivityResult.mobile){
-          this.netStatus=1;
-        }
-      });
-    }catch(e){
-      print(e.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -252,8 +195,10 @@ class _registerState extends State<register> {
                           style: new TextStyle(
                             fontFamily: "Poppins",
                           ),
-                          onSaved: (String val){
-                            this.name=val;
+                          onChanged: (value){
+                            setState(() {
+                              this.name=value;
+                            });
                           },
                         ),
                       ),
@@ -262,7 +207,7 @@ class _registerState extends State<register> {
                         child: TextFormField(
                           controller: studentidCtrl,
                           decoration: new InputDecoration(
-                            labelText: 'Student ID',
+                            labelText: 'Your ID',
                             fillColor: Colors.white,
                             prefixText: '',
                             icon: Icon(Icons.account_balance_wallet),
@@ -280,8 +225,10 @@ class _registerState extends State<register> {
                           style: new TextStyle(
                             fontFamily: "Poppins",
                           ),
-                          onSaved: (String val){
-                            this.studentid=val;
+                          onChanged: (value){
+                            setState(() {
+                              this.studentid=value;
+                            });
                           },
                         ),
                       ),
@@ -310,8 +257,10 @@ class _registerState extends State<register> {
                           style: new TextStyle(
                             fontFamily: "Poppins",
                           ),
-                          onSaved: (String val){
-                            this.mobile=val;
+                          onChanged: (value){
+                            setState(() {
+                              this.mobile=value;
+                            });
                           },
                         ),
                       ),
@@ -339,8 +288,39 @@ class _registerState extends State<register> {
                           style: new TextStyle(
                             fontFamily: "Poppins",
                           ),
-                          onSaved: (String val){
-                            this.email=val;
+                          onChanged: (value){
+                            setState(() {
+                              this.email=value;
+                            });
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
+                        child: TextFormField(
+                          controller: passCtrl,
+                          decoration: new InputDecoration(
+                            labelText: 'Password',
+                            fillColor: Colors.white,
+                            icon: Icon(Icons.person),
+                            border: UnderlineInputBorder(),
+                            //fillColor: Colors.green
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter secure code';
+                            }else {
+                              return null;
+                            }
+                          },
+                          keyboardType: TextInputType.text,
+                          style: new TextStyle(
+                            fontFamily: "Poppins",
+                          ),
+                          onChanged: (value){
+                            setState(() {
+                              this.password=value;
+                            });
                           },
                         ),
                       ),
@@ -354,16 +334,16 @@ class _registerState extends State<register> {
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
-                          value: departmentid,
-                          items: (department != null)?department.map((array){
+                          value: (department != null)?department:null,
+                          items: (departments != null)?departments.map((array){
                             return DropdownMenuItem(
-                              value: array['id'].toString(),
+                              value: array['name'].toString(),
                               child: Text(array['name']),
                             );
                           }).toList():null,
                           onChanged: (value){
                             setState(() {
-                              this.departmentid=value;
+                              this.department=value;
                             });
                           },
                           validator: (value) {
@@ -386,13 +366,13 @@ class _registerState extends State<register> {
                           ),
                           onChanged: (value){
                             setState(() {
-                              this.semesterid=value;
-                            });
+                              this.semester=value;
+                            }); 
                           },
-                          value: semesterid,
-                          items: (semester != null)?semester.map((array){
+                          value: (semester != null)?semester:null,
+                          items: (semesters != null)?semesters.map((array){
                             return DropdownMenuItem(
-                              value: array['id'].toString(),
+                              value: array['name'].toString(), 
                               child: Text(array['name']),
                             );
                           }).toList():null,
@@ -476,6 +456,51 @@ class _registerState extends State<register> {
     );
   }
 
+  void alertSucess(String title,String body){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle(title),
+            alertSubtitle: richSubtitle(body),
+            alertType: RichAlertType.SUCCESS,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  void alertError(String title,String body){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle(title),
+            alertSubtitle: richSubtitle(body),
+            alertType: RichAlertType.ERROR,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        }
+    );
+  }
 
   void showMessage(message, body) {
     showDialog(

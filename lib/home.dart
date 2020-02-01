@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:cms/controller/sharedData.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cms/appBars.dart';
 import 'package:cms/util.dart';
 import 'package:nice_button/nice_button.dart';
+import 'package:cms/controller/onscreen.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -12,19 +14,44 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int bottomNavigationBarIndex = 0;
-  int userStatus=1;
   String postStatus="today";
   String type="Admission",reason="I Have a Reason for Councill";
-  var post=[{
-    'name':"chandan Kumar",
-    'id':"2017004",
-    'Class':"first"
-  }];
+  var user;
+  OnScreen onScreen=new OnScreen();
+  var post;
 
   @override
   void initState() {
+    _getUserData();
     super.initState();
+    //_getPost();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+    _getUserData() async{
+    var u=await SharedData().getUserData();
+    setState(() {
+      this.user=u;
+    });
+  }
+
+  // _getPost() async{
+  //   if(postStatus == "today"){ 
+  //     this.post=await onScreen.getToday(user['id']);
+  //   }else if(postStatus == "waiting"){ 
+  //     this.post=await onScreen.getWaiting(user['id']);
+  //   }else if(postStatus == "accepted"){
+  //     this.post=await onScreen.getPending(user['id']);
+  //   }else{
+  //     this.post=await onScreen.getSettled(user['id']);
+  //   }
+  //   setState(() {});
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +59,9 @@ class _HomeState extends State<Home> {
       appBar: fullAppbar(context,"Hello Chandan"),
       body: listView(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: (userStatus == 1)? fabView() : null,
-      bottomNavigationBar: BottomNavTab(bottomNavigationBarIndex),
+      //floatingActionButton:(user['role'] == 'student')? fabView() : null,
+      floatingActionButton: user != null?(user['role'] == 'student')? fabView() : null:null,
+      bottomNavigationBar: user != null?(user['role'] == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex):null,
     );
   }
 
@@ -843,7 +871,7 @@ class _HomeState extends State<Home> {
     ],
   );
 
-  Widget BottomNavTab(bottomNavigationBarIndex)=> BottomNavigationBar(
+  Widget BottomNavTab1(bottomNavigationBarIndex)=> BottomNavigationBar(
   currentIndex: bottomNavigationBarIndex,
   type: BottomNavigationBarType.fixed,
   selectedFontSize:12,
@@ -852,6 +880,7 @@ class _HomeState extends State<Home> {
   unselectedFontSize: 12,
   items: [
     BottomNavigationBarItem(
+      title: Text('Today (20)',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
       icon: Container(
         margin: EdgeInsets.only(bottom: 5),
         child:InkWell(
@@ -866,11 +895,10 @@ class _HomeState extends State<Home> {
             color: (bottomNavigationBarIndex == 0) ? CustomColors.BlueDark : CustomColors.TextGrey,
           ),),
       ),
-      title: Text('Today (20)',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
     //4
     BottomNavigationBarItem(
-      icon: Container(
+     icon: Container(
           margin: EdgeInsets.only(bottom: 5),
           child: InkWell(
             onTap: (){
@@ -889,8 +917,7 @@ class _HomeState extends State<Home> {
       ),
       title: Text('Waiting (20)',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
-
-    (userStatus == 1) ? BottomNavigationBarItem(icon: Container(margin: EdgeInsets.only(bottom: 5),), title: Text(''),) : null ,
+   BottomNavigationBarItem(icon: Container(margin: EdgeInsets.only(bottom: 5),),title: Text(' '),),
 
   BottomNavigationBarItem(
   icon: Container(
@@ -929,6 +956,92 @@ class _HomeState extends State<Home> {
     ),
   ],
   );
+  
+Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
+  currentIndex: bottomNavigationBarIndex,
+  type: BottomNavigationBarType.fixed,
+  selectedFontSize:12,
+  selectedLabelStyle: TextStyle(color: CustomColors.BlueDark),
+  selectedItemColor: CustomColors.BlueDark,
+  unselectedFontSize: 12,
+  items: [
+    BottomNavigationBarItem(
+      title: Text('Today (20)',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      icon: Container(
+        margin: EdgeInsets.only(bottom: 5),
+        child:InkWell(
+          onTap: (){
+            setState(() {
+              this.bottomNavigationBarIndex=0;
+              this.postStatus="today";
+            });
+          },
+          child:  Icon(Icons.airline_seat_recline_normal,
+            size: 30,
+            color: (bottomNavigationBarIndex == 0) ? CustomColors.BlueDark : CustomColors.TextGrey,
+          ),),
+      ),
+    ),
+    //4
+    BottomNavigationBarItem(
+     icon: Container(
+          margin: EdgeInsets.only(bottom: 5),
+          child: InkWell(
+            onTap: (){
+              setState(() {
+                this.bottomNavigationBarIndex=1;
+                this.postStatus="waiting";
+              });
+            },
+            child: Icon(Icons.record_voice_over,
+              size: 30,
+              color: (bottomNavigationBarIndex == 1)
+                  ? CustomColors.BlueDark
+                  : CustomColors.TextGrey,
+            ),
+          )
+      ),
+      title: Text('Waiting (20)',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
+    ),
+
+  BottomNavigationBarItem(
+  icon: Container(
+  margin: EdgeInsets.only(bottom: 5),
+  child:InkWell(
+    onTap: (){
+      setState(() {
+        this.bottomNavigationBarIndex=2;
+        this.postStatus="accepted";
+      });
+    },
+    child: Icon(Icons.streetview,
+      size: 30,
+  color: (bottomNavigationBarIndex == 2) ? CustomColors.BlueDark : CustomColors.TextGrey,
+  ),),
+  ),
+    title: Text('Pending (20)',style: TextStyle(color: (bottomNavigationBarIndex==2)?CustomColors.BlueDark:CustomColors.TextGrey),),
+  ),
+
+    BottomNavigationBarItem(
+      icon: Container(
+        margin: EdgeInsets.only(bottom: 5),
+        child:InkWell(
+          onTap: (){
+            setState(() {
+              this.bottomNavigationBarIndex=3;
+              this.postStatus="settled";
+            });
+          },
+          child: Icon(Icons.thumbs_up_down,
+            size: 30,
+            color: (bottomNavigationBarIndex == 3) ? CustomColors.BlueDark : CustomColors.TextGrey,
+          ),),
+      ),
+      title: Text('Settled (20)',style: TextStyle(color: (bottomNavigationBarIndex == 3)?CustomColors.BlueDark:CustomColors.TextGrey),),
+    ),
+  ],
+  );
+
 
   Widget empty()=> Center(
     child: Container(

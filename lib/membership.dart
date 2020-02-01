@@ -1,46 +1,23 @@
-import 'package:cms/membership.dart';
 import 'package:flutter/material.dart';
 import 'util.dart';
 import 'package:cms/register.dart';
 import 'package:cms/home.dart';
 import 'package:cms/log.dart';
-import 'package:cms/controller/sharedData.dart';
 
-class Onboarding extends StatefulWidget {
-  Onboarding({Key key}) : super(key: key);
+class Membership extends StatefulWidget {
+  Membership({Key key}) : super(key: key);
 
-  _OnboardingState createState() => _OnboardingState();
+  _MembershipState createState() => _MembershipState();
 }
 
-class _OnboardingState extends State<Onboarding> {
-  int log=1;var user;
+class _MembershipState extends State<Membership> {
+  int log=0;var user;
 
   @override
   void initState(){
     super.initState();
-    getUserData();
-    //print(user);
   }
 
-  void getUserData() async{
-    var u=await SharedData().getUserData();
-    setState(() {
-      this.user=u;
-    });
-  }
-
-  _welcome(){
-    user['role'] == null?_Membership():_Home();
-  }
-
-  _Home(){
-      Route route=MaterialPageRoute(builder: (context) => Home());
-      Navigator.push(context, route);
-  }
-  _Membership(){
-      Route route=MaterialPageRoute(builder: (context) => Membership());
-      Navigator.push(context, route);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,10 +69,10 @@ class _OnboardingState extends State<Onboarding> {
               Expanded(
                 child: Row(
                   children: <Widget>[
-                    //if (log == 0) Login(),
-                    //if (log == 0) Width(),
-                    //if (log == 0) Register(),
-                    if (log != 0) Welcome(),
+                    if (log == 0) Login(),
+                    if (log == 0) Width(),
+                    if (log == 0) Register(),
+                    ///if (log != 0) Welcome(),
                 ],
                 )
               ),
@@ -203,7 +180,16 @@ class _OnboardingState extends State<Onboarding> {
   );
   
   Widget Welcome()=>RaisedButton(
-    onPressed: _welcome,
+    onPressed: () {
+      if(user == null){
+      Route route=MaterialPageRoute(builder: (context) => Home());
+      Navigator.push(context, route);
+      }else{
+        setState(() {
+          this.log=0;
+        });
+      }
+    },
     textColor: Colors.white,
     padding: const EdgeInsets.all(0.0),
     shape: RoundedRectangleBorder(

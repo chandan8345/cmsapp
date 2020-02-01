@@ -15,6 +15,7 @@ SharedPreferences sp;
     sp.setString('studentid', user[0]['studentid']);
     sp.setInt('semesterid', user[0]['semesterid']);
     sp.setInt('departmentid', user[0]['departmentid']);
+    print('sucess store');
   }
 
   Future getUserData()async{
@@ -25,8 +26,9 @@ SharedPreferences sp;
     user['studentid']=sp.getString('studentid').toString();
     user['mobile']=sp.getString('mobile').toString();
     user['email']=sp.getString('email').toString();
+    user['role']=sp.getString('role').toString();
     user['password']=sp.getString('password').toString();
-    user['department']=sp.getInt('semesterid').toString();
+    user['semester']=sp.getInt('semesterid').toString();
     user['department']=sp.getInt('departmentid').toString();
     return user;
   }
