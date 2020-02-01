@@ -10,9 +10,11 @@ class Auth{
   var postURL ="http://flatbasha.com/registerUser";
 
   //Users
-  Future<bool> registerUser(String name,String studentid,String mobile,String email,String password,String department,String semester,File image) async{
+  Future<bool> registerUser(String name,String studentid,String mobile,String email,String password,int department,int semester,File image) async{
     var fileContent = image.readAsBytesSync();
     var base64image = base64.encode(fileContent);
+    var response;
+    //print(name+""+studentid+" "+mobile+" "+email+" "+password+" "+department+" "+semester+" "+base64image);
     try{
       FormData formData = new FormData.fromMap(<String, dynamic>{
         "name" : name,
@@ -24,16 +26,16 @@ class Auth{
         "semester" : semester,
         "image" : base64image
        });
-      Response response = await dio.post(postURL, data: formData);
+      response = await dio.post(postURL, data: formData);
       print(response);
-      if(response.toString() != null){
+      }catch (e){
+        print(e);
+     }
+     if(response.toString() == "data saved with image" || response.toString() == "data saved without image"){
         return true;
       }else{
         return false;
       }
-      }catch (e){
-        print(e);
-    }
   }
   Future<bool> updateUser() async{
 
@@ -55,5 +57,12 @@ class Auth{
     SharedData().sessionOut();
     return true;
   }
-  
+  Future getDepartmentID(String value)async{
+    var id=await dio.get("http://flatbasha.com/getDepartmentId?department='$value'");
+    return id;
+  }
+  Future getSemesterID(String value)async{
+    var id=await dio.get("http://flatbasha.com/getSemesterId?department='$value'");
+    return id;
+  }
 }

@@ -27,7 +27,7 @@ class _registerState extends State<register> {
   TextEditingController semesterCtrl=new TextEditingController();
   TextEditingController passCtrl=new TextEditingController();
   String name,email,mobile,password,studentid;
-  String department,semester;
+  String department,semester;int semesterid,departmentid;
   var cr,netStatus=0,message,body;List posts,departments,semesters;
   ProgressDialog pr;
   static Pattern pattern =r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -46,6 +46,26 @@ class _registerState extends State<register> {
     super.dispose();
   }
 
+ _setDepartment(String value){
+    for(var item in departments){
+       if(item['name']==value){
+         setState(() {
+           this.departmentid=item['id'];
+         });
+      }
+    }
+  }
+
+  _setSemester(String value){
+    for(var item in semesters){
+      if(item['name']==value){
+         setState(() {
+           this.semesterid=item['id'];
+         });
+      }
+    }
+  }
+
   _Others()async{
     Others others=new Others();
     this.departments=await others.getDepartment();
@@ -60,7 +80,7 @@ class _registerState extends State<register> {
       pr.show();
       bool result;
       if(image != null){
-        result =await Auth().registerUser(name,studentid,mobile,email,password,department,semester,image);
+        result =await Auth().registerUser(name,studentid,mobile,email,password,departmentid,semesterid,image);
         pr.hide();
       if(result == true){
         alertSucess("Notice", "User created successfully...");
@@ -72,7 +92,6 @@ class _registerState extends State<register> {
       }
     }
   }
-
 
   Future getImage() async {
     var img= await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -342,9 +361,10 @@ class _registerState extends State<register> {
                             );
                           }).toList():null,
                           onChanged: (value){
-                            setState(() {
+                            setState((){
                               this.department=value;
                             });
+                            _setDepartment(department);
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -365,9 +385,10 @@ class _registerState extends State<register> {
                             //fillColor: Colors.green
                           ),
                           onChanged: (value){
-                            setState(() {
+                            setState((){
                               this.semester=value;
-                            }); 
+                            });
+                            _setSemester(semester);
                           },
                           value: (semester != null)?semester:null,
                           items: (semesters != null)?semesters.map((array){
