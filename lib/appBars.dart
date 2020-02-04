@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'util.dart';
-import 'package:cms/register.dart';
+import 'package:cms/dashboard.dart';
 
-Widget fullAppbar(BuildContext context,String name) {
+Widget fullAppbar(BuildContext context,String name,String sort) {
   return PreferredSize(
     preferredSize: Size.fromHeight(70.0),
     child: GradientAppBar(
@@ -29,24 +29,24 @@ Widget fullAppbar(BuildContext context,String name) {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
             Text(
-              'Today you have 9 tasks',
+              '$sort',
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
             ),
           ],
         ),
       ),
-      actions: <Widget>[
+      actions: name=="Northern University Bangladesh"?(<Widget>[
         Container(
           margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
           child: InkWell(
             onTap: (){
-               Route route=MaterialPageRoute(builder: (context) => register());
+               Route route=MaterialPageRoute(builder: (context) => Dashboard());
                                 Navigator.push(context, route);
             },
-            child: Icon(Icons.person),
+            child: Icon(Icons.dashboard),
           ),//Image.asset('assets/images/photo.png'),
         ),
-      ],
+      ]):null,
       elevation: 0,
       gradient: LinearGradient(
         begin: Alignment.topLeft,
@@ -156,7 +156,8 @@ Widget emptyAppbar() {
       actions: <Widget>[
         Container(
           margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
-          child: Image.asset('assets/images/photo.png'),
+          child: Icon(Icons.ac_unit),
+          //Image.asset('assets/images/photo.png'),
         ),
       ],
       elevation: 0,

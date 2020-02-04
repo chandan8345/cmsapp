@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:cms/controller/sharedData.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cms/appBars.dart';
 import 'package:cms/util.dart';
+import 'dart:async';
 import 'package:nice_button/nice_button.dart';
 import 'package:cms/controller/onscreen.dart';
+import 'package:cms/controller/Others.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+import 'package:cms/Request.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -13,17 +17,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final formKey = GlobalKey<FormState>();
   int bottomNavigationBarIndex = 0;
   String postStatus="today";
   String type="Admission",reason="I Have a Reason for Councill";
-  var user;
+  int councillerid;
+  DateTime meetingDate;
+  SharedPreferences sp;
   OnScreen onScreen=new OnScreen();
-  var post;
+  var post;String role;List councillers;
 
   @override
   void initState() {
-    _getUserData();
     super.initState();
+    _welcome();
+    _getCounciller();
     //_getPost();
   }
 
@@ -32,12 +40,22 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-    _getUserData() async{
-    var u=await SharedData().getUserData();
+  _welcome() async{
+    sp=await SharedPreferences.getInstance();
+    String r=sp.getString('role');
     setState(() {
-      this.user=u;
+      this.role=r;
     });
   }
+
+  _getCounciller() async{
+    List c=await Others().getCounciller();
+    setState(() {
+      this.councillers=c;
+    });
+    print(councillers);
+  }
+
 
   // _getPost() async{
   //   if(postStatus == "today"){ 
@@ -56,12 +74,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: fullAppbar(context,"Hello Chandan"),
+      appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
       body: listView(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //floatingActionButton:(user['role'] == 'student')? fabView() : null,
-      floatingActionButton: user != null?(user['role'] == 'student')? fabView() : null:null,
-      bottomNavigationBar: user != null?(user['role'] == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex):null,
+      floatingActionButton: (role == 'student')? fabView() : null,
+      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
     );
   }
 
@@ -495,7 +513,9 @@ class _HomeState extends State<Home> {
 
   Widget customFab(context) =>FloatingActionButton(
       onPressed: () {
-       mainBottomSheet(context);
+       //mainBottomSheet(context);
+      Route route=MaterialPageRoute(builder: (context) => Request());
+      Navigator.push(context, route);
       },
       elevation: 5,
       backgroundColor: Colors.transparent,
@@ -650,7 +670,8 @@ class _HomeState extends State<Home> {
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                          child: Column(
+                          child: 
+                            Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
@@ -661,11 +682,13 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               SizedBox(height: 10),
-                              Container(
+                              InkWell(
+                                onTap: (){},
+                                child: Container(
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                      'Today, 19: - 21:00',
+                                      '$meetingDate',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           fontSize: 12,
@@ -678,11 +701,11 @@ class _HomeState extends State<Home> {
                                     ),
                                   ],
                                 ),
-
+                              ), 
                               ),
                             ],
+                            ),
                           ),
-                        ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -917,6 +940,8 @@ class _HomeState extends State<Home> {
       ),
       title: Text('Waiting (20)',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
+
+
    BottomNavigationBarItem(icon: Container(margin: EdgeInsets.only(bottom: 5),),title: Text(' '),),
 
   BottomNavigationBarItem(

@@ -57,12 +57,4 @@ class Auth{
     SharedData().sessionOut();
     return true;
   }
-  Future getDepartmentID(String value)async{
-    var id=await dio.get("http://flatbasha.com/getDepartmentId?department='$value'");
-    return id;
-  }
-  Future getSemesterID(String value)async{
-    var id=await dio.get("http://flatbasha.com/getSemesterId?department='$value'");
-    return id;
-  }
 }

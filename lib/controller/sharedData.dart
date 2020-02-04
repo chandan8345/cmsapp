@@ -33,6 +33,7 @@ SharedPreferences sp;
     return user;
   }
   Future sessionOut()async{
+    sp=await SharedPreferences.getInstance();
     sp.clear();
   }
 

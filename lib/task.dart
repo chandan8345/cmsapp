@@ -15,7 +15,7 @@ class _TaskState extends State<Task> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: fullAppbar(context,""),
+     // appBar: fullAppbar(context,""),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         width: MediaQuery.of(context).size.width,

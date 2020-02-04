@@ -8,8 +8,7 @@ import 'package:cms/register.dart';
 import 'package:cms/home.dart';
 
 class Log extends StatefulWidget {
-  Log({Key key,this.mobile,this.password,this.message,this.body}) : super(key:key);
-  var mobile,password,message,body;
+  Log({Key key}) : super(key:key);
   @override
   _LogState createState() => _LogState();  
 }

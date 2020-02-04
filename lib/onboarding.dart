@@ -4,7 +4,7 @@ import 'util.dart';
 import 'package:cms/register.dart';
 import 'package:cms/home.dart';
 import 'package:cms/log.dart';
-import 'package:cms/controller/sharedData.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboarding extends StatefulWidget {
   Onboarding({Key key}) : super(key: key);
@@ -13,31 +13,25 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int log=1;var user;
+  int log=1;SharedPreferences sp;
 
   @override
   void initState(){
     super.initState();
-    getUserData();
-    //print(user);
+    //getUserData();
   }
 
-  void getUserData() async{
-    var u=await SharedData().getUserData();
-    setState(() {
-      this.user=u;
-    });
+  _welcome() async{
+    sp=await SharedPreferences.getInstance();
+    String role=sp.getString('role');
+    role==null?_memberShip():_homE();
   }
 
-  _welcome(){
-    user['role'] == null?_Membership():_Home();
-  }
-
-  _Home(){
+  _homE(){
       Route route=MaterialPageRoute(builder: (context) => Home());
       Navigator.push(context, route);
   }
-  _Membership(){
+  _memberShip(){
       Route route=MaterialPageRoute(builder: (context) => Membership());
       Navigator.push(context, route);
   }
