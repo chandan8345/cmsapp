@@ -7,8 +7,8 @@ class Others{
    Dio dio=new Dio();
    var cr;
    
-   Future getCounciller()async{
-    var response = await dio.get("http://flatbasha.com/getCounciller");
+   Future getCounciller(int id)async{
+    var response = await dio.get("http://flatbasha.com/getCounciller?id=$id");
     List counciller = json.decode(response.toString());
     return counciller;
    }

@@ -1,25 +1,28 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
 
 class Councill{
   Dio dio=new Dio();
   
-    Future<bool> createCouncill(String reason,int categoryid,int semesterid,int departmentid,int councillerid,int postingUser,DateTime meetingDate)async{
+    Future<String> createCouncill(String reason,int categoryid,int semesterid,int departmentid,int councillerid,int postingUser,DateTime meetingDate)async{
       var response = await dio.get("http://flatbasha.com/createCouncilling?reason=$reason&categoryid=$categoryid&postinguserid=$postingUser&councillerid=$councillerid&meetingdate=$meetingDate&semesterid=$semesterid&departmentid=$departmentid");
-      if(response.toString() == "create councill successfuly"){
-        return true;
-      }else{
-        return false;
-      }
+    return response.toString();
     }
 
-    Future acceptCouncill()async{}
+    Future acceptCouncill(String comments,String room,DateTime meeting,int councillerId,int postId)async{
+      var response =await dio.get("http://flatbasha.com/acceptCouncilling?room=$room&comments=$comments&meetingdate=$meeting&councillerid=$councillerId&postId=$postId");
+      return response.toString();
+    }
 
-    Future referredCouncill()async{}
+    Future referredCouncill(String comments,String room,int refferedId,int postId) async{
+      var response =await dio.get("http://flatbasha.com/refferedCouncilling?comments=$comments&refferedid=$refferedId&postId=$postId");
+      return response.toString();
+    }
 
-    Future settledCouncill()async{}
+    Future settledCouncill(String summary,int councillerId,int postId)async{
+      var response =await dio.get("http://flatbasha.com/settledCouncilling?solution=$summary&councillerid=$councillerId&postId=$postId");
+      return response.toString();
+    }
 
-    Future removeCouncill()async{}
+    Future removeCouncill(int postId)async{}
 }

@@ -3,35 +3,33 @@ import 'package:cms/appBars.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:cms/util.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:date_format/date_format.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
-class Request extends StatefulWidget {
-
+class RefferedReq extends StatefulWidget {
+  int postId;
+  RefferedReq({Key key,this.postId}) : super(key: key);
   @override
-  _RequestState createState() => _RequestState();
+  _RefferedReqState createState() => _RefferedReqState(this.postId);
 }
 
-class _RequestState extends State<Request> {
-final _formKey = GlobalKey<FormState>();
-TextEditingController reasonCtrl=new TextEditingController();
-TextEditingController dateCtrl=new TextEditingController();
-var reason,counciller,councillerId,postingUserId,type,categoryId,semesterId,departmentId,studentId,department;
-SharedPreferences sp;
-DateTime meetingDate;
-List councillers,types,departments;
-ProgressDialog pr;
+class _RefferedReqState extends State<RefferedReq> {
+  int postId;
+  _RefferedReqState(this.postId); 
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController commentsCtrl=new TextEditingController();
+  TextEditingController roomCtrl=new TextEditingController();
+  TextEditingController meetingDateCtrl=new TextEditingController();
+  TextEditingController meetingTimeCtrl=new TextEditingController();
+  ProgressDialog pr;var comments,room,meetingDate,meetingTime,councillerId,refferedId,counciller;
+  SharedPreferences sp;List councillers;
 
 @override
 void initState(){
   super.initState();
   //_getCounciller();
   _getUserData();
-  _Others();
-  _getCategory();
 }
 
 _submit() async{
@@ -39,11 +37,11 @@ _submit() async{
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
       pr.show();
-      var result =await Councill().createCouncill(reason, categoryId, semesterId, departmentId, councillerId, postingUserId, meetingDate);
+      var result =await Councill().referredCouncill(comments, room, refferedId, postId);
       pr.hide();
       print(result);
-      if(result.contains("create councill successfuly")){
-        alertSucess("Alert","Your Councill Request Submited.");
+      if(result.contains("reffered councill successfuly")){
+        alertSucess("Alert","Your Councill Reffered Submited.");
       }else{
         alertError("Alert","Something Went Wrong");
       }
@@ -57,47 +55,11 @@ _submit() async{
     });
   }
 
-   _setDepartment(String value){
-     var id;
-    for(var item in departments){
-       if(item['name']==value){
-         setState(() {
-           id=item['id'];
-         });
-         _getCounciller(id);
-      }
-    }
-  }
-
-  _getCategory() async{
-    List c=await Others().getCategory();
-    setState(() {
-      this.types=c;
-    });
-  }
-
-    _Others()async{
-    Others others=new Others();
-    this.departments=await others.getDepartment();
-    setState((){
-    });
-  }
-
-  _setCategoryId(value)async{
-    for(var item in types){
-      if(item['name']==value){
-         setState(() {
-           this.categoryId=item['id'];
-         });
-      }
-    } 
-  }
-
  _setCouncillerId(String value){
     for(var item in councillers){
       if(item['name']==value){
          setState(() {
-           this.councillerId=item['id'];
+           this.refferedId=item['id'];
          });
       }
     }
@@ -105,14 +67,10 @@ _submit() async{
 
   _getUserData() async{
     sp=await SharedPreferences.getInstance();
-    int semesterid=sp.getInt('semesterid');
-    int departmentid=sp.getInt('departmentid');
     int postinguserid=sp.getInt('id');
     //int studentid=sp.getInt('studentid');
     setState(() {
-      this.semesterId=semesterid;
-      this.departmentId=departmentid;
-      this.postingUserId=postinguserid;
+      this.councillerId=postinguserid;
       //this.studentId=studentid;
     });
   }
@@ -122,7 +80,7 @@ _submit() async{
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
        backgroundColor: Colors.white,
-       appBar: fullAppbar(context,"Create Request","add new councill"),
+       appBar: fullAppbar(context,"Reffer Form","Reffer the post"),
        body: 
        ListView(
          children: <Widget>[
@@ -134,18 +92,18 @@ _submit() async{
           child: Column(
           children: <Widget>[
             TextFormField(
-                controller: reasonCtrl,
+                controller: commentsCtrl,
                 decoration: new InputDecoration(
-                  labelText: 'Reason',
+                  labelText: 'Comments',
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
-                  hintText: 'Write down your reason',
+                  hintText: 'Write down comments for refferd',
                   border:  OutlineInputBorder(),
                   //fillColor: Colors.green
                 ),
                 validator:  (value) {
                   if (value.isEmpty) {
-                    return 'Reason is required';
+                    return 'Comments is required';
                   }else {
                     return null;
                   }
@@ -155,65 +113,35 @@ _submit() async{
                   fontFamily: "Poppins",
                 ),
                 onSaved: (String val){
-                  this.reason=val;
+                  this.comments=val;
                 },
               ),
-              DropdownButtonFormField(
-                          decoration: new InputDecoration(
-                            labelText: 'Select Category',
-                            fillColor: Colors.white,
-                            icon: Icon(Icons.developer_board),
-                            border: UnderlineInputBorder(),
-                            //fillColor: Colors.green
-                          ),
-                          onChanged: (value){
-                            setState((){
-                              this.type=value;
-                            });
-                            _setCategoryId(value);
-                          },
-                          value: (type != null)?type:null,
-                          items: (types != null)?types.map((array){
-                            return DropdownMenuItem(
-                              value: array['name'].toString(), 
-                              child: Text(array['name']),
-                            );
-                          }).toList():null,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please select the councilling type';
-                            }
-                            return null;
-                          },
-                        ),
-                        DropdownButtonFormField(
-                          decoration: new InputDecoration(
-                            labelText: 'Select Department',
-                            fillColor: Colors.white,
-                            icon: Icon(Icons.import_contacts),
-                            border: UnderlineInputBorder(),
-                            //fillColor: Colors.green
-                          ),
-                          value: (department != null)?department:null,
-                          items: (departments != null)?departments.map((array){
-                            return DropdownMenuItem(
-                              value: array['name'].toString(),
-                              child: Text(array['name']),
-                            );
-                          }).toList():null,
-                          onChanged: (value){
-                            setState((){
-                              this.department=value;
-                            });
-                            _setDepartment(department);
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please select department for get counciller';
-                            }
-                            return null;
-                          },
-                        ),
+              TextFormField(
+                controller: roomCtrl,
+                decoration: new InputDecoration(
+                  labelText: 'Room No',
+                  fillColor: Colors.white,
+                  icon: Icon(Icons.border_color),
+                  hintText: 'Meeting Room No',
+                  border:  OutlineInputBorder(),
+                  //fillColor: Colors.green
+                ),
+                validator:  (value) {
+                  if (value.isEmpty) {
+                    return 'Room No is required';
+                  }else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.text,
+                style: new TextStyle(
+                  fontFamily: "Poppins",
+                ),
+                onSaved: (String val){
+                  this.room=val;
+                },
+              ),
+
                         DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Select Counciller',
@@ -244,50 +172,6 @@ _submit() async{
                         ),
                         SizedBox(
                 height: 15,
-              ),
-              TextFormField(
-                controller: dateCtrl,
-                onChanged: (val){
-                  setState(() {
-                    dateCtrl.text=val;
-                  });
-                },
-                autofocus: false,
-                decoration: new InputDecoration(
-                  labelText: 'Meeting Date Time',
-                  fillColor: Colors.white,
-                  icon: Icon(Icons.access_time),
-                  hintText: (meetingDate!=null)?formatDate(DateTime(meetingDate.year, meetingDate.month, meetingDate.day), [dd, '-', mm, '-', yyyy]).toString():"",
-                  border:  OutlineInputBorder(),
-                  //fillColor: Colors.green
-                ),
-                onTap: (){
-                  DatePicker.showDateTimePicker(context,
-                  showTitleActions: true,
-                              minTime: DateTime.now(),
-                              maxTime: DateTime(2050, 12, 12), onChanged: (date) {
-                              setState(() {
-                                this.meetingDate=date;
-                              });
-                          }, onConfirm: (date) {
-                            setState(() {
-                              this.meetingDate=date;
-                            });
-                          }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                validator: (value) {
-                  if (meetingDate == null) {
-                    return 'MeetingDate is required';
-                  }else {
-                    return null;
-                  }
-                },
-                style: new TextStyle(
-                  fontFamily: "Poppins",
-                ),
-              ),
-                                      SizedBox(
-                height: 25,
               ),
                         RaisedButton(
                       onPressed: () {

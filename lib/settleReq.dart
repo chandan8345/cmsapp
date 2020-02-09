@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:cms/util.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import 'package:date_format/date_format.dart';
 
-class AcceptReq extends StatefulWidget {
+class SettleReq extends StatefulWidget {
   int postId;
-  AcceptReq({Key key,this.postId}) : super(key: key);
+  SettleReq({Key key,this.postId}) : super(key: key);  
   @override
-  _AcceptReqState createState() => _AcceptReqState(this.postId);
+  _SettleReqState createState() => _SettleReqState(this.postId);
 }
 
-class _AcceptReqState extends State<AcceptReq> {
+class _SettleReqState extends State<SettleReq> {
   int postId;
-  _AcceptReqState(this.postId);
-  final _formKey = GlobalKey<FormState>();
+  _SettleReqState(this.postId);
+final _formKey = GlobalKey<FormState>();
   TextEditingController commentsCtrl=new TextEditingController();
   TextEditingController roomCtrl=new TextEditingController();
   TextEditingController meetingDateCtrl=new TextEditingController();
   TextEditingController meetingTimeCtrl=new TextEditingController();
-  ProgressDialog pr;var comments,room,meetingDate,meetingTime,councillerId;
+  ProgressDialog pr;var meetingDate,councillerId,summary;
   SharedPreferences sp;
 
   @override
@@ -37,10 +35,10 @@ class _AcceptReqState extends State<AcceptReq> {
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
       pr.show();
-      var result =await Councill().acceptCouncill(comments, room, meetingDate, councillerId, postId);
+      var result =await Councill().settledCouncill(summary, councillerId, postId);
       pr.hide();
-      if(result.contains("accept councill successfuly")){
-        alertSucess("Alert","Councill Request Accepted.");
+      if(result.contains("Settled councill successfuly")){
+        alertSucess("Alert","Councill Settled Already.");
       }else{
         alertError("Alert","Something Went Wrong");
       }
@@ -60,7 +58,7 @@ class _AcceptReqState extends State<AcceptReq> {
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
        backgroundColor: Colors.white,
-       appBar: fullAppbar(context,"Approve Form","approve the councill"),
+       appBar: fullAppbar(context,"Settle Form","Settle the councill"),
        body: 
        ListView(
          children: <Widget>[
@@ -74,16 +72,16 @@ class _AcceptReqState extends State<AcceptReq> {
             TextFormField(
                 controller: commentsCtrl,
                 decoration: new InputDecoration(
-                  labelText: 'Wtite down comments...',
+                  labelText: 'Wtite down solution',
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
-                  hintText: 'Write down comments',
+                  hintText: 'Write down solutions...',
                   border:  OutlineInputBorder(),
                   //fillColor: Colors.green
                 ),
                 validator:  (value) {
                   if (value.isEmpty) {
-                    return 'Comments is required';
+                    return 'Solution summary is required';
                   }else {
                     return null;
                   }
@@ -93,84 +91,12 @@ class _AcceptReqState extends State<AcceptReq> {
                   fontFamily: "Poppins",
                 ),
                 onSaved: (String val){
-                  this.comments=val;
+                  this.summary=val;
                 },
               ),
              SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                controller: roomCtrl,
-                decoration: new InputDecoration(
-                  labelText: 'Room No',
-                  fillColor: Colors.white,
-                  icon: Icon(Icons.event_seat),
-                  hintText: 'Room no for councill',
-                  border:  OutlineInputBorder(),
-                  //fillColor: Colors.green
-                ),
-                validator:  (value) {
-                  if (value.isEmpty) {
-                    return 'Room No is required';
-                  }else {
-                    return null;
-                  }
-                },
-                keyboardType: TextInputType.text,
-                style: new TextStyle(
-                  fontFamily: "Poppins",
-                ),
-                onSaved: (String val){
-                  this.room=val;
-                },
-              ),
-             SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                controller: meetingDateCtrl,
-                onChanged: (val){
-                  setState(() {
-                    this.meetingDate=val;
-                  });
-                },
-                autofocus: false,
-                decoration: new InputDecoration(
-                  labelText: 'Meeting Date',
-                  fillColor: Colors.white,
-                  icon: Icon(Icons.access_time),
-                  hintText: (meetingDate!=null)?formatDate(DateTime(meetingDate.year, meetingDate.month, meetingDate.day), [dd, '-', mm, '-', yyyy]).toString():"",
-                  border:  OutlineInputBorder(),
-                  //fillColor: Colors.green
-                ),
-                onTap: (){
-                  DatePicker.showDateTimePicker(context,
-                  showTitleActions: true,
-                              minTime: DateTime.now(),
-                              maxTime: DateTime(2050, 12, 12), onChanged: (date) {
-                              setState(() {
-                                this.meetingDate=date;
-                              });
-                          }, onConfirm: (date) {
-                            setState(() {
-                              this.meetingDate=date;
-                            });
-                          }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                validator: (value) {
-                  if (meetingDate == null) {
-                    return 'MeetingDate is required';
-                  }else {
-                    return null;
-                  }
-                },
-                style: new TextStyle(
-                  fontFamily: "Poppins",
-                ),
-              ),
-                                      SizedBox(
                 height: 25,
-              ),
+              ), 
                         RaisedButton(
                       onPressed: () {
                          _submit();

@@ -1,14 +1,15 @@
+import 'package:cms/accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cms/appBars.dart';
 import 'package:cms/util.dart';
-import 'dart:async';
 import 'package:nice_button/nice_button.dart';
 import 'package:cms/controller/onscreen.dart';
-import 'package:cms/controller/Others.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 import 'package:cms/Request.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:cms/settleReq.dart';
+import 'package:cms/refferedReq.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -18,21 +19,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
-  int bottomNavigationBarIndex = 0;
-  String postStatus="today";
+  OnScreen display=new OnScreen();
+  int bottomNavigationBarIndex = 1;
+  String postStatus="waiting";
   String type="Admission",reason="I Have a Reason for Councill";
-  int councillerid;
+  int councillerid,userid;ProgressDialog pr;
   DateTime meetingDate;
   SharedPreferences sp;
-  OnScreen onScreen=new OnScreen();
-  var post;String role;List councillers;
+  List post;String role;List councillers;
 
   @override
   void initState() {
     super.initState();
     _welcome();
-    _getCounciller();
-    //_getPost();
+    _getPost();
+    //_getCounciller();
   }
 
   @override
@@ -48,31 +49,43 @@ class _HomeState extends State<Home> {
     });
   }
 
-  _getCounciller() async{
-    List c=await Others().getCounciller();
-    setState(() {
-      this.councillers=c;
-    });
-    print(councillers);
-  }
-
-
-  // _getPost() async{
-  //   if(postStatus == "today"){ 
-  //     this.post=await onScreen.getToday(user['id']);
-  //   }else if(postStatus == "waiting"){ 
-  //     this.post=await onScreen.getWaiting(user['id']);
-  //   }else if(postStatus == "accepted"){
-  //     this.post=await onScreen.getPending(user['id']);
-  //   }else{
-  //     this.post=await onScreen.getSettled(user['id']);
-  //   }
-  //   setState(() {});
+  // _getCounciller() async{
+  //   List c=await Others().getCounciller(0);
+  //   setState(() {
+  //     this.councillers=c;
+  //   });
   // }
+
+  _getPost() async{
+    sp=await SharedPreferences.getInstance();
+    int userid=sp.getInt('id');
+      if(postStatus == "today"){ 
+        List a=await display.getToday(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "waiting"){
+        List a=await display.getWaiting(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "accepted"){
+        List a=await display.getPending(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else{
+        List a=await display.getSettled(userid);
+        setState(() {
+          this.post=a;
+        });
+    }
+  }
 
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
       appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
       body: listView(),
@@ -88,15 +101,15 @@ class _HomeState extends State<Home> {
     width: MediaQuery.of(context).size.width,
     child: Padding(
       padding: EdgeInsets.only(top: 10),
-      child:post != null ? ListView.builder(
+      child: post != null ? ListView.builder(
         itemCount: (post == null) ? 0 : post.length,
         itemBuilder: (BuildContext context,int index){
           if(postStatus == "today"){
             return todayCard();
           }else if(postStatus == "waiting"){
-            return waitingCard();
+            return waitingCard(index);
           }else if(postStatus == "accepted"){
-           return acceptedCard();
+           return acceptedCard(index);
           }else{
             return settledCard();
           }
@@ -211,7 +224,7 @@ class _HomeState extends State<Home> {
     ),
   );
 
-  Widget waitingCard() => Container(
+  Widget waitingCard(item) => Container(
     child:Padding(
       padding: EdgeInsets.all(10.0),
       child:
@@ -232,10 +245,10 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               Flexible(
-                child: Text('We have reason for make a solution for tution fees & permission ',style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.BlueIcon,size: 18,),
-              Text(' 12 June',style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -245,10 +258,10 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text('Education',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('ECSE',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('SEM 8th',style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('SEC A',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['category'],style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['department'],style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['semester'],style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              //Text('CALL',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
           Divider(
@@ -262,10 +275,13 @@ class _HomeState extends State<Home> {
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
-                text: "Procced",
+                text: "Accept",
                 fontSize: 14,
                 gradientColors: [CustomColors.BlueDark, CustomColors.BlueIcon],
-                onPressed: () {},
+                onPressed: () {
+                Route route=MaterialPageRoute(builder: (context) => AcceptReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
+                },
               ),
               NiceButton(
                 radius: 50,
@@ -392,7 +408,7 @@ class _HomeState extends State<Home> {
     ),
   );
 
-  Widget acceptedCard() => Container(
+  Widget acceptedCard(item) => Container(
     child:Padding(
       padding: EdgeInsets.all(10.0),
       child:
@@ -460,7 +476,10 @@ class _HomeState extends State<Home> {
                 text: "Settled",
                 fontSize: 14,
                 gradientColors: [CustomColors.GreenIcon, CustomColors.BlueIcon],
-                onPressed: () {},
+                onPressed: () {
+                Route route=MaterialPageRoute(builder: (context) => SettleReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
+                },
               ),
               NiceButton(
                 radius: 50,
@@ -469,7 +488,10 @@ class _HomeState extends State<Home> {
                 text: "Reffered",
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
-                onPressed: () {},
+                onPressed: () {
+                Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
+                },
               ),
               NiceButton(
                 radius: 50,
@@ -912,6 +934,7 @@ class _HomeState extends State<Home> {
               this.bottomNavigationBarIndex=0;
               this.postStatus="today";
             });
+            _getPost();
           },
           child:  Icon(Icons.airline_seat_recline_normal,
             size: 30,
@@ -929,6 +952,7 @@ class _HomeState extends State<Home> {
                 this.bottomNavigationBarIndex=1;
                 this.postStatus="waiting";
               });
+              _getPost();
             },
             child: Icon(Icons.record_voice_over,
               size: 30,
@@ -953,6 +977,7 @@ class _HomeState extends State<Home> {
         this.bottomNavigationBarIndex=2;
         this.postStatus="accepted";
       });
+      _getPost();
     },
     child: Icon(Icons.streetview,
       size: 30,
@@ -1000,6 +1025,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
               this.bottomNavigationBarIndex=0;
               this.postStatus="today";
             });
+            _getPost();
           },
           child:  Icon(Icons.airline_seat_recline_normal,
             size: 30,
@@ -1017,6 +1043,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
                 this.bottomNavigationBarIndex=1;
                 this.postStatus="waiting";
               });
+              _getPost();
             },
             child: Icon(Icons.record_voice_over,
               size: 30,
@@ -1038,6 +1065,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
         this.bottomNavigationBarIndex=2;
         this.postStatus="accepted";
       });
+      _getPost();
     },
     child: Icon(Icons.streetview,
       size: 30,
@@ -1056,6 +1084,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
               this.bottomNavigationBarIndex=3;
               this.postStatus="settled";
             });
+            _getPost();
           },
           child: Icon(Icons.thumbs_up_down,
             size: 30,
