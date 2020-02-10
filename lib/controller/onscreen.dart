@@ -14,14 +14,12 @@ class OnScreen {
   Future<List> getWaiting(int id)async{
     var response = await dio.get("http://flatbasha.com/getWaiting?user_id=$id");
     List result = json.decode(response.toString());
-    print(result);
     return result; 
   }
 
   Future<List> getPending(int id)async{
     var response = await dio.get("http://flatbasha.com/getPending?user_id=$id");
     List result = json.decode(response.toString());
-    print(result);
     return result;
   }
 

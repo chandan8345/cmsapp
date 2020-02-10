@@ -37,7 +37,7 @@ final _formKey = GlobalKey<FormState>();
       pr.show();
       var result =await Councill().settledCouncill(summary, councillerId, postId);
       pr.hide();
-      if(result.contains("Settled councill successfuly")){
+      if(result.contains("settled councill successfuly")){
         alertSucess("Alert","Councill Settled Already.");
       }else{
         alertError("Alert","Something Went Wrong");

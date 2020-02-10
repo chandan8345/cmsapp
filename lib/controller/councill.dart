@@ -14,7 +14,7 @@ class Councill{
       return response.toString();
     }
 
-    Future referredCouncill(String comments,String room,int refferedId,int postId) async{
+    Future referredCouncill(String comments,int refferedId,int postId) async{
       var response =await dio.get("http://flatbasha.com/refferedCouncilling?comments=$comments&refferedid=$refferedId&postId=$postId");
       return response.toString();
     }
@@ -24,5 +24,8 @@ class Councill{
       return response.toString();
     }
 
-    Future removeCouncill(int postId)async{}
+    Future removeCouncill(int postId)async{
+      var response =await dio.get("http://flatbasha.com/removePost?id=$postId");
+      return response.toString();
+    }
 }

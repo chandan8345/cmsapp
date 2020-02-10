@@ -28,7 +28,7 @@ class _RefferedReqState extends State<RefferedReq> {
 @override
 void initState(){
   super.initState();
-  //_getCounciller();
+  _getCounciller(0);
   _getUserData();
 }
 
@@ -37,7 +37,7 @@ _submit() async{
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
       pr.show();
-      var result =await Councill().referredCouncill(comments, room, refferedId, postId);
+      var result =await Councill().referredCouncill(comments, refferedId, postId);
       pr.hide();
       print(result);
       if(result.contains("reffered councill successfuly")){
@@ -116,33 +116,10 @@ _submit() async{
                   this.comments=val;
                 },
               ),
-              TextFormField(
-                controller: roomCtrl,
-                decoration: new InputDecoration(
-                  labelText: 'Room No',
-                  fillColor: Colors.white,
-                  icon: Icon(Icons.border_color),
-                  hintText: 'Meeting Room No',
-                  border:  OutlineInputBorder(),
-                  //fillColor: Colors.green
-                ),
-                validator:  (value) {
-                  if (value.isEmpty) {
-                    return 'Room No is required';
-                  }else {
-                    return null;
-                  }
-                },
-                keyboardType: TextInputType.text,
-                style: new TextStyle(
-                  fontFamily: "Poppins",
-                ),
-                onSaved: (String val){
-                  this.room=val;
-                },
+                                      SizedBox(
+                height: 15,
               ),
-
-                        DropdownButtonFormField(
+                      DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Select Counciller',
                             fillColor: Colors.white,

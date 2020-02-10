@@ -1,4 +1,5 @@
 import 'package:cms/accept.dart';
+import 'package:cms/controller/councill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cms/appBars.dart';
@@ -7,8 +8,8 @@ import 'package:nice_button/nice_button.dart';
 import 'package:cms/controller/onscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cms/Request.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:cms/settleReq.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:cms/refferedReq.dart';
 
 class Home extends StatefulWidget {
@@ -22,8 +23,9 @@ class _HomeState extends State<Home> {
   OnScreen display=new OnScreen();
   int bottomNavigationBarIndex = 1;
   String postStatus="waiting";
+  ProgressDialog pr;
   String type="Admission",reason="I Have a Reason for Councill";
-  int councillerid,userid;ProgressDialog pr;
+  int councillerid,userid;
   DateTime meetingDate;
   SharedPreferences sp;
   List post;String role;List councillers;
@@ -57,6 +59,8 @@ class _HomeState extends State<Home> {
   // }
 
   _getPost() async{
+    pr.update(message: "Loading");
+    pr.show();
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
       if(postStatus == "today"){ 
@@ -74,12 +78,59 @@ class _HomeState extends State<Home> {
         setState(() {
           this.post=a;
         });
-    }else{
+    }else if(postStatus == "settled"){
         List a=await display.getSettled(userid);
         setState(() {
           this.post=a;
         });
+    }else{
+      return Container(
+    width: MediaQuery.of(context).size.width,
+    child: Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: empty()
+    ),
+  );
     }
+    pr.hide();
+  }
+
+  _removePost(int postId) async{
+    pr.update(message: "Deleting...");
+    pr.show();
+    String a=await Councill().removeCouncill(postId);
+    if(a.contains("deleted")){
+ if(postStatus == "today"){ 
+        List a=await display.getToday(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "waiting"){
+        List a=await display.getWaiting(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "accepted"){
+        List a=await display.getPending(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "settled"){
+        List a=await display.getSettled(userid);
+        setState(() {
+          this.post=a;
+        });
+    }else{
+      return Container(
+    width: MediaQuery.of(context).size.width,
+    child: Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: empty()
+    ),
+  );
+    }
+    }
+    pr.hide();
   }
 
 
@@ -88,37 +139,37 @@ class _HomeState extends State<Home> {
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
       appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
-      body: listView(),
+      body: (post == null)?empty():listView(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      //floatingActionButton:(user['role'] == 'student')? fabView() : null,
       floatingActionButton: (role == 'student')? fabView() : null,
       bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
     );
   }
 
-  
   Widget listView() =>  Container(
     width: MediaQuery.of(context).size.width,
     child: Padding(
       padding: EdgeInsets.only(top: 10),
-      child: post != null ? ListView.builder(
+      child: post == null ?empty():ListView.builder(
         itemCount: (post == null) ? 0 : post.length,
         itemBuilder: (BuildContext context,int index){
           if(postStatus == "today"){
-            return todayCard();
+            return todayCard(index);
           }else if(postStatus == "waiting"){
             return waitingCard(index);
           }else if(postStatus == "accepted"){
            return acceptedCard(index);
+          }else if(postStatus == "settled"){
+            return settledCard(index);
           }else{
-            return settledCard();
+            return empty();
           }
         },
-      ):empty(),
+      ),
     ),
   );
 
-  Widget todayCard() => Container(
+  Widget todayCard(item) => Container(
     child:Padding(
       padding: EdgeInsets.all(10.0),
       child:
@@ -175,7 +226,10 @@ class _HomeState extends State<Home> {
                 text: "Settled",
                 fontSize: 14,
                 gradientColors: [CustomColors.GreenIcon, CustomColors.BlueIcon],
-                onPressed: () {},
+                onPressed: () {
+                Route route=MaterialPageRoute(builder: (context) => AcceptReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
+                },
               ),
               NiceButton(
                 radius: 50,
@@ -184,7 +238,10 @@ class _HomeState extends State<Home> {
                 text: "Reffered",
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
-                onPressed: () {},
+                onPressed: () {
+                Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
+                },
               ),
               NiceButton(
                 radius: 50,
@@ -193,7 +250,9 @@ class _HomeState extends State<Home> {
                 text: "Remove",
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
-                onPressed: () {},
+                onPressed: () {
+                  _removePost(post[item]['postid']);
+                },
               ),
             ],
           ),
@@ -290,7 +349,9 @@ class _HomeState extends State<Home> {
                 text: "Remove",
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
-                onPressed: () {},
+                onPressed: () {
+                  _removePost(post[item]['postid']);
+                },
               ),
             ],
           ),
@@ -318,7 +379,7 @@ class _HomeState extends State<Home> {
     ),
   );
 
-  Widget settledCard() => Container(
+  Widget settledCard(item) => Container(
     child:Padding(
       padding: EdgeInsets.all(10.0),
       child:
@@ -485,7 +546,7 @@ class _HomeState extends State<Home> {
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
-                text: "Reffered",
+                text: "Reffer",
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
@@ -500,7 +561,9 @@ class _HomeState extends State<Home> {
                 text: "Remove",
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
-                onPressed: () {},
+                onPressed: () {
+                  _removePost(post[item]['id']);
+                },
               ),
             ],
           ),
@@ -925,7 +988,7 @@ class _HomeState extends State<Home> {
   unselectedFontSize: 12,
   items: [
     BottomNavigationBarItem(
-      title: Text('Today (20)',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      title: Text('Today',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
       icon: Container(
         margin: EdgeInsets.only(bottom: 5),
         child:InkWell(
@@ -962,7 +1025,7 @@ class _HomeState extends State<Home> {
             ),
           )
       ),
-      title: Text('Waiting (20)',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      title: Text('Waiting',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
 
 
@@ -984,7 +1047,7 @@ class _HomeState extends State<Home> {
   color: (bottomNavigationBarIndex == 2) ? CustomColors.BlueDark : CustomColors.TextGrey,
   ),),
   ),
-    title: Text('Pending (20)',style: TextStyle(color: (bottomNavigationBarIndex==2)?CustomColors.BlueDark:CustomColors.TextGrey),),
+    title: Text('Pending',style: TextStyle(color: (bottomNavigationBarIndex==2)?CustomColors.BlueDark:CustomColors.TextGrey),),
   ),
 
     BottomNavigationBarItem(
@@ -996,13 +1059,14 @@ class _HomeState extends State<Home> {
               this.bottomNavigationBarIndex=3;
               this.postStatus="settled";
             });
+            _getPost();
           },
           child: Icon(Icons.thumbs_up_down,
             size: 30,
             color: (bottomNavigationBarIndex == 3) ? CustomColors.BlueDark : CustomColors.TextGrey,
           ),),
       ),
-      title: Text('Settled (20)',style: TextStyle(color: (bottomNavigationBarIndex == 3)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      title: Text('Settled',style: TextStyle(color: (bottomNavigationBarIndex == 3)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
   ],
   );
