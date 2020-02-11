@@ -21,10 +21,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
   OnScreen display=new OnScreen();
-  int bottomNavigationBarIndex = 1;
-  String postStatus="waiting";
+  int bottomNavigationBarIndex = 0;
+  String postStatus="today";
   ProgressDialog pr;
-  String type="Admission",reason="I Have a Reason for Councill";
   int councillerid,userid;
   DateTime meetingDate;
   SharedPreferences sp;
@@ -35,7 +34,6 @@ class _HomeState extends State<Home> {
     super.initState();
     _welcome();
     _getPost();
-    //_getCounciller();
   }
 
   @override
@@ -59,8 +57,6 @@ class _HomeState extends State<Home> {
   // }
 
   _getPost() async{
-    pr.update(message: "Loading");
-    pr.show();
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
       if(postStatus == "today"){ 
@@ -92,7 +88,6 @@ class _HomeState extends State<Home> {
     ),
   );
     }
-    pr.hide();
   }
 
   _removePost(int postId) async{
@@ -131,6 +126,7 @@ class _HomeState extends State<Home> {
     }
     }
     pr.hide();
+    _getPost();
   }
 
 
@@ -139,7 +135,7 @@ class _HomeState extends State<Home> {
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
       appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
-      body: (post == null)?empty():listView(),
+      body: (post != null)?listView():empty(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (role == 'student')? fabView() : null,
       bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
@@ -150,8 +146,8 @@ class _HomeState extends State<Home> {
     width: MediaQuery.of(context).size.width,
     child: Padding(
       padding: EdgeInsets.only(top: 10),
-      child: post == null ?empty():ListView.builder(
-        itemCount: (post == null) ? 0 : post.length,
+      child: post != null ?ListView.builder(
+        itemCount: (post != null) ? post.length : 0,
         itemBuilder: (BuildContext context,int index){
           if(postStatus == "today"){
             return todayCard(index);
@@ -165,7 +161,7 @@ class _HomeState extends State<Home> {
             return empty();
           }
         },
-      ),
+      ):empty(),
     ),
   );
 
@@ -440,7 +436,7 @@ class _HomeState extends State<Home> {
               Text('Education',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               Text('CSE',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               Text('SEM 8TH',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text('SEC A',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              //Text('SEC A',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               Text('501',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('10:00 AM',style: TextStyle(color: CustomColors.PurpleDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
@@ -632,290 +628,290 @@ class _HomeState extends State<Home> {
       ),
     );
 
-  void mainBottomSheet(context) =>showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return Container(
-        height: MediaQuery.of(context).size.height - 100,
-        padding:
-        EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Stack(
-          alignment: AlignmentDirectional.topCenter,
-          children: <Widget>[
-            Positioned(
-              top: MediaQuery.of(context).size.height / 25,
-              left: 0,
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.elliptical(175, 30),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height / 2 - 340,
-              child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        child: Icon(Icons.arrow_downward),
-                        //Image.asset('assets/images/fab-delete.png'),
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: <Color>[
-                              CustomColors.PurpleLight,
-                              CustomColors.PurpleDark,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(50.0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: CustomColors.PurpleShadow,
-                              blurRadius: 10.0,
-                              spreadRadius: 5.0,
-                              offset: Offset(0.0, 0.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20,),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.2,
-                      child: TextFormField(
-                        initialValue: '$reason',
-                        autofocus: false,
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontSize: 22, fontStyle: FontStyle.normal,color: Colors.white),
-                        decoration:
-                        InputDecoration(border: InputBorder.none),
-                        onChanged: (value){
-                          this.reason=value;
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    //Text('You Selected $type', style: TextStyle(fontSize: 12,color: Colors.white)),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.2,
-                      height: 50,
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            width: 1.0,
-                            color: CustomColors.GreyBorder,
-                          ),
-                          bottom: BorderSide(
-                            width: 1.0,
-                            color: CustomColors.GreyBorder,
-                          ),
-                        ),
-                      ),
-                      child:
-                      ListView(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          CouncillType('Admission',type),
-                          CouncillType('Tution Fees',type),
-                          CouncillType('Class Schedule',type),
-                          CouncillType('Exam Permit',type),
-                          CouncillType('Project/Thesis',type),
-                          CouncillType('Harresment',type),
-                          CouncillType('Internship',type),
-                          CouncillType('Contest',type),
-                          CouncillType('Sports',type),
-                          CouncillType('Others',type),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Container(
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    height: 100,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: 
-                            Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                child: Text(
-                                  'Choose date',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(fontSize: 12,color: Colors.white),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              InkWell(
-                                onTap: (){},
-                                child: Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      '$meetingDate',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,color: Colors.white),
-                                    ),
-                                    SizedBox(width: 5),
-                                    RotatedBox(
-                                      quarterTurns: 0,
-                                      child: Icon(Icons.touch_app,color: Colors.white,),
-                                    ),
-                                  ],
-                                ),
-                              ), 
-                              ),
-                            ],
-                            ),
-                          ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                child: Text(
-                                  'Assigned Request',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 12,color: Colors.white),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Mr. Example',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,color: Colors.white),
-                                    ),
-                                    SizedBox(width: 5),
-                                    RotatedBox(
-                                      quarterTurns: 0,
-                                      child: Icon(Icons.keyboard_arrow_down,color: Colors.white,),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 30),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                         Navigator.pop(context);
-                      },
-                      textColor: Colors.white,
-                      padding: const EdgeInsets.all(0.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              CustomColors.GreenLight,
-                              CustomColors.GreenDark,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: CustomColors.GreenShadow,
-                              blurRadius: 2.0,
-                              spreadRadius: 1.0,
-                              offset: Offset(0.0, 0.0),
-                            ),
-                          ],
-                        ),
-                        padding:
-                        const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        child: Center(
-                          child: const Text(
-                            'Add Request',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
+  // void mainBottomSheet(context) =>showModalBottomSheet(
+  //   context: context,
+  //   backgroundColor: Colors.transparent,
+  //   isScrollControlled: true,
+  //   builder: (BuildContext context) {
+  //     return Container(
+  //       height: MediaQuery.of(context).size.height - 100,
+  //       padding:
+  //       EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+  //       child: Stack(
+  //         alignment: AlignmentDirectional.topCenter,
+  //         children: <Widget>[
+  //           Positioned(
+  //             top: MediaQuery.of(context).size.height / 25,
+  //             left: 0,
+  //             child: Container(
+  //               height: MediaQuery.of(context).size.height,
+  //               width: MediaQuery.of(context).size.width,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.black54,
+  //                 borderRadius: BorderRadius.vertical(
+  //                   top: Radius.elliptical(175, 30),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           Positioned(
+  //             top: MediaQuery.of(context).size.height / 2 - 340,
+  //             child: Container(
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: <Widget>[
+  //                   InkWell(
+  //                     onTap: () {
+  //                       Navigator.pop(context);
+  //                     },
+  //                     child: Container(
+  //                       width: 50,
+  //                       height: 50,
+  //                       child: Icon(Icons.arrow_downward),
+  //                       //Image.asset('assets/images/fab-delete.png'),
+  //                       decoration: const BoxDecoration(
+  //                         gradient: LinearGradient(
+  //                           begin: Alignment.topLeft,
+  //                           end: Alignment.bottomRight,
+  //                           colors: <Color>[
+  //                             CustomColors.PurpleLight,
+  //                             CustomColors.PurpleDark,
+  //                           ],
+  //                         ),
+  //                         borderRadius: BorderRadius.all(
+  //                           Radius.circular(50.0),
+  //                         ),
+  //                         boxShadow: [
+  //                           BoxShadow(
+  //                             color: CustomColors.PurpleShadow,
+  //                             blurRadius: 10.0,
+  //                             spreadRadius: 5.0,
+  //                             offset: Offset(0.0, 0.0),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 20,),
+  //                   Container(
+  //                     width: MediaQuery.of(context).size.width / 1.2,
+  //                     child: TextFormField(
+  //                       initialValue: '$reason',
+  //                       autofocus: false,
+  //                       maxLines: 2,
+  //                       style: TextStyle(
+  //                           fontSize: 22, fontStyle: FontStyle.normal,color: Colors.white),
+  //                       decoration:
+  //                       InputDecoration(border: InputBorder.none),
+  //                       onChanged: (value){
+  //                         this.reason=value;
+  //                       },
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5),
+  //                   //Text('You Selected $type', style: TextStyle(fontSize: 12,color: Colors.white)),
+  //                   Container(
+  //                     width: MediaQuery.of(context).size.width / 1.2,
+  //                     height: 50,
+  //                     padding: EdgeInsets.symmetric(vertical: 10),
+  //                     decoration: BoxDecoration(
+  //                       border: Border(
+  //                         top: BorderSide(
+  //                           width: 1.0,
+  //                           color: CustomColors.GreyBorder,
+  //                         ),
+  //                         bottom: BorderSide(
+  //                           width: 1.0,
+  //                           color: CustomColors.GreyBorder,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     child:
+  //                     ListView(
+  //                       scrollDirection: Axis.horizontal,
+  //                       shrinkWrap: true,
+  //                       children: <Widget>[
+  //                         CouncillType('Admission',type),
+  //                         CouncillType('Tution Fees',type),
+  //                         CouncillType('Class Schedule',type),
+  //                         CouncillType('Exam Permit',type),
+  //                         CouncillType('Project/Thesis',type),
+  //                         CouncillType('Harresment',type),
+  //                         CouncillType('Internship',type),
+  //                         CouncillType('Contest',type),
+  //                         CouncillType('Sports',type),
+  //                         CouncillType('Others',type),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 30),
+  //                   Container(
+  //                   width: MediaQuery.of(context).size.width / 1.2,
+  //                   height: 100,
+  //                   child: Row(
+  //                     children: <Widget>[
+  //                       Expanded(
+  //                         child: 
+  //                           Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: <Widget>[
+  //                             Container(
+  //                               child: Text(
+  //                                 'Choose date',
+  //                                 textAlign: TextAlign.right,
+  //                                 style: TextStyle(fontSize: 12,color: Colors.white),
+  //                               ),
+  //                             ),
+  //                             SizedBox(height: 10),
+  //                             InkWell(
+  //                               onTap: (){},
+  //                               child: Container(
+  //                               child: Row(
+  //                                 children: <Widget>[
+  //                                   Text(
+  //                                     '$meetingDate',
+  //                                     textAlign: TextAlign.left,
+  //                                     style: TextStyle(
+  //                                         fontSize: 12,
+  //                                         fontWeight: FontWeight.w600,color: Colors.white),
+  //                                   ),
+  //                                   SizedBox(width: 5),
+  //                                   RotatedBox(
+  //                                     quarterTurns: 0,
+  //                                     child: Icon(Icons.touch_app,color: Colors.white,),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ), 
+  //                             ),
+  //                           ],
+  //                           ),
+  //                         ),
+  //                       Expanded(
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: <Widget>[
+  //                             Container(
+  //                               child: Text(
+  //                                 'Assigned Request',
+  //                                 textAlign: TextAlign.left,
+  //                                 style: TextStyle(fontSize: 12,color: Colors.white),
+  //                               ),
+  //                             ),
+  //                             SizedBox(height: 10),
+  //                             Container(
+  //                               child: Row(
+  //                                 children: <Widget>[
+  //                                   Text(
+  //                                     'Mr. Example',
+  //                                     textAlign: TextAlign.left,
+  //                                     style: TextStyle(
+  //                                         fontSize: 12,
+  //                                         fontWeight: FontWeight.w600,color: Colors.white),
+  //                                   ),
+  //                                   SizedBox(width: 5),
+  //                                   RotatedBox(
+  //                                     quarterTurns: 0,
+  //                                     child: Icon(Icons.keyboard_arrow_down,color: Colors.white,),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ),
+  //                             SizedBox(height: 30),
+  //                           ],
+  //                         ),
+  //                       )
+  //                     ],
+  //                   )
+  //                   ),
+  //                   RaisedButton(
+  //                     onPressed: () {
+  //                        Navigator.pop(context);
+  //                     },
+  //                     textColor: Colors.white,
+  //                     padding: const EdgeInsets.all(0.0),
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(8.0),
+  //                     ),
+  //                     child: Container(
+  //                       width: MediaQuery.of(context).size.width / 1.2,
+  //                       height: 60,
+  //                       decoration: const BoxDecoration(
+  //                         gradient: LinearGradient(
+  //                           colors: <Color>[
+  //                             CustomColors.GreenLight,
+  //                             CustomColors.GreenDark,
+  //                           ],
+  //                         ),
+  //                         borderRadius: BorderRadius.all(
+  //                           Radius.circular(8.0),
+  //                         ),
+  //                         boxShadow: [
+  //                           BoxShadow(
+  //                             color: CustomColors.GreenShadow,
+  //                             blurRadius: 2.0,
+  //                             spreadRadius: 1.0,
+  //                             offset: Offset(0.0, 0.0),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       padding:
+  //                       const EdgeInsets.fromLTRB(20, 10, 20, 10),
+  //                       child: Center(
+  //                         child: const Text(
+  //                           'Add Request',
+  //                           style: TextStyle(
+  //                               fontSize: 18,
+  //                               fontWeight: FontWeight.w500),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   },
+  // );
 
-  Widget CouncillType(title,type) => InkWell(
-    onTap: (){
-      setState(() {
-        this.type=title;
-      });
-      Navigator.pop(context);
-      mainBottomSheet(context);
-      },
-    child: Center(
-      child:
-      Container(
-        margin: EdgeInsets.only(right: 10),
-        child: Text(
-          '$title',
-          style: TextStyle(color: Colors.white),
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: 5, horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(5),
-          ),
-          color: (type == title) ?CustomColors.GreenIcon : null,
-          boxShadow: (type == title) ?[
-            BoxShadow(
-              color: CustomColors.GreenShadow,
-              blurRadius: 5.0,
-              spreadRadius: 3.0,
-              offset: Offset(0.0, 0.0),
-            ),
-          ] : null,
-        ),
-      ),
-    ),
-  );
+  // Widget CouncillType(title,type) => InkWell(
+  //   onTap: (){
+  //     setState(() {
+  //       this.type=title;
+  //     });
+  //     Navigator.pop(context);
+  //     mainBottomSheet(context);
+  //     },
+  //   child: Center(
+  //     child:
+  //     Container(
+  //       margin: EdgeInsets.only(right: 10),
+  //       child: Text(
+  //         '$title',
+  //         style: TextStyle(color: Colors.white),
+  //       ),
+  //       padding: EdgeInsets.symmetric(
+  //           vertical: 5, horizontal: 10),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.all(
+  //           Radius.circular(5),
+  //         ),
+  //         color: (type == title) ?CustomColors.GreenIcon : null,
+  //         boxShadow: (type == title) ?[
+  //           BoxShadow(
+  //             color: CustomColors.GreenShadow,
+  //             blurRadius: 5.0,
+  //             spreadRadius: 3.0,
+  //             offset: Offset(0.0, 0.0),
+  //           ),
+  //         ] : null,
+  //       ),
+  //     ),
+  //   ),
+  // );
 
   Widget Cardview(item) => Slidable(
     actionPane: SlidableDrawerActionPane(),
