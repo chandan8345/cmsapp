@@ -56,38 +56,39 @@ class _HomeState extends State<Home> {
   //   });
   // }
 
-  _getPost() async{
+  Future<Null> _getPost() async{
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
-      if(postStatus == "today"){ 
-        List a=await display.getToday(userid);
+      if(postStatus == "today"){
+        List a=await display.getToday(userid,role);
         setState(() {
           this.post=a;
         });
     }else if(postStatus == "waiting"){
-        List a=await display.getWaiting(userid);
+        List a=await display.getWaiting(userid,role);
         setState(() {
           this.post=a;
         });
     }else if(postStatus == "accepted"){
-        List a=await display.getPending(userid);
+        List a=await display.getPending(userid,role);
         setState(() {
           this.post=a;
         });
     }else if(postStatus == "settled"){
-        List a=await display.getSettled(userid);
+        List a=await display.getSettled(userid,role);
         setState(() {
           this.post=a;
         });
     }else{
-      return Container(
-    width: MediaQuery.of(context).size.width,
-    child: Padding(
-      padding: EdgeInsets.only(top: 10),
-      child: empty()
-    ),
-  );
+    //   return Container(
+    // width: MediaQuery.of(context).size.width,
+    // child: Padding(
+    //   padding: EdgeInsets.only(top: 10),
+    //   child: empty()
+    // ),
+  // );
     }
+   return null;
   }
 
   _removePost(int postId) async{
@@ -96,22 +97,22 @@ class _HomeState extends State<Home> {
     String a=await Councill().removeCouncill(postId);
     if(a.contains("deleted")){
  if(postStatus == "today"){ 
-        List a=await display.getToday(userid);
+        List a=await display.getToday(userid,role);
         setState(() {
           this.post=a;
         });
     }else if(postStatus == "waiting"){
-        List a=await display.getWaiting(userid);
+        List a=await display.getWaiting(userid,role);
         setState(() {
           this.post=a;
         });
     }else if(postStatus == "accepted"){
-        List a=await display.getPending(userid);
+        List a=await display.getPending(userid,role);
         setState(() {
           this.post=a;
         });
     }else if(postStatus == "settled"){
-        List a=await display.getSettled(userid);
+        List a=await display.getSettled(userid,role);
         setState(() {
           this.post=a;
         });
@@ -128,14 +129,18 @@ class _HomeState extends State<Home> {
     pr.hide();
     _getPost();
   }
-
+  
 
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
-    return Scaffold(
-      appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
-      body: (post != null)?listView():empty(),
+        return Scaffold(
+          appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
+          body: RefreshIndicator(
+            child: (post != null)?listView():empty(),
+            onRefresh: _getPost,
+            color: CustomColors.BlueDark,
+          ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (role == 'student')? fabView() : null,
       bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
@@ -180,17 +185,28 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
               ),
               Flexible(
-                child: Text('We have reason for make a solution for tution fees & permission ',style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
-              Icon(Icons.call_missed_outgoing,color: CustomColors.TrashRed,size: 18,),
-              Text(' 12 June',style: TextStyle(color: CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
+              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: EdgeInsets.all(5.0),
+            color: CustomColors.BlueIcon,
+            child: Text(post[item]['comments'],style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
+          ),
+          SizedBox(
+            height: 5,
           ),
           Divider(
             color: CustomColors.GreyBorder,
@@ -199,10 +215,10 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text('Education',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('Room 501',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('15 June',style: TextStyle(color: CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('10:00 AM',style: TextStyle(color: CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['category'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['room'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+             // Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
           Divider(
@@ -213,33 +229,38 @@ class _HomeState extends State<Home> {
             height: 5,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              NiceButton(
+              Container(
+                child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
-                text: "Settled",
+                text: "Settle",
                 fontSize: 14,
                 gradientColors: [CustomColors.GreenIcon, CustomColors.BlueIcon],
                 onPressed: () {
-                Route route=MaterialPageRoute(builder: (context) => AcceptReq(postId: post[item]['postid']));
+                Route route=MaterialPageRoute(builder: (context) => SettleReq(postId: post[item]['postid']));
                 Navigator.push(context, route);
                 },
+              ):null,
               ),
-              NiceButton(
+              Container(
+                child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
-                text: "Reffered",
+                text: "Reffer",
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                 Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
                 Navigator.push(context, route);
                 },
+              ):null,
               ),
-              NiceButton(
+              Container(
+                child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
@@ -247,8 +268,9 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
                 onPressed: () {
-                  _removePost(post[item]['postid']);
+                  _removePost(post[item]['id']);
                 },
+              ):null,
               ),
             ],
           ),
@@ -263,7 +285,7 @@ class _HomeState extends State<Home> {
     decoration: BoxDecoration(
       gradient: LinearGradient(
         stops: [0.015, 0.015],
-        colors: [CustomColors.TrashRed, Colors.white],
+        colors: [CustomColors.OrangeIcon, Colors.white],
       ),
       borderRadius: BorderRadius.all(
         Radius.circular(5.0),
@@ -294,7 +316,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
@@ -326,7 +348,8 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              NiceButton(
+              Container(
+                child:  (role != 'student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
@@ -337,6 +360,7 @@ class _HomeState extends State<Home> {
                 Route route=MaterialPageRoute(builder: (context) => AcceptReq(postId: post[item]['postid']));
                 Navigator.push(context, route);
                 },
+              ):null,
               ),
               NiceButton(
                 radius: 50,
@@ -390,16 +414,16 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
               ),
               Flexible(
-                child: Text('We have reason for make a solution for tution fees & permission ',style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(' 12 June',style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -414,16 +438,16 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
               ),
               Flexible(
-                child: Text('We have reason for make a solution for tution fees & permission ',style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['solution'],style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(' 12 June',style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['settleddate'],style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -433,11 +457,11 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text('Education',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text('CSE',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text('SEM 8TH',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['category'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['department'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['semester'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('SEC A',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text('501',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['room'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('10:00 AM',style: TextStyle(color: CustomColors.PurpleDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
@@ -480,16 +504,16 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
               ),
               SizedBox(
                 width: 10,
               ),
               Flexible(
-                child: Text('We have reason for make a solution for tution fees & permission ',style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
-              Text(' 12 June',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
@@ -498,7 +522,7 @@ class _HomeState extends State<Home> {
           Container(
             padding: EdgeInsets.all(5.0),
             color: CustomColors.BlueIcon,
-            child: Text('We have reason for make a solution for tution fees & permission ',style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
+            child: Text(post[item]['comments'],style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
           ),
           SizedBox(
             height: 5,
@@ -510,10 +534,10 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text('Education',style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('Room 501',style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('15 June',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['category'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['room'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+             // Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
           Divider(
@@ -524,21 +548,24 @@ class _HomeState extends State<Home> {
             height: 5,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              NiceButton(
+              Container(
+                child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
-                text: "Settled",
+                text: "Settle",
                 fontSize: 14,
                 gradientColors: [CustomColors.GreenIcon, CustomColors.BlueIcon],
                 onPressed: () {
                 Route route=MaterialPageRoute(builder: (context) => SettleReq(postId: post[item]['postid']));
                 Navigator.push(context, route);
                 },
+              ):null,
               ),
-              NiceButton(
+              Container(
+                child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
@@ -549,8 +576,10 @@ class _HomeState extends State<Home> {
                 Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
                 Navigator.push(context, route);
                 },
+              ):null,
               ),
-              NiceButton(
+              Container(
+                child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
                 padding: EdgeInsets.all(10.0),
@@ -560,6 +589,7 @@ class _HomeState extends State<Home> {
                 onPressed: () {
                   _removePost(post[item]['id']);
                 },
+              ):null,
               ),
             ],
           ),
@@ -1076,7 +1106,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
   unselectedFontSize: 12,
   items: [
     BottomNavigationBarItem(
-      title: Text('Today (20)',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      title: Text('Today',style: TextStyle(color: (bottomNavigationBarIndex==0)?CustomColors.BlueDark:CustomColors.TextGrey),),
       icon: Container(
         margin: EdgeInsets.only(bottom: 5),
         child:InkWell(
@@ -1113,7 +1143,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
             ),
           )
       ),
-      title: Text('Waiting (20)',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      title: Text('Waiting',style: TextStyle(color: (bottomNavigationBarIndex==1)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
 
   BottomNavigationBarItem(
@@ -1132,7 +1162,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
   color: (bottomNavigationBarIndex == 2) ? CustomColors.BlueDark : CustomColors.TextGrey,
   ),),
   ),
-    title: Text('Pending (20)',style: TextStyle(color: (bottomNavigationBarIndex==2)?CustomColors.BlueDark:CustomColors.TextGrey),),
+    title: Text('Pending',style: TextStyle(color: (bottomNavigationBarIndex==2)?CustomColors.BlueDark:CustomColors.TextGrey),),
   ),
 
     BottomNavigationBarItem(
@@ -1151,7 +1181,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
             color: (bottomNavigationBarIndex == 3) ? CustomColors.BlueDark : CustomColors.TextGrey,
           ),),
       ),
-      title: Text('Settled (20)',style: TextStyle(color: (bottomNavigationBarIndex == 3)?CustomColors.BlueDark:CustomColors.TextGrey),),
+      title: Text('Settled',style: TextStyle(color: (bottomNavigationBarIndex == 3)?CustomColors.BlueDark:CustomColors.TextGrey),),
     ),
   ],
   );
