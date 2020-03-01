@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'package:cms/onboarding.dart';
 import 'package:cms/util.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
-import 'package:cms/controller/auth.dart';
 import 'package:cms/register.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({Key key}) : super(key: key);
@@ -13,7 +16,64 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  ProgressDialog pr;
+  ProgressDialog pr;SharedPreferences sp;
+  String name,role;List today,waiting,pending,settled;String id;
+
+  @override
+  void initState(){
+    super.initState();
+    _welcome();
+    _today();
+    _waiting();
+    _pending();
+    _settled();
+  }
+
+  _welcome() async{
+    sp=await SharedPreferences.getInstance();
+    String r=sp.getString('role');
+    String n=sp.getString('name');
+    String i=sp.getInt('id').toString();
+    setState(() {
+      this.name=n;
+      this.role=r;
+      this.id=i;
+    });
+  }
+
+   Future _today() async {
+    Dio dio = new Dio();
+    Response r1 = await dio.get("http://flatbasha.com/totaltoday");
+    setState(() {
+    this.today = json.decode(r1.toString());
+    });
+    print(today);
+  }
+  Future _waiting() async{
+    Dio dio = new Dio();
+    Response r2 =await dio.get("http://flatbasha.com/totalwaiting");
+        setState(() {
+    this.waiting = json.decode(r2.toString());
+        });
+            print(waiting);
+  }
+    Future _pending() async{
+    Dio dio = new Dio();
+    Response r3 =await dio.get("http://flatbasha.com/totalpending");
+        setState(() {
+    this.pending = json.decode(r3.toString());
+        });
+        print(pending);
+  }
+    Future _settled() async{
+    Dio dio = new Dio();
+    Response r4 =await dio.get("http://flatbasha.com/totalsettled");
+    setState(() {
+    this.settled = json.decode(r4.toString());
+        });
+        print(settled);
+  }
+
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
@@ -52,22 +112,22 @@ class _DashboardState extends State<Dashboard> {
                         child: SizedBox(
                         width: 120,
                         height: 120,
-                        child://(username != 'FLATBASHA') ? Image.network("http://flatbasha.com/image/"+id+".jpg",fit: BoxFit.fill) : 
+                        child:(id != null) ? Image.network("http://flatbasha.com/image/$id.jpg",fit: BoxFit.fill,) :
                         Image.network("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill)),
                   )
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 5),
-                              child: Text("username",textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 18),),
+                              child: Text(name==null?"Username":name,textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 18),),
                             ),
                             Padding(
                               padding: EdgeInsets.only(top:3),
-                              child: Text("Role",textAlign: TextAlign.center,style: TextStyle(color:  Colors.white70,fontSize: 14),),
+                              child: Text(role==null?"Role":role,textAlign: TextAlign.center,style: TextStyle(color:  Colors.white70,fontSize: 14),),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text('Active',textAlign: TextAlign.center,style: TextStyle(color:  Colors.white70,fontSize: 12),),
-                            )
+                            // Padding(
+                            //   padding: EdgeInsets.only(top: 2),
+                            //   child: Text('Active',textAlign: TextAlign.center,style: TextStyle(color:  Colors.white70,fontSize: 12),),
+                            // )
                           ],
                         ),
                         Padding(
@@ -76,16 +136,16 @@ class _DashboardState extends State<Dashboard> {
                           Row(
                             children: <Widget>[
                               Expanded(
-                                child: Text('222',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
+                                child: Text(today!=null?today[0]['total'].toString():"0",textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
                               ),
                               Expanded(
-                                child: Text('33',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
+                                child: Text(waiting!=null?waiting[0]['total'].toString():"0",textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
                               ),
                               Expanded(
-                                child: Text('87',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
+                                child: Text(pending!=null?pending[0]['total'].toString():"0",textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
                               ),
                               Expanded(
-                                child: Text('12',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
+                                child: Text(settled!=null?settled[0]['total'].toString():"0",textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 25),),
                               )
                             ],
                           ),
@@ -96,16 +156,16 @@ class _DashboardState extends State<Dashboard> {
                           Row(
                             children: <Widget>[
                               Expanded(
-                                child: Text('Published',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
+                                child: Text('Today',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
                               ),
                               Expanded(
                                 child: Text('Waiting',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
                               ),
                               Expanded(
-                                child: Text('Soldout',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
+                                child: Text('Pending',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
                               ),
                               Expanded(
-                                child: Text('Expired',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
+                                child: Text('Settled',textAlign: TextAlign.center,style: TextStyle(color: Colors.white70,fontSize: 14),),
                               )
                             ],
                           ),
@@ -253,8 +313,11 @@ class _DashboardState extends State<Dashboard> {
                              )),
                              Expanded(
                                child:InkWell(
-                                   onTap: (){
-                                    Auth().logoutUser();
+                                   onTap: () async {
+                                    sp=await SharedPreferences.getInstance();
+                                    await sp.clear();
+                                   Route route=MaterialPageRoute(builder: (context) => Onboarding());
+                                   Navigator.push(context, route);
                                    },
                                    child:
                                    CircleAvatar(

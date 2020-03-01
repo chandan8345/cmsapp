@@ -49,6 +49,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+
   // _getCounciller() async{
   //   List c=await Others().getCounciller(0);
   //   setState(() {
@@ -191,10 +192,10 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               Flexible(
-                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
-              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
@@ -203,7 +204,7 @@ class _HomeState extends State<Home> {
           Container(
             padding: EdgeInsets.all(5.0),
             color: CustomColors.BlueIcon,
-            child: Text(post[item]['comments'],style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
+            child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
           ),
           SizedBox(
             height: 5,
@@ -215,9 +216,9 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(post[item]['category'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['room'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['meetingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['room']!=null?post[item]['room']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?post[item]['meetingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
              // Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
@@ -322,10 +323,10 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               Flexible(
-                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.BlueIcon,size: 18,),
-              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -335,9 +336,9 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(post[item]['category'],style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['department'],style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['semester'],style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['department']!=null?post[item]['department']:"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               //Text('CALL',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
@@ -420,10 +421,10 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               Flexible(
-                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -444,10 +445,10 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               Flexible(
-                child: Text(post[item]['solution'],style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['solution']!=null?post[item]['solution']:"",style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(post[item]['settleddate'],style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['settleddate']!=null?post[item]['settleddate']:"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -457,11 +458,11 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(post[item]['category'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text(post[item]['department'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text(post[item]['semester'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['department']!=null?post[item]['department']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('SEC A',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text(post[item]['room'],style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['room']!=null?post[item]['room']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('10:00 AM',style: TextStyle(color: CustomColors.PurpleDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
@@ -510,10 +511,10 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               Flexible(
-                child: Text(post[item]['reason'],style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
+                child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
-              Text(post[item]['postingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
@@ -522,7 +523,7 @@ class _HomeState extends State<Home> {
           Container(
             padding: EdgeInsets.all(5.0),
             color: CustomColors.BlueIcon,
-            child: Text(post[item]['comments'],style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
+            child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
           ),
           SizedBox(
             height: 5,
@@ -534,9 +535,9 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(post[item]['category'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['room'],style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['meetingdate'],style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['room']!=null?post[item]['room']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?post[item]['meetingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
              // Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),

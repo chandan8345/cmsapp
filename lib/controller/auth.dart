@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:cms/controller/sharedData.dart';
 import 'package:dio/dio.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth{
   Dio dio=new Dio();
   var postURL ="http://flatbasha.com/registerUser";
+  SharedPreferences sp;
 
   //Users
   Future<bool> registerUser(String name,String studentid,String mobile,String email,String password,int department,int semester,File image) async{
@@ -31,7 +33,7 @@ class Auth{
       }catch (e){
         print(e);
      }
-     if(response.toString() == "data saved with image" || response.toString() == "data saved without image"){
+     if(response.toString().contains("data saved with image") || response.toString().contains("data saved without image")){
         return true;
       }else{
         return false;
@@ -54,7 +56,9 @@ class Auth{
     }
   }
   Future<bool> logoutUser() async{
-    SharedData().sessionOut();
+    sp=await SharedPreferences.getInstance();
+    await sp.clear();
+    
     return true;
   }
 }
