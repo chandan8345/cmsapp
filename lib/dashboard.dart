@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:cms/ProfilePage.dart';
 import 'package:cms/onboarding.dart';
-import 'package:cms/util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
@@ -94,7 +94,7 @@ class _DashboardState extends State<Dashboard> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                color: CustomColors.BlueDark,
+                color: Colors.black38,
                 child: Padding(
                   padding: EdgeInsets.only(top: 40,bottom: 10),
                   child: Container(
@@ -292,11 +292,18 @@ class _DashboardState extends State<Dashboard> {
                             //    ),
                             //  ),
                              Expanded(
-                                 child:  CircleAvatar(
+                                 child:  InkWell(
+                                   onTap: (){
+                                   Route route=MaterialPageRoute(builder: (context) => ProfilePage());
+                                   Navigator.push(context, route);
+                                   },
+                                   child:
+                                   CircleAvatar(
                                    radius: 35,
-                                   backgroundColor: Colors.green,
+                                   backgroundColor: Colors.lightBlue,
                                    child: Icon(Icons.person,color: Colors.white,),
                                  )
+                             )
                              ),
                              Expanded(
                                  child:  InkWell(
@@ -307,7 +314,7 @@ class _DashboardState extends State<Dashboard> {
                                    child:
                                    CircleAvatar(
                                    radius: 35,
-                                   backgroundColor: Colors.blueGrey,
+                                   backgroundColor: Colors.green,
                                    child: Icon(Icons.laptop,color: Colors.white,),
                                  )
                              )),

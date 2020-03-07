@@ -202,6 +202,7 @@ class _HomeState extends State<Home> {
             height: 10,
           ),
           Container(
+            width: 200,
             padding: EdgeInsets.all(5.0),
             color: CustomColors.BlueIcon,
             child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
@@ -521,6 +522,7 @@ class _HomeState extends State<Home> {
             height: 10,
           ),
           Container(
+            width: 200,
             padding: EdgeInsets.all(5.0),
             color: CustomColors.BlueIcon,
             child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
