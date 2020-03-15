@@ -17,61 +17,59 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   ProgressDialog pr;SharedPreferences sp;
-  String name,role;List today,waiting,pending,settled;String id;
+  String name,role;List today,waiting,pending,settled;int no;
 
   @override
   void initState(){
     super.initState();
     _welcome();
-    _today();
-    _waiting();
-    _pending();
-    _settled();
   }
 
   _welcome() async{
     sp=await SharedPreferences.getInstance();
     String r=sp.getString('role');
     String n=sp.getString('name');
-    String i=sp.getInt('id').toString();
+    int i=sp.getInt('id');
     setState(() {
       this.name=n;
       this.role=r;
-      this.id=i;
+      this.no=i;
     });
+    _today();
+    _waiting();
+    _pending();
+    _settled();
   }
 
    Future _today() async {
     Dio dio = new Dio();
-    Response r1 = await dio.get("http://flatbasha.com/totaltoday");
+    Response r1 = await dio.get("http://flatbasha.com/totaltoday?id=$no");
     setState(() {
     this.today = json.decode(r1.toString());
     });
-    print(today);
+    print(no);
   }
   Future _waiting() async{
     Dio dio = new Dio();
-    Response r2 =await dio.get("http://flatbasha.com/totalwaiting");
+    Response r2 =await dio.get("http://flatbasha.com/totalwaiting?id=$no");
         setState(() {
     this.waiting = json.decode(r2.toString());
         });
-            print(waiting);
   }
     Future _pending() async{
     Dio dio = new Dio();
-    Response r3 =await dio.get("http://flatbasha.com/totalpending");
+    Response r3 =await dio.get("http://flatbasha.com/totalpending?id=$no");
         setState(() {
     this.pending = json.decode(r3.toString());
         });
-        print(pending);
+        print(pending[0]['total']);
   }
     Future _settled() async{
     Dio dio = new Dio();
-    Response r4 =await dio.get("http://flatbasha.com/totalsettled");
+    Response r4 =await dio.get("http://flatbasha.com/totalsettled?id=$no");
     setState(() {
     this.settled = json.decode(r4.toString());
         });
-        print(settled);
   }
 
   @override
@@ -112,7 +110,7 @@ class _DashboardState extends State<Dashboard> {
                         child: SizedBox(
                         width: 120,
                         height: 120,
-                        child:(id != null) ? Image.network("http://flatbasha.com/image/$id.jpg",fit: BoxFit.fill,) :
+                        child:(no != null) ? Image.network("http://flatbasha.com/image/$no.jpg",fit: BoxFit.fill,) :
                         Image.network("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill)),
                   )
                             ),
