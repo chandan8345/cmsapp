@@ -64,7 +64,7 @@ class _OnboardingState extends State<Onboarding> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      'Councilling Management System',
+                      'Counselling Management System',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w400,

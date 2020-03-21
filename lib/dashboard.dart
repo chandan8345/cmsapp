@@ -43,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
 
    Future _today() async {
     Dio dio = new Dio();
-    Response r1 = await dio.get("http://flatbasha.com/totaltoday?id=$no");
+    Response r1 = await dio.get("http://cms.flatbasha.com/totaltoday?id=$no");
     setState(() {
     this.today = json.decode(r1.toString());
     });
@@ -51,14 +51,14 @@ class _DashboardState extends State<Dashboard> {
   }
   Future _waiting() async{
     Dio dio = new Dio();
-    Response r2 =await dio.get("http://flatbasha.com/totalwaiting?id=$no");
+    Response r2 =await dio.get("http://cms.flatbasha.com/totalwaiting?id=$no");
         setState(() {
     this.waiting = json.decode(r2.toString());
         });
   }
     Future _pending() async{
     Dio dio = new Dio();
-    Response r3 =await dio.get("http://flatbasha.com/totalpending?id=$no");
+    Response r3 =await dio.get("http://cms.flatbasha.com/totalpending?id=$no");
         setState(() {
     this.pending = json.decode(r3.toString());
         });
@@ -66,7 +66,7 @@ class _DashboardState extends State<Dashboard> {
   }
     Future _settled() async{
     Dio dio = new Dio();
-    Response r4 =await dio.get("http://flatbasha.com/totalsettled?id=$no");
+    Response r4 =await dio.get("http://cms.flatbasha.com/totalsettled?id=$no");
     setState(() {
     this.settled = json.decode(r4.toString());
         });
@@ -92,7 +92,7 @@ class _DashboardState extends State<Dashboard> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                color: Colors.black38,
+                color: Colors.blueAccent,
                 child: Padding(
                   padding: EdgeInsets.only(top: 40,bottom: 10),
                   child: Container(
@@ -110,7 +110,7 @@ class _DashboardState extends State<Dashboard> {
                         child: SizedBox(
                         width: 120,
                         height: 120,
-                        child:(no != null) ? Image.network("http://flatbasha.com/image/$no.jpg",fit: BoxFit.fill,) :
+                        child:(no != null) ? Image.network("http://cms.flatbasha.com/image/$no.jpg",fit: BoxFit.fill,) :
                         Image.network("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill)),
                   )
                             ),
@@ -298,7 +298,7 @@ class _DashboardState extends State<Dashboard> {
                                    child:
                                    CircleAvatar(
                                    radius: 35,
-                                   backgroundColor: Colors.lightBlue,
+                                   backgroundColor: Colors.deepOrange,
                                    child: Icon(Icons.person,color: Colors.white,),
                                  )
                              )

@@ -8,22 +8,22 @@ class Others{
    var cr;
    
    Future getCounciller(int id)async{
-    var response = await dio.get("http://flatbasha.com/getCounciller?id=$id");
+    var response = await dio.get("http://cms.flatbasha.com/getCounciller?id=$id");
     List counciller = json.decode(response.toString());
     return counciller;
    }
   Future getDepartment()async{
-    var response = await dio.get("http://flatbasha.com/getDepartment");
+    var response = await dio.get("http://cms.flatbasha.com/getDepartment");
     List department = json.decode(response.toString());
     return department;
    }
   Future getSemester()async{
-    var response = await dio.get("http://flatbasha.com/getSemester");
+    var response = await dio.get("http://cms.flatbasha.com/getSemester");
     List semester = json.decode(response.toString());
     return semester;
    }
   Future getCategory()async{
-    var response = await dio.get("http://flatbasha.com/getCategory");
+    var response = await dio.get("http://cms.flatbasha.com/getCategory");
     List category = json.decode(response.toString());
     return category;
    }

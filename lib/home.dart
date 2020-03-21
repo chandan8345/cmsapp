@@ -9,8 +9,10 @@ import 'package:cms/controller/onscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cms/Request.dart';
 import 'package:cms/settleReq.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:cms/refferedReq.dart';
+import 'package:custom_progress_dialog/custom_progress_dialog.dart';
+
+
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -93,8 +95,6 @@ class _HomeState extends State<Home> {
   }
 
   _removePost(int postId) async{
-    pr.update(message: "Deleting...");
-    pr.show();
     String a=await Councill().removeCouncill(postId);
     if(a.contains("deleted")){
  if(postStatus == "today"){ 
@@ -127,28 +127,30 @@ class _HomeState extends State<Home> {
   );
     }
     }
-    pr.hide();
+    //pr.hide();
     _getPost();
   }
   
 
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
+    ProgressDialog _progressDialog = ProgressDialog();
+    //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Initializing...',dismissAfter: Duration(seconds: 1));
+    // pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
         return Scaffold(
-          appBar: fullAppbar(context,"Northern University Bangladesh","Councilling Management System"),
+          appBar: fullAppbar(context,"Northern University Bangladesh","Counselling Management System"),
           body: RefreshIndicator(
-            child: (post != null)?listView():empty(),
+            child: (post != null)?listView(_progressDialog):empty(),
             onRefresh: _getPost,
             color: CustomColors.BlueDark,
           ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (role == 'student')? fabView() : null,
-      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
+      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex,_progressDialog):BottomNavTab2(bottomNavigationBarIndex,_progressDialog),
     );
   }
 
-  Widget listView() =>  Container(
+  Widget listView(ProgressDialog _progressDialog) =>  Container(
     width: MediaQuery.of(context).size.width,
     child: Padding(
       padding: EdgeInsets.only(top: 10),
@@ -186,7 +188,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
@@ -318,7 +320,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
@@ -416,7 +418,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
@@ -440,7 +442,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
@@ -506,7 +508,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
               ),
               SizedBox(
                 width: 10,
@@ -1008,7 +1010,7 @@ class _HomeState extends State<Home> {
     ],
   );
 
-  Widget BottomNavTab1(bottomNavigationBarIndex)=> BottomNavigationBar(
+  Widget BottomNavTab1(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> BottomNavigationBar(
   currentIndex: bottomNavigationBarIndex,
   type: BottomNavigationBarType.fixed,
   selectedFontSize:12,
@@ -1026,6 +1028,7 @@ class _HomeState extends State<Home> {
               this.bottomNavigationBarIndex=0;
               this.postStatus="today";
             });
+            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child:  Icon(Icons.airline_seat_recline_normal,
@@ -1044,6 +1047,7 @@ class _HomeState extends State<Home> {
                 this.bottomNavigationBarIndex=1;
                 this.postStatus="waiting";
               });
+              _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
               _getPost();
             },
             child: Icon(Icons.record_voice_over,
@@ -1069,6 +1073,7 @@ class _HomeState extends State<Home> {
         this.bottomNavigationBarIndex=2;
         this.postStatus="accepted";
       });
+      _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       _getPost();
     },
     child: Icon(Icons.streetview,
@@ -1088,6 +1093,7 @@ class _HomeState extends State<Home> {
               this.bottomNavigationBarIndex=3;
               this.postStatus="settled";
             });
+            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child: Icon(Icons.thumbs_up_down,
@@ -1100,7 +1106,7 @@ class _HomeState extends State<Home> {
   ],
   );
   
-Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
+Widget BottomNavTab2(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> BottomNavigationBar(
   currentIndex: bottomNavigationBarIndex,
   type: BottomNavigationBarType.fixed,
   selectedFontSize:12,
@@ -1118,6 +1124,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
               this.bottomNavigationBarIndex=0;
               this.postStatus="today";
             });
+            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child:  Icon(Icons.airline_seat_recline_normal,
@@ -1136,6 +1143,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
                 this.bottomNavigationBarIndex=1;
                 this.postStatus="waiting";
               });
+              _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
               _getPost();
             },
             child: Icon(Icons.record_voice_over,
@@ -1158,6 +1166,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
         this.bottomNavigationBarIndex=2;
         this.postStatus="accepted";
       });
+_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       _getPost();
     },
     child: Icon(Icons.streetview,
@@ -1177,6 +1186,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
               this.bottomNavigationBarIndex=3;
               this.postStatus="settled";
             });
+            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child: Icon(Icons.thumbs_up_down,

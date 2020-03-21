@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth{
   Dio dio=new Dio();
-  var postURL ="http://flatbasha.com/registerUser";
+  var postURL ="http://cms.flatbasha.com/registerUser";
   SharedPreferences sp;
 
   //Users
@@ -44,7 +44,7 @@ class Auth{
     return true;
   }
   Future<bool> loginUser(String mobile,String password,ProgressDialog p) async{
-    var response = await dio.get("http://flatbasha.com/loginUser?mobile=$mobile&password=$password");
+    var response = await dio.get("http://cms.flatbasha.com/loginUser?mobile=$mobile&password=$password");
     if(response.data.toString().length > 2){
     List user = json.decode(response.toString());
     SharedData().setUserData(user);

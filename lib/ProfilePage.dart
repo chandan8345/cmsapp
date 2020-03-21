@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:cms/register.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'appBars.dart';
+import 'dart:ui' as ui;
+
+import 'onboarding.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -11,11 +17,11 @@ class ProfilePage extends StatefulWidget {
 class MapScreenState extends State<ProfilePage>{
   bool _status = true;SharedPreferences sp;
   final FocusNode myFocusNode = FocusNode();
-  String name,department,semester,mobile,sid,role,id;
+  String name,department,semester,mobile,role,id;
+  List today,waiting,pending,settled;int sid;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _welcome();
   }
@@ -28,383 +34,132 @@ class MapScreenState extends State<ProfilePage>{
     String d=sp.getString('department');
     String m=sp.getString('mobile');
     String si=sp.getString('studentid');
-    String i=sp.getInt('id').toString();
+    int i=sp.getInt('id');
     setState(() {
       this.role=r;
       this.name=n;
       this.mobile=m;
       this.semester=s;
       this.department=d;
-      this.id=i;
-      this.sid=si;
+      //this.id=i;
+      this.sid=i;
     });
+    _today();
+    _waiting();
+    _pending();
+    _settled();
+  }
+
+     Future _today() async {
+    Dio dio = new Dio();
+    Response r1 = await dio.get("http://cms.flatbasha.com/totaltoday?id=$sid");
+    setState(() {
+    this.today = json.decode(r1.toString());
+    });
+  }
+  Future _waiting() async{
+    Dio dio = new Dio();
+    Response r2 =await dio.get("http://cms.flatbasha.com/totalwaiting?id=$sid");
+        setState(() {
+    this.waiting = json.decode(r2.toString());
+        });
+  }
+    Future _pending() async{
+    Dio dio = new Dio();
+    Response r3 =await dio.get("http://cms.flatbasha.com/totalpending?id=$sid");
+        setState(() {
+    this.pending = json.decode(r3.toString());
+        });
+        print(pending[0]['total']);
+  }
+    Future _settled() async{
+    Dio dio = new Dio();
+    Response r4 =await dio.get("http://cms.flatbasha.com/totalsettled?id=$sid");
+    setState(() {
+    this.settled = json.decode(r4.toString());
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: fullAppbar(context,"Profile","update your profile"),
-      body: new Container(
-      color: Colors.white,
-      child: new ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              new Container(
-                height: 250.0,
-                color: Colors.white,
-                child: new Column(
+    final _width = MediaQuery.of(context).size.width;
+    final _height = MediaQuery.of(context).size.height;
+    final String imgUrl = 'https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg';
+    return new Stack(children: <Widget>[
+      new Container(color: Colors.blue,),
+      new Image.network(imgUrl, fit: BoxFit.fill,),
+      new BackdropFilter(
+      filter: new ui.ImageFilter.blur(
+      sigmaX: 6.0,
+      sigmaY: 6.0,
+      ),
+      child: new Container(
+      decoration: BoxDecoration(
+      color:  Colors.blue.withOpacity(0.9),
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),)),
+      new Scaffold(
+          // appBar: new AppBar(
+          //   title: new Text(''),
+          //   centerTitle: false,
+          //   elevation: 0.0,
+          //   backgroundColor: Colors.transparent,
+          // ),
+          // drawer: new Drawer(child: new Container(),),
+          backgroundColor: Colors.transparent,
+          body:
+          new Center(
+            child: new Column(
+              children: <Widget>[
+                new SizedBox(height: _height/12,),
+                new CircleAvatar(radius:_width<_height? _width/4:_height/4,
+                backgroundImage: NetworkImage(
+                  (sid != null) ? "http://cms.flatbasha.com/image/$sid.jpg" :
+                        "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",
+                ),),
+                new SizedBox(height: _height/25.0,),
+                new Text('$name', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: _width/15, color: Colors.white),),
+                new Padding(padding: new EdgeInsets.only(top: 5,bottom: 10),
+                  child:new Text('$role',
+                    style: new TextStyle(fontWeight: FontWeight.normal, fontSize: _width/25,color: Colors.white),textAlign: TextAlign.center,) ,),
+                new Divider(height: _height/30,color: Colors.white,),
+                new Row(
                   children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(left: 20.0, top: 20.0),
-                        child: new Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            // new Icon(
-                            //   Icons.arrow_back_ios,
-                            //   color: Colors.black,
-                            //   size: 22.0,
-                            // ),
-                            // Padding(
-                            //   padding: EdgeInsets.only(left: 25.0),
-                            //   child: new Text('PROFILE',
-                            //       style: TextStyle(
-                            //           fontWeight: FontWeight.bold,
-                            //           fontSize: 20.0,
-                            //           fontFamily: 'sans-serif-light',
-                            //           color: Colors.black)),
-                            // )
-                          ],
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: new Stack(fit: StackFit.loose, children: <Widget>[
-                        new Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            new Container(
-                                width: 140.0,
-                                height: 140.0,
-                                child: 
-                                (id != null) ? Image.network("http://flatbasha.com/image/$id.jpg",fit: BoxFit.fill,) :
-                        Image.network("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill),
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                )),
-                          ],
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(top: 90.0, right: 100.0),
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new CircleAvatar(
-                                  backgroundColor: Colors.red,
-                                  radius: 25.0,
-                                  child: new Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            )),
-                      ]),
-                    )
-                  ],
-                ),
-              ),
-              new Container(
-                color: Color(0xffFFFFFF),
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 25.0),
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Parsonal Information',
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  _status ? _getEditIcon() : new Container(),
-                                ],
-                              )
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Name',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
-                                  
-                                  decoration: const InputDecoration(
-                                    hintText: "Enter Your Name",
-                                  ),
-                                  //enabled: !_status,
-                                  autofocus: !_status,
-
-                                ),
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Email ID',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Email ID"),
-                                  enabled: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  new Text(
-                                    'Mobile',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              new Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter Mobile Number"),
-                                  enabled: !_status,
-                                ),
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  child: new Text(
-                                    'Pin Code',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: new Text(
-                                    'State',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
-                            ],
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 2.0),
-                          child: new Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Flexible(
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 10.0),
-                                  child: new TextField(
-                                    decoration: const InputDecoration(
-                                        hintText: "Enter Pin Code"),
-                                    enabled: !_status,
-                                  ),
-                                ),
-                                flex: 2,
-                              ),
-                              Flexible(
-                                child: new TextField(
-                                  decoration: const InputDecoration(
-                                      hintText: "Enter State"),
-                                  enabled: !_status,
-                                ),
-                                flex: 2,
-                              ),
-                            ],
-                          )),
-                      !_status ? _getActionButtons() : new Container(),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    ));
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
-  Widget _getActionButtons() {
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-      child: new Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                child: new Text("Save"),
-                textColor: Colors.white,
-                color: Colors.green,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-              )),
+                    rowCell(today!=null?today[0]['total'].toString():"0", 'TODAY'),
+                    rowCell(waiting!=null?waiting[0]['total'].toString():"0", 'WAITING'),
+                    rowCell(pending!=null?pending[0]['total'].toString():"0", 'PENDING'),
+                    rowCell(settled!=null?settled[0]['total'].toString():"0", 'SETTLED'),
+                  ],),
+                new Divider(height: _height/30,color: Colors.white),
+                // new Padding(padding: new EdgeInsets.only(left: _width/8, right: _width/8), child: new FlatButton(onPressed: (){},
+                //   child: new Container(child: new Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
+                //     new Icon(Icons.person),
+                //     new SizedBox(width: _width/30,),
+                //     new Text('FOLLOW')
+                //   ],)),color: Colors.blue[50],),),
+              ],
             ),
-            flex: 2,
           ),
-          Expanded(
+          //floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async{
+              sp=await SharedPreferences.getInstance();
+                                    await sp.clear();
+                                   Route route=MaterialPageRoute(builder: (context) => Onboarding());
+                                   Navigator.push(context, route);
+            },
             child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                child: new Text("Cancel"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-              )),
+              padding: EdgeInsets.all(3.0),
+              child: Text('Logout',style: TextStyle(fontSize: 12),),
             ),
-            flex: 2,
+            backgroundColor: Colors.green,
           ),
-        ],
-      ),
-    );
+      )
+    ],);
   }
 
-  Widget _getEditIcon() {
-    return new GestureDetector(
-      child: new CircleAvatar(
-        backgroundColor: Colors.red,
-        radius: 14.0,
-        child: new Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 16.0,
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _status = false;
-        });
-      },
-    );
-  }
+  Widget rowCell(String count, String type) => new Expanded(child: new Column(children: <Widget>[
+    new Text('$count',style: new TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
+    new Text(type,style: new TextStyle(color: Colors.white, fontWeight: FontWeight.normal,fontSize: 12))
+  ],));
 }

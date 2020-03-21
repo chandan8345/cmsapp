@@ -1,3 +1,4 @@
+import 'package:cms/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'util.dart';
@@ -40,7 +41,7 @@ Widget fullAppbar(BuildContext context,String name,String sort) {
           margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
           child: InkWell(
             onTap: (){
-               Route route=MaterialPageRoute(builder: (context) => Dashboard());
+               Route route=MaterialPageRoute(builder: (context) => ProfilePage());
                                 Navigator.push(context, route);
             },
             child: Icon(Icons.dashboard),
