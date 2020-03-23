@@ -35,6 +35,8 @@ void initState(){
 }
 
 _submit() async{
+  Others others=new Others();
+  if(await others.checkConection() == true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
@@ -48,6 +50,9 @@ _submit() async{
         alertError("Alert","Something Went Wrong");
       }
    }
+  }else{
+    others.showMessage(context, "Notice", "Please check your internet connection !!!");
+  }
 }
 
   _getCounciller(int id) async{

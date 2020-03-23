@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:fancy_dialog/fancy_dialog.dart';
+import 'package:flutter/material.dart';
 
 class Others{
    Dio dio=new Dio();
@@ -28,18 +30,28 @@ class Others{
     return category;
    }
 
-   Future<bool> checkConection() async{
-    try{
-      cr = await (Connectivity().checkConnectivity());
-        if (cr == ConnectivityResult.none) {
-          return false;
-        }if(cr== ConnectivityResult.wifi){
-          return true;
-        }if(cr == ConnectivityResult.mobile){
-          return true;
-        }
-    }catch(e){
-      print(e.toString());
-    }
+  Future<bool> checkConection() async{
+   try{
+     cr = await (Connectivity().checkConnectivity());
+       if (cr == ConnectivityResult.none) {
+         return false;
+       }if(cr== ConnectivityResult.wifi){
+         return true;
+       }if(cr == ConnectivityResult.mobile){
+         return true;
+       }
+   }catch(e){
+     print(e.toString());
+   }
+ }
+
+   void showMessage(context,message, body) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => FancyDialog(
+          title: message,
+          descreption: body,
+        )
+    );
   }
 }

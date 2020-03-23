@@ -1,3 +1,4 @@
+import 'package:cms/controller/Others.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -31,6 +32,8 @@ final _formKey = GlobalKey<FormState>();
   }
 
   _submit() async{
+  Others others=new Others();
+  if(await others.checkConection() ==true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
@@ -42,6 +45,8 @@ final _formKey = GlobalKey<FormState>();
       }else{
         alertError("Alert","Something Went Wrong");
       }
+   }}else{
+     others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
 }
 

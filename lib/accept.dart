@@ -1,3 +1,4 @@
+import 'package:cms/controller/Others.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -25,6 +26,7 @@ class _AcceptReqState extends State<AcceptReq> {
   TextEditingController meetingTimeCtrl=new TextEditingController();
   ProgressDialog pr;var comments,room,meetingDate,meetingTime,councillerId;
   SharedPreferences sp;
+  Others others=new Others();
 
   @override
   void initState(){
@@ -33,6 +35,7 @@ class _AcceptReqState extends State<AcceptReq> {
   }
 
   _submit() async{
+  if(await others.checkConection() == true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
@@ -44,6 +47,8 @@ class _AcceptReqState extends State<AcceptReq> {
       }else{
         alertError("Alert","Something Went Wrong");
       }
+   }}else{
+     others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
 }
 

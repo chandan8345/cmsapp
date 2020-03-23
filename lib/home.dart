@@ -1,4 +1,5 @@
 import 'package:cms/accept.dart';
+import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -11,12 +12,12 @@ import 'package:cms/Request.dart';
 import 'package:cms/settleReq.dart';
 import 'package:cms/refferedReq.dart';
 import 'package:custom_progress_dialog/custom_progress_dialog.dart';
+import 'package:jiffy/jiffy.dart';
 
 
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
-
   _HomeState createState() => _HomeState();
 }
 
@@ -25,11 +26,12 @@ class _HomeState extends State<Home> {
   OnScreen display=new OnScreen();
   int bottomNavigationBarIndex = 0;
   String postStatus="today";
-  ProgressDialog pr;
   int councillerid,userid;
   DateTime meetingDate;
   SharedPreferences sp;
   List post;String role;List councillers;
+  Others others=new Others();
+  ProgressDialog _progressDialog = ProgressDialog();
 
   @override
   void initState() {
@@ -44,6 +46,7 @@ class _HomeState extends State<Home> {
   }
 
   _welcome() async{
+    others=new Others();
     sp=await SharedPreferences.getInstance();
     String r=sp.getString('role');
     setState(() {
@@ -60,8 +63,10 @@ class _HomeState extends State<Home> {
   // }
 
   Future<Null> _getPost() async{
+    if(await others.checkConection() == true){
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
+    _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       if(postStatus == "today"){
         List a=await display.getToday(userid,role);
         setState(() {
@@ -91,10 +96,15 @@ class _HomeState extends State<Home> {
     // ),
   // );
     }
+    }else{
+       others.showMessage(context, "Notice", "Please check your internet connection !!!");
+    }
    return null;
   }
 
   _removePost(int postId) async{
+    if(await others.checkConection() == true){
+    _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
     String a=await Councill().removeCouncill(postId);
     if(a.contains("deleted")){
  if(postStatus == "today"){ 
@@ -127,6 +137,9 @@ class _HomeState extends State<Home> {
   );
     }
     }
+    }else{
+      others.showMessage(context, "Notice", "Please check your internet connection !!!");
+    }
     //pr.hide();
     _getPost();
   }
@@ -134,23 +147,22 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    ProgressDialog _progressDialog = ProgressDialog();
     //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Initializing...',dismissAfter: Duration(seconds: 1));
     // pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
         return Scaffold(
           appBar: fullAppbar(context,"Northern University Bangladesh","Counselling Management System"),
           body: RefreshIndicator(
-            child: (post != null)?listView(_progressDialog):empty(),
+            child: (post != null)?listView():empty(),
             onRefresh: _getPost,
             color: CustomColors.BlueDark,
           ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (role == 'student')? fabView() : null,
-      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex,_progressDialog):BottomNavTab2(bottomNavigationBarIndex,_progressDialog),
+      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
     );
   }
 
-  Widget listView(ProgressDialog _progressDialog) =>  Container(
+  Widget listView() =>  Container(
     width: MediaQuery.of(context).size.width,
     child: Padding(
       padding: EdgeInsets.only(top: 10),
@@ -188,7 +200,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
               ),
               SizedBox(
                 width: 10,
@@ -197,20 +209,23 @@ class _HomeState extends State<Home> {
                 child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
-              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
-            height: 10,
+            height: 5,
+          ),
+                    Divider(
+            color: CustomColors.GreyBorder,
+            thickness: 1,
           ),
           Container(
-            width: 200,
             padding: EdgeInsets.all(5.0),
-            color: CustomColors.BlueIcon,
-            child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
+            //color: CustomColors.BlueIcon,
+            child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.green,fontSize: 15,fontWeight: FontWeight.w500)),
           ),
           SizedBox(
-            height: 5,
+            height: 0,
           ),
           Divider(
             color: CustomColors.GreyBorder,
@@ -221,7 +236,8 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               Text(post[item]['room']!=null?post[item]['room']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['meetingdate']!=null?post[item]['meetingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).jm:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
              // Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
@@ -232,15 +248,16 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: 5,
           ),
-          Row(
+Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
                 child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Settle",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.gavel,
                 fontSize: 14,
                 gradientColors: [CustomColors.GreenIcon, CustomColors.BlueIcon],
                 onPressed: () {
@@ -253,8 +270,9 @@ class _HomeState extends State<Home> {
                 child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Reffer",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.wc,
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
@@ -267,8 +285,9 @@ class _HomeState extends State<Home> {
                 child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Remove",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.clear,
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
                 onPressed: () {
@@ -328,8 +347,18 @@ class _HomeState extends State<Home> {
               Flexible(
                 child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
-              Icon(Icons.call_missed_outgoing,color: CustomColors.BlueIcon,size: 18,),
-              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Column(
+                children: <Widget>[
+                                Icon(Icons.calendar_today,color: CustomColors.BlueIcon,size: 15,),
+                               // Icon(Icons.watch_later,color: CustomColors.BlueIcon,size: 15,),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+                  //Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).jm:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+                ],
+              ),
             ],
           ),
           Divider(
@@ -356,8 +385,9 @@ class _HomeState extends State<Home> {
                 child:  (role != 'student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Accept",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.check,
                 fontSize: 14,
                 gradientColors: [CustomColors.BlueDark, CustomColors.BlueIcon],
                 onPressed: () {
@@ -369,8 +399,9 @@ class _HomeState extends State<Home> {
               NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Remove",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.clear,
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
                 onPressed: () {
@@ -427,7 +458,7 @@ class _HomeState extends State<Home> {
                 child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?""+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -442,7 +473,7 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
               ),
               SizedBox(
                 width: 10,
@@ -451,7 +482,7 @@ class _HomeState extends State<Home> {
                 child: Text(post[item]['solution']!=null?post[item]['solution']:"",style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(post[item]['settleddate']!=null?post[item]['settleddate']:"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['settleddate']!=null?" "+Jiffy(post[item]['settleddate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -517,20 +548,23 @@ class _HomeState extends State<Home> {
                 child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
-              Text(post[item]['postingdate']!=null?post[item]['postingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
-            height: 10,
+            height: 0,
+          ),
+          Divider(
+            color: CustomColors.GreyBorder,
+            thickness: 1,
           ),
           Container(
-            width: 200,
             padding: EdgeInsets.all(5.0),
-            color: CustomColors.BlueIcon,
-            child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400)),
+            //color: CustomColors.BlueIcon,
+            child: Text(post[item]['comments']!=null?post[item]['comments']:"",style: TextStyle(color: Colors.green,fontSize: 15,fontWeight: FontWeight.w500)),
           ),
           SizedBox(
-            height: 5,
+            height: 0,
           ),
           Divider(
             color: CustomColors.GreyBorder,
@@ -541,7 +575,8 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               Text(post[item]['room']!=null?post[item]['room']:"",style: TextStyle(color:CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['meetingdate']!=null?post[item]['meetingdate']:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).jm:"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
              // Text('10:00 AM',style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
@@ -559,8 +594,9 @@ class _HomeState extends State<Home> {
                 child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Settle",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.gavel,
                 fontSize: 14,
                 gradientColors: [CustomColors.GreenIcon, CustomColors.BlueIcon],
                 onPressed: () {
@@ -573,8 +609,9 @@ class _HomeState extends State<Home> {
                 child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Reffer",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.wc,
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
@@ -587,8 +624,9 @@ class _HomeState extends State<Home> {
                 child: (role!='student')?NiceButton(
                 radius: 50,
                 width: 80,
-                padding: EdgeInsets.all(10.0),
-                text: "Remove",
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.clear,
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
                 onPressed: () {
@@ -1010,7 +1048,7 @@ class _HomeState extends State<Home> {
     ],
   );
 
-  Widget BottomNavTab1(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> BottomNavigationBar(
+  Widget BottomNavTab1(bottomNavigationBarIndex)=> BottomNavigationBar(
   currentIndex: bottomNavigationBarIndex,
   type: BottomNavigationBarType.fixed,
   selectedFontSize:12,
@@ -1028,7 +1066,6 @@ class _HomeState extends State<Home> {
               this.bottomNavigationBarIndex=0;
               this.postStatus="today";
             });
-            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child:  Icon(Icons.airline_seat_recline_normal,
@@ -1047,7 +1084,6 @@ class _HomeState extends State<Home> {
                 this.bottomNavigationBarIndex=1;
                 this.postStatus="waiting";
               });
-              _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
               _getPost();
             },
             child: Icon(Icons.record_voice_over,
@@ -1073,7 +1109,6 @@ class _HomeState extends State<Home> {
         this.bottomNavigationBarIndex=2;
         this.postStatus="accepted";
       });
-      _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       _getPost();
     },
     child: Icon(Icons.streetview,
@@ -1088,12 +1123,11 @@ class _HomeState extends State<Home> {
       icon: Container(
         margin: EdgeInsets.only(bottom: 5),
         child:InkWell(
-          onTap: (){
+          onTap: () async {
             setState(() {
               this.bottomNavigationBarIndex=3;
               this.postStatus="settled";
             });
-            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child: Icon(Icons.thumbs_up_down,
@@ -1106,7 +1140,7 @@ class _HomeState extends State<Home> {
   ],
   );
   
-Widget BottomNavTab2(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> BottomNavigationBar(
+Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
   currentIndex: bottomNavigationBarIndex,
   type: BottomNavigationBarType.fixed,
   selectedFontSize:12,
@@ -1124,7 +1158,6 @@ Widget BottomNavTab2(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> 
               this.bottomNavigationBarIndex=0;
               this.postStatus="today";
             });
-            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child:  Icon(Icons.airline_seat_recline_normal,
@@ -1143,7 +1176,6 @@ Widget BottomNavTab2(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> 
                 this.bottomNavigationBarIndex=1;
                 this.postStatus="waiting";
               });
-              _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
               _getPost();
             },
             child: Icon(Icons.record_voice_over,
@@ -1166,7 +1198,6 @@ Widget BottomNavTab2(bottomNavigationBarIndex,ProgressDialog _progressDialog)=> 
         this.bottomNavigationBarIndex=2;
         this.postStatus="accepted";
       });
-_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       _getPost();
     },
     child: Icon(Icons.streetview,
@@ -1186,7 +1217,6 @@ _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismi
               this.bottomNavigationBarIndex=3;
               this.postStatus="settled";
             });
-            _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
             _getPost();
           },
           child: Icon(Icons.thumbs_up_down,

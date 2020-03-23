@@ -4,9 +4,8 @@ import 'dart:async';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:fancy_dialog/fancy_dialog.dart';
+//import 'package:fancy_dialog/fancy_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cms/register.dart';
@@ -29,23 +28,23 @@ class _LoginState extends State<Login> {
   String POST_URL = 'http://flatbasha.com/loginverify';
   var mobile,password,message,body,cr;
 
-  Future<int> _checkConection() async{
-    try{
-      cr = await (Connectivity().checkConnectivity());
-    }catch(e){
-      print(e.toString());
-    }finally{
-      setState(() {
-        if (cr == ConnectivityResult.none) {
-          this.netStatus=0;
-        }if(cr== ConnectivityResult.wifi){
-          this.netStatus=1;
-        }if(cr == ConnectivityResult.mobile){
-          this.netStatus=1;
-        }
-      });
-    }
-  }
+//  Future<int> _checkConection() async{
+//    try{
+//      cr = await (Connectivity().checkConnectivity());
+//    }catch(e){
+//      print(e.toString());
+//    }finally{
+//      setState(() {
+//        if (cr == ConnectivityResult.none) {
+//          this.netStatus=0;
+//        }if(cr== ConnectivityResult.wifi){
+//          this.netStatus=1;
+//        }if(cr == ConnectivityResult.mobile){
+//          this.netStatus=1;
+//        }
+//      });
+//    }
+//  }
 
   init() async{
     sp=await SharedPreferences.getInstance();
@@ -78,27 +77,27 @@ class _LoginState extends State<Login> {
     //_checkConection();
   }
 
-  _validate(){
-    if(_formKey.currentState.validate()){
-      _checkConection();
-      _formKey.currentState.save();
-      if(netStatus != 0){
-        pr.update(message: "Please Wait ...");
-        pr.show();
-        _submit();
-      }else{
-        if(pr.isShowing()){
-          pr.hide();
-        }
-        setState(() {
-          this.message="Interner Connection";
-          this.body="Please check the mobile data or wifi connection !!!";
-        });
-        showMessage(message, body);
-      }
-
-    }
-  }
+//  _validate(){
+//    if(_formKey.currentState.validate()){
+//      _checkConection();
+//      _formKey.currentState.save();
+//      if(netStatus != 0){
+//        pr.update(message: "Please Wait ...");
+//        pr.show();
+//        _submit();
+//      }else{
+//        if(pr.isShowing()){
+//          pr.hide();
+//        }
+//        setState(() {
+//          this.message="Interner Connection";
+//          this.body="Please check the mobile data or wifi connection !!!";
+//        });
+//        showMessage(message, body);
+//      }
+//
+//    }
+//  }
 
   void alertError(String title,String body){
     showDialog(
@@ -124,7 +123,7 @@ class _LoginState extends State<Login> {
   }
 
   Future<bool> _submit() async{
-    _checkConection();
+    //_checkConection();
     String info="?mobile=$mobile&password=$password";
     var response;
     Dio dio = new Dio();
@@ -241,7 +240,7 @@ class _LoginState extends State<Login> {
                       Center(
                         child:
                         InkWell(
-                          onTap: _validate,
+                          onTap: (){},//_validate,
                           child:
                           roundedRectButton("Submit ", signInGradients, false),
                         ),
@@ -256,16 +255,16 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void showMessage(message, body) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => FancyDialog(
-          title: message,
-          descreption: body,
-        )
-    );
-  }
-}
+//   void showMessage(message, body) {
+//     showDialog(
+//         context: context,
+//         builder: (BuildContext context) => FancyDialog(
+//           title: message,
+//           descreption: body,
+//         )
+//     );
+//   }
+// }
 
 Widget roundedRectButton(
     String title, List<Color> gradient, bool isEndIconVisible) {
@@ -309,14 +308,15 @@ Widget roundedRectButton(
   });
 }
 
-const List<Color> signInGradients = [
+static const List<Color> signInGradients = [
   Color(0xFF0EDED2),
   Color(0xFF03A0FE),
 ];
 
-const List<Color> signUpGradients = [
+static const List<Color> signUpGradients = [
   Color(0xFFFF9945),
   Color(0xFFFc6076),
 ];
 
 
+}

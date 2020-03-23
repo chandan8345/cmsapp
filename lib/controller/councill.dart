@@ -11,6 +11,7 @@ class Councill{
       var student=await dio.get("http://cms.flatbasha.com/getStudent?id=$postingUser");
       List s=json.decode(student.toString());
       String st=s[0]['name'];String tc=t[0]['name'];
+      print(meetingDate);
       var response = await dio.get("http://cms.flatbasha.com/createCouncilling?reason=$reason&categoryid=$categoryid&postinguserid=$postingUser&councillerid=$councillerid&meetingdate=$meetingDate&semesterid=$semesterid&departmentid=$departmentid&teacher=$tc&student=$st");
     return response.toString();
     }

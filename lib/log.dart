@@ -1,10 +1,11 @@
+import 'package:cms/controller/Others.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/controller/auth.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
-import 'package:cms/register.dart';
+import 'package:cms/register.dart'; 
 import 'package:cms/home.dart';
 
 class Log extends StatefulWidget {
@@ -20,8 +21,10 @@ class _LogState extends State<Log> {
   var mobile,password,message,body,cr;
   ProgressDialog pr;
   Auth login=new Auth();
+  Others others=new Others();
 
    _submit() async{
+   if(await others.checkConection()==true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
       pr.update(message:"Please Wait...");
@@ -33,6 +36,8 @@ class _LogState extends State<Log> {
       }else{
         alertError("Alert", "Sorry, you are invalid, register then try...");
       }
+   }}else{
+     others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
   }
 

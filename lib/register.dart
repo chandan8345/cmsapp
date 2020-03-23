@@ -75,6 +75,8 @@ class _registerState extends State<register> {
   }
 
   Future _submit() async{
+    Others others=new Others();
+  if(await others.checkConection()== true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
       pr.show();
@@ -90,6 +92,8 @@ class _registerState extends State<register> {
       }else{
         getImage();
       }
+    }}else{
+      others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
   }
 

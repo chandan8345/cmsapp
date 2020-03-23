@@ -24,6 +24,7 @@ class _RefferedReqState extends State<RefferedReq> {
   TextEditingController meetingTimeCtrl=new TextEditingController();
   ProgressDialog pr;var comments,room,meetingDate,meetingTime,councillerId,refferedId,counciller;
   SharedPreferences sp;List councillers;
+  Others others=new Others();
 
 @override
 void initState(){
@@ -33,6 +34,7 @@ void initState(){
 }
 
 _submit() async{
+  if(await others.checkConection()==true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
@@ -45,6 +47,8 @@ _submit() async{
       }else{
         alertError("Alert","Something Went Wrong");
       }
+   }}else{
+     others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
 }
 
