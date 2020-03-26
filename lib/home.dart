@@ -11,7 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cms/Request.dart';
 import 'package:cms/settleReq.dart';
 import 'package:cms/refferedReq.dart';
-import 'package:custom_progress_dialog/custom_progress_dialog.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+//import 'package:custom_progress_dialog/custom_progress_dialog.dart';
 import 'package:jiffy/jiffy.dart';
 
 
@@ -31,11 +32,13 @@ class _HomeState extends State<Home> {
   SharedPreferences sp;
   List post;String role;List councillers;
   Others others=new Others();
-  ProgressDialog _progressDialog = ProgressDialog();
+  ProgressDialog pr;
+  //ProgressDialog _progressDialog = ProgressDialog();
 
   @override
   void initState() {
     super.initState();
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     _welcome();
     _getPost();
   }
@@ -66,7 +69,9 @@ class _HomeState extends State<Home> {
     if(await others.checkConection() == true){
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
-    _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
+    pr.update(message: "Loading...");
+    pr.show();
+    //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       if(postStatus == "today"){
         List a=await display.getToday(userid,role);
         setState(() {
@@ -99,12 +104,15 @@ class _HomeState extends State<Home> {
     }else{
        others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
+    pr.hide();
    return null;
   }
 
   _removePost(int postId) async{
     if(await others.checkConection() == true){
-    _progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
+    pr.update(message: "Deleting...");
+    pr.show();
+    //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
     String a=await Councill().removeCouncill(postId);
     if(a.contains("deleted")){
  if(postStatus == "today"){ 
@@ -140,7 +148,7 @@ class _HomeState extends State<Home> {
     }else{
       others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
-    //pr.hide();
+    pr.hide();
     _getPost();
   }
   
