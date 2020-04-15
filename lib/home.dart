@@ -1,4 +1,5 @@
 import 'package:call_number/call_number.dart';
+import 'package:snack/snack.dart';
 import 'package:cms/accept.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
@@ -61,7 +62,6 @@ class _HomeState extends State<Home> {
     await new CallNumber().callNumber('+88' + mobile);
   }
 
-
   // _getCounciller() async{
   //   List c=await Others().getCounciller(0);
   //   setState(() {
@@ -97,13 +97,7 @@ class _HomeState extends State<Home> {
           this.post=a;
         });
     }else{
-    //   return Container(
-    // width: MediaQuery.of(context).size.width,
-    // child: Padding(
-    //   padding: EdgeInsets.only(top: 10),
-    //   child: empty()
-    // ),
-  // );
+      empty();
     }
     }else{
        others.showMessage(context, "Notice", "Please check your internet connection !!!");
@@ -178,7 +172,7 @@ class _HomeState extends State<Home> {
     width: MediaQuery.of(context).size.width,
     child: Padding(
       padding: EdgeInsets.only(top: 10),
-      child: post != null ?ListView.builder(
+      child: (post != null)?ListView.builder(
         itemCount: (post != null) ? post.length : 0,
         itemBuilder: (BuildContext context,int index){
           if(postStatus == "today"){
@@ -260,13 +254,13 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: 5,
           ),
-Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
                 child: (role!='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.gavel,
@@ -278,41 +272,26 @@ Row(
                 },
               ):null,
               ),
-              Container(
-                child: (role!='student')?NiceButton(
-                radius: 50,
-                width: 80,
-                padding: EdgeInsets.all(5.0),
-                text: "",
-                icon: Icons.wc,
-                fontSize: 14,
-                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
-                onPressed: () {
-                Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
-                Navigator.push(context, route);
-                },
-              ):null,
-              ),
                Container(
-                child: (role=='student')?NiceButton(
+                child: (role =='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.call,
                 fontSize: 14,
-                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                     _initCall(post[item]['teachermobile']);
                 },
               ):NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.call,
                 fontSize: 14,
-                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                     _initCall(post[item]['mobile']);
                 },
@@ -321,20 +300,34 @@ Row(
               Container(
                 child: (role!='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
-                icon: Icons.clear,
+                icon: Icons.wc,
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
                 onPressed: () {
-                  _removePost(post[item]['id']);
+                Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
                 },
               ):null,
               ),
+              // Container(
+              //   child: (role!='student')?NiceButton(
+              //   radius: 50,
+              //   width: 60,
+              //   padding: EdgeInsets.all(5.0),
+              //   text: "",
+              //   icon: Icons.clear,
+              //   fontSize: 14,
+              //   gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
+              //   onPressed: () {
+              //     _removePost(post[item]['id']);
+              //   },
+              // ):null,
+              // ),
             ],
-          ),
-          SizedBox(
+          ),          SizedBox(
             height: 5,
           ),
         ],
@@ -386,8 +379,8 @@ Row(
               ),
               Column(
                 children: <Widget>[
-                                Icon(Icons.calendar_today,color: CustomColors.BlueIcon,size: 15,),
-                               // Icon(Icons.watch_later,color: CustomColors.BlueIcon,size: 15,),
+                 Icon(Icons.calendar_today,color: CustomColors.BlueIcon,size: 15,),
+                 // Icon(Icons.watch_later,color: CustomColors.BlueIcon,size: 15,),
                 ],
               ),
               Column(
@@ -407,7 +400,8 @@ Row(
             children: <Widget>[
               Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               Text(post[item]['department']!=null?post[item]['department']:"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).format('MMM do yy'):"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              //Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               //Text('CALL',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],
           ),
@@ -421,7 +415,7 @@ Row(
               Container(
                 child:  (role != 'student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.check,
@@ -436,23 +430,23 @@ Row(
                 Container(
                 child: (role =='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.call,
                 fontSize: 14,
-                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                     _initCall(post[item]['teachermobile']);
                 },
               ):NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.call,
                 fontSize: 14,
-                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                     _initCall(post[item]['mobile']);
                 },
@@ -460,7 +454,7 @@ Row(
               ),
               NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.clear,
@@ -655,7 +649,7 @@ Row(
               Container(
                 child: (role!='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.gavel,
@@ -667,41 +661,26 @@ Row(
                 },
               ):null,
               ),
-              Container(
-                child: (role!='student')?NiceButton(
-                radius: 50,
-                width: 80,
-                padding: EdgeInsets.all(5.0),
-                text: "",
-                icon: Icons.wc,
-                fontSize: 14,
-                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
-                onPressed: () {
-                Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
-                Navigator.push(context, route);
-                },
-              ):null,
-              ),
-                Container(
+               Container(
                 child: (role =='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.call,
                 fontSize: 14,
-                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                     _initCall(post[item]['teachermobile']);
                 },
               ):NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
                 icon: Icons.call,
                 fontSize: 14,
-                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
                     _initCall(post[item]['mobile']);
                 },
@@ -710,17 +689,32 @@ Row(
               Container(
                 child: (role!='student')?NiceButton(
                 radius: 50,
-                width: 80,
+                width: 60,
                 padding: EdgeInsets.all(5.0),
                 text: "",
-                icon: Icons.clear,
+                icon: Icons.wc,
                 fontSize: 14,
                 gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
                 onPressed: () {
-                  _removePost(post[item]['id']);
+                Route route=MaterialPageRoute(builder: (context) => RefferedReq(postId: post[item]['postid']));
+                Navigator.push(context, route);
                 },
               ):null,
               ),
+              // Container(
+              //   child: (role!='student')?NiceButton(
+              //   radius: 50,
+              //   width: 60,
+              //   padding: EdgeInsets.all(5.0),
+              //   text: "",
+              //   icon: Icons.clear,
+              //   fontSize: 14,
+              //   gradientColors: [CustomColors.TrashRed, CustomColors.PurpleLight],
+              //   onPressed: () {
+              //     _removePost(post[item]['id']);
+              //   },
+              // ):null,
+              // ),
             ],
           ),
           SizedBox(
@@ -1317,7 +1311,11 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
   );
 
 
-  Widget empty()=> Center(
+  Widget empty()=> Container(
+    width: MediaQuery.of(context).size.width,
+    child: Padding(
+      padding: EdgeInsets.only(top: 10),
+      child:   Center(
     child: Container(
       width: MediaQuery.of(context).size.width / 1.2,
       child: Column(
@@ -1360,5 +1358,7 @@ Widget BottomNavTab2(bottomNavigationBarIndex)=> BottomNavigationBar(
         ],
       ),
     ),
+  )
+     )
   );
 }

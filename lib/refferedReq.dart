@@ -3,9 +3,10 @@ import 'package:cms/appBars.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:cms/util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+// import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class RefferedReq extends StatefulWidget {
   int postId;
@@ -43,15 +44,25 @@ _submit() async{
       pr.hide();
       print(result);
       if(result.contains("reffered councill successfuly")){
-        alertSucess("Alert","Your Councill Reffered Submited.");
+        //alertSucess("Alert","Your Councill Reffered Submited.");
+        toast("Refferd successfully");
       }else{
-        alertError("Alert","Something Went Wrong");
+        //alertError("Alert","Something Went Wrong");
+        toast("Something Went Wrong");
       }
    }}else{
      others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
 }
 
+  void toast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1);
+  }
   _getCounciller(int id) async{
     List c=await Others().getCounciller(id);
     setState(() {
@@ -84,7 +95,7 @@ _submit() async{
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
        backgroundColor: Colors.white,
-       appBar: fullAppbar(context,"Reffer Form","Reffer the post"),
+       appBar: fullAppbar(context,"Reffered Form","Reffer the post"),
        body: 
        ListView(
          children: <Widget>[
@@ -205,51 +216,51 @@ _submit() async{
        ) 
     );
   }
-   void alertSucess(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.SUCCESS,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  //  void alertSucess(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.SUCCESS,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 
-  void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  // void alertError(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.ERROR,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 }
 
 const List<Color> signInGradients = [

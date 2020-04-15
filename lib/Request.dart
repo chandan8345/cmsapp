@@ -4,10 +4,11 @@ import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:cms/util.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_format/date_format.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+//import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class Request extends StatefulWidget {
 
@@ -34,6 +35,15 @@ void initState(){
   _getCategory();
 }
 
+  void toast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1);
+  }
+
 _submit() async{
   Others others=new Others();
   if(await others.checkConection() == true){
@@ -45,9 +55,11 @@ _submit() async{
       pr.hide();
       print(result);
       if(result.contains("create councill successfuly")){
-        alertSucess("Alert","Your Councill Request Submited.");
+        //alertSucess("Alert","Your Councill Request Submited.");
+        toast("Your request submitted");
       }else{
-        alertError("Alert","Something Went Wrong");
+        toast("Something Went Wrong");
+        //alertError("Alert","Something Went Wrong");
       }
    }
   }else{
@@ -345,51 +357,51 @@ _submit() async{
        ) 
     );
   }
-   void alertSucess(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.SUCCESS,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  //  void alertSucess(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.SUCCESS,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 
-  void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  // void alertError(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.ERROR,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 }
 
 const List<Color> signInGradients = [

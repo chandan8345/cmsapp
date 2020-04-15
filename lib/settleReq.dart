@@ -1,11 +1,12 @@
 import 'package:cms/controller/Others.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:cms/util.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+//import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class SettleReq extends StatefulWidget {
   int postId;
@@ -41,9 +42,11 @@ final _formKey = GlobalKey<FormState>();
       var result =await Councill().settledCouncill(summary, councillerId, postId);
       pr.hide();
       if(result.contains("settled councill successfuly")){
-        alertSucess("Alert","Councill Settled Already.");
+       // alertSucess("Alert","Councill Settled Already.");
+       toast("Thanks for settled");
       }else{
-        alertError("Alert","Something Went Wrong");
+        //alertError("Alert","Something Went Wrong");
+        toast("Something Went Wrong");
       }
    }}else{
      others.showMessage(context, "Notice", "Please check your internet connection !!!");
@@ -56,6 +59,15 @@ final _formKey = GlobalKey<FormState>();
     setState(() {
       this.councillerId=userid;
     });
+  }
+
+  void toast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1);
   }
 
   @override
@@ -153,49 +165,49 @@ final _formKey = GlobalKey<FormState>();
        ) 
     );
   }
-   void alertSucess(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.SUCCESS,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+//    void alertSucess(String title,String body){
+//     showDialog(
+//         context: context,
+//         builder: (BuildContext context) {
+//           return RichAlertDialog(
+//             alertTitle: richTitle(title),
+//             alertSubtitle: richSubtitle(body),
+//             alertType: RichAlertType.SUCCESS,
+//             actions: <Widget>[
+//               FlatButton(
+//                 child: Text("OK"),
+//                 onPressed: (){Navigator.pop(context);},
+//               ),
+//               FlatButton(
+//                 child: Text("Cancel"),
+//                 onPressed: (){Navigator.pop(context);},
+//               ),
+//             ],
+//           );
+//         }
+//     );
+//   }
 
-  void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+//   void alertError(String title,String body){
+//     showDialog(
+//         context: context,
+//         builder: (BuildContext context) {
+//           return RichAlertDialog(
+//             alertTitle: richTitle(title),
+//             alertSubtitle: richSubtitle(body),
+//             alertType: RichAlertType.ERROR,
+//             actions: <Widget>[
+//               FlatButton(
+//                 child: Text("OK"),
+//                 onPressed: (){Navigator.pop(context);},
+//               ),
+//               FlatButton(
+//                 child: Text("Cancel"),
+//                 onPressed: (){Navigator.pop(context);},
+//               ),
+//             ],
+//           );
+//         }
+//     );
+//   }
 }

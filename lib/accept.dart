@@ -1,12 +1,13 @@
 import 'package:cms/controller/Others.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/appBars.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:cms/util.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+//import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:date_format/date_format.dart';
 
 class AcceptReq extends StatefulWidget {
@@ -34,6 +35,15 @@ class _AcceptReqState extends State<AcceptReq> {
    _getUserData();
   }
 
+  void toast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1);
+  }
+
   _submit() async{
   if(await others.checkConection() == true){
    if(_formKey.currentState.validate()){
@@ -43,9 +53,9 @@ class _AcceptReqState extends State<AcceptReq> {
       var result =await Councill().acceptCouncill(comments, room, meetingDate, councillerId, postId);
       pr.hide();
       if(result.contains("accept councill successfuly")){
-        alertSucess("Alert","Councill Request Accepted.");
+        toast("councill accepted");
       }else{
-        alertError("Alert","Something Went Wrong");
+        toast("Something Went Wrong");
       }
    }}else{
      others.showMessage(context, "Notice", "Please check your internet connection !!!");
@@ -227,49 +237,49 @@ class _AcceptReqState extends State<AcceptReq> {
        ) 
     );
   }
-   void alertSucess(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.SUCCESS,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  //  void alertSucess(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.SUCCESS,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 
-  void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  // void alertError(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.ERROR,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 }
