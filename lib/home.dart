@@ -1,3 +1,4 @@
+import 'package:call_number/call_number.dart';
 import 'package:cms/accept.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
@@ -12,7 +13,6 @@ import 'package:cms/Request.dart';
 import 'package:cms/settleReq.dart';
 import 'package:cms/refferedReq.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-//import 'package:custom_progress_dialog/custom_progress_dialog.dart';
 import 'package:jiffy/jiffy.dart';
 
 
@@ -55,6 +55,10 @@ class _HomeState extends State<Home> {
     setState(() {
       this.role=r;
     });
+  }
+
+  _initCall(String mobile) async {
+    await new CallNumber().callNumber('+88' + mobile);
   }
 
 
@@ -289,6 +293,31 @@ Row(
                 },
               ):null,
               ),
+               Container(
+                child: (role=='student')?NiceButton(
+                radius: 50,
+                width: 80,
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.call,
+                fontSize: 14,
+                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                onPressed: () {
+                    _initCall(post[item]['teachermobile']);
+                },
+              ):NiceButton(
+                radius: 50,
+                width: 80,
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.call,
+                fontSize: 14,
+                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                onPressed: () {
+                    _initCall(post[item]['mobile']);
+                },
+              ),
+              ),
               Container(
                 child: (role!='student')?NiceButton(
                 radius: 50,
@@ -403,6 +432,31 @@ Row(
                 Navigator.push(context, route);
                 },
               ):null,
+              ),
+                Container(
+                child: (role =='student')?NiceButton(
+                radius: 50,
+                width: 80,
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.call,
+                fontSize: 14,
+                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                onPressed: () {
+                    _initCall(post[item]['teachermobile']);
+                },
+              ):NiceButton(
+                radius: 50,
+                width: 80,
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.call,
+                fontSize: 14,
+                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                onPressed: () {
+                    _initCall(post[item]['mobile']);
+                },
+              ),
               ),
               NiceButton(
                 radius: 50,
@@ -627,6 +681,31 @@ Row(
                 Navigator.push(context, route);
                 },
               ):null,
+              ),
+                Container(
+                child: (role =='student')?NiceButton(
+                radius: 50,
+                width: 80,
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.call,
+                fontSize: 14,
+                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                onPressed: () {
+                    _initCall(post[item]['teachermobile']);
+                },
+              ):NiceButton(
+                radius: 50,
+                width: 80,
+                padding: EdgeInsets.all(5.0),
+                text: "",
+                icon: Icons.call,
+                fontSize: 14,
+                gradientColors: [CustomColors.GreenIcon, CustomColors.GreenAccent],
+                onPressed: () {
+                    _initCall(post[item]['mobile']);
+                },
+              ),
               ),
               Container(
                 child: (role!='student')?NiceButton(

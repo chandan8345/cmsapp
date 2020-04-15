@@ -10,9 +10,11 @@ class Councill{
       List t=json.decode(teacher.toString());
       var student=await dio.get("http://cms.flatbasha.com/getStudent?id=$postingUser");
       List s=json.decode(student.toString());
-      String st=s[0]['name'];String tc=t[0]['name'];
+      String st=s[0]['name'];
+      String tc=t[0]['name'];
+      String tm=t[0]['mobile'];
       print(meetingDate);
-      var response = await dio.get("http://cms.flatbasha.com/createCouncilling?reason=$reason&categoryid=$categoryid&postinguserid=$postingUser&councillerid=$councillerid&meetingdate=$meetingDate&semesterid=$semesterid&departmentid=$departmentid&teacher=$tc&student=$st");
+      var response = await dio.get("http://cms.flatbasha.com/createCouncilling?reason=$reason&categoryid=$categoryid&postinguserid=$postingUser&councillerid=$councillerid&meetingdate=$meetingDate&semesterid=$semesterid&departmentid=$departmentid&teacher=$tc&teachermobile=$tm&student=$st");
     return response.toString();
     }
 
@@ -25,7 +27,8 @@ class Councill{
       var teacher= await dio.get("http://cms.flatbasha.com/getTeacher?id=$refferedId");
       List s=json.decode(teacher.toString());
       String teach=s[0]['name'];
-      var response =await dio.get("http://cms.flatbasha.com/refferedCouncilling?comments=$comments&refferedid=$refferedId&postId=$postId&teacher=$teach");
+      String tm=s[0]['mobile'];
+      var response =await dio.get("http://cms.flatbasha.com/refferedCouncilling?comments=$comments&refferedid=$refferedId&postId=$postId&teacher=$teach&teachermobile=$tm");
       return response.toString();
     }
 
