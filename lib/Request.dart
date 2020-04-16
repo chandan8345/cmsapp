@@ -35,6 +35,11 @@ void initState(){
   _getCategory();
 }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void toast(String text) {
     Fluttertoast.showToast(
         msg: text,
@@ -52,11 +57,12 @@ _submit() async{
       pr.update(message: "Please wait...");
       pr.show();
       var result =await Councill().createCouncill(reason, categoryId, semesterId, departmentId, councillerId, postingUserId, meetingDate);
-      pr.hide();
+      pr.dismiss();
       print(result);
       if(result.contains("create councill successfuly")){
         //alertSucess("Alert","Your Councill Request Submited.");
         toast("Your request submitted");
+        Navigator.pop(context);
       }else{
         toast("Something Went Wrong");
         //alertError("Alert","Something Went Wrong");

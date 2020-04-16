@@ -25,6 +25,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
+  final refreshKey = new GlobalKey<RefreshIndicatorState>();
   OnScreen display=new OnScreen();
   int bottomNavigationBarIndex = 0;
   String postStatus="today";
@@ -41,7 +42,7 @@ class _HomeState extends State<Home> {
     super.initState();
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     _welcome();
-    _getPost();
+    _getPostRefresh();
   }
 
   @override
@@ -69,12 +70,10 @@ class _HomeState extends State<Home> {
   //   });
   // }
 
-  Future<Null> _getPost() async{
+    Future<Null> _getPostRefresh() async{
     if(await others.checkConection() == true){
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
-    pr.update(message: "Loading...");
-    pr.show();
     //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
       if(postStatus == "today"){
         List a=await display.getToday(userid,role);
@@ -102,8 +101,48 @@ class _HomeState extends State<Home> {
     }else{
        others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
-    pr.hide();
-   return null;
+    return null;
+  }
+
+  Future<Null> _getPost() async{
+    if(await others.checkConection() == true){
+    sp=await SharedPreferences.getInstance();
+    int userid=sp.getInt('id');
+    try{
+      pr.update(message: "Loading...");
+      pr.show();
+    }catch(e){
+      print(e);
+    }
+    //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Loading...',dismissAfter: Duration(seconds: 1));
+      if(postStatus == "today"){
+        List a=await display.getToday(userid,role);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "waiting"){
+        List a=await display.getWaiting(userid,role);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "accepted"){
+        List a=await display.getPending(userid,role);
+        setState(() {
+          this.post=a;
+        });
+    }else if(postStatus == "settled"){
+        List a=await display.getSettled(userid,role);
+        setState(() {
+          this.post=a;
+        });
+    }else{
+      empty();
+    }
+    }else{
+       others.showMessage(context, "Notice", "Please check your internet connection !!!");
+    }
+    pr.dismiss();
+    return null;
   }
 
   _removePost(int postId) async{
@@ -146,20 +185,20 @@ class _HomeState extends State<Home> {
     }else{
       others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
-    pr.hide();
-    _getPost();
+    pr.dismiss();
+    _getPostRefresh();
   }
   
 
   @override
   Widget build(BuildContext context) {
     //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Initializing...',dismissAfter: Duration(seconds: 1));
-    // pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
         return Scaffold(
           appBar: fullAppbar(context,"Northern University Bangladesh","Counselling Management System"),
           body: RefreshIndicator(
             child: (post != null)?listView():empty(),
-            onRefresh: _getPost,
+            onRefresh: _getPostRefresh,
+            key: refreshKey,
             color: CustomColors.BlueDark,
           ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

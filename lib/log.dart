@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cms/controller/auth.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+//import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cms/register.dart'; 
 import 'package:cms/home.dart';
 
@@ -34,35 +35,45 @@ class _LogState extends State<Log> {
       Route route=MaterialPageRoute(builder: (context) => Home());
       Navigator.push(context, route);
       }else{
-        alertError("Alert", "Sorry, you are invalid, register then try...");
+        //alertError("Alert", "Sorry, you are invalid, register then try...");
+        toast("Sorry, Register then try again");
       }
    }}else{
      others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
   }
 
-    void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-   }
+  void toast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1);
+  }
+
+  //   void alertError(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.ERROR,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  //  }
 
   @override
   Widget build(BuildContext context) {

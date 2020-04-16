@@ -35,6 +35,11 @@ class _AcceptReqState extends State<AcceptReq> {
    _getUserData();
   }
 
+    @override
+  void dispose() {
+    super.dispose();
+  }
+
   void toast(String text) {
     Fluttertoast.showToast(
         msg: text,
@@ -48,12 +53,12 @@ class _AcceptReqState extends State<AcceptReq> {
   if(await others.checkConection() == true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
-      pr.update(message: "Please wait...");
       pr.show();
       var result =await Councill().acceptCouncill(comments, room, meetingDate, councillerId, postId);
-      pr.hide();
+      pr.dismiss();
       if(result.contains("accept councill successfuly")){
         toast("councill accepted");
+        Navigator.pop(context);
       }else{
         toast("Something Went Wrong");
       }
@@ -73,6 +78,7 @@ class _AcceptReqState extends State<AcceptReq> {
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
+    pr.update(message: "Please wait...");
     return Scaffold(
        backgroundColor: Colors.white,
        appBar: fullAppbar(context,"Approve Form","approve the councill"),

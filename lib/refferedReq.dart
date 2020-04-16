@@ -34,6 +34,11 @@ void initState(){
   _getUserData();
 }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 _submit() async{
   if(await others.checkConection()==true){
    if(_formKey.currentState.validate()){
@@ -41,11 +46,12 @@ _submit() async{
       pr.update(message: "Please wait...");
       pr.show();
       var result =await Councill().referredCouncill(comments, refferedId, postId);
-      pr.hide();
+      pr.dismiss();
       print(result);
       if(result.contains("reffered councill successfuly")){
         //alertSucess("Alert","Your Councill Reffered Submited.");
         toast("Refferd successfully");
+        Navigator.pop(context);
       }else{
         //alertError("Alert","Something Went Wrong");
         toast("Something Went Wrong");

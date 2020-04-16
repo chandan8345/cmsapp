@@ -32,6 +32,11 @@ final _formKey = GlobalKey<FormState>();
    _getUserData();
   }
 
+    @override
+  void dispose() {
+    super.dispose();
+  }
+
   _submit() async{
   Others others=new Others();
   if(await others.checkConection() ==true){
@@ -40,10 +45,11 @@ final _formKey = GlobalKey<FormState>();
       pr.update(message: "Please wait...");
       pr.show();
       var result =await Councill().settledCouncill(summary, councillerId, postId);
-      pr.hide();
+      pr.dismiss();
       if(result.contains("settled councill successfuly")){
        // alertSucess("Alert","Councill Settled Already.");
        toast("Thanks for settled");
+       Navigator.pop(context);
       }else{
         //alertError("Alert","Something Went Wrong");
         toast("Something Went Wrong");

@@ -2,10 +2,11 @@ import 'package:cms/controller/auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:fancy_dialog/fancy_dialog.dart';
 import 'dart:io';
-import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+//import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cms/log.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:image_picker/image_picker.dart';
@@ -74,6 +75,15 @@ class _registerState extends State<register> {
     });
   }
 
+    void toast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1);
+  }
+
   Future _submit() async{
     Others others=new Others();
   if(await others.checkConection()== true){
@@ -85,9 +95,11 @@ class _registerState extends State<register> {
         result =await Auth().registerUser(name,studentid,mobile,email,password,departmentid,semesterid,image);
         pr.hide();
       if(result == true){
-        alertSucess("Notice", "User created successfully...");
+        //alertSucess("Notice", "User created successfully...");
+        toast("Register successfully");
       }else{
-        alertError("Notice", "Something went wrong...");
+        //alertError("Notice", "Something went wrong...");
+        toast("Something went wrong");
       }
       }else{
         getImage();
@@ -463,7 +475,7 @@ class _registerState extends State<register> {
                     InkWell(
                       onTap: getImage,
                       child:
-                      roundedRectButton("Choose Photo", signInGradients, false),
+                      roundedRectButton("Get Photo", signInGradients, false),
                     ),
                     InkWell(
                       onTap: _submit,
@@ -481,51 +493,51 @@ class _registerState extends State<register> {
     );
   }
 
-  void alertSucess(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.SUCCESS,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  // void alertSucess(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.SUCCESS,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 
-  void alertError(String title,String body){
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(body),
-            alertType: RichAlertType.ERROR,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-    );
-  }
+  // void alertError(String title,String body){
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return RichAlertDialog(
+  //           alertTitle: richTitle(title),
+  //           alertSubtitle: richSubtitle(body),
+  //           alertType: RichAlertType.ERROR,
+  //           actions: <Widget>[
+  //             FlatButton(
+  //               child: Text("OK"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //             FlatButton(
+  //               child: Text("Cancel"),
+  //               onPressed: (){Navigator.pop(context);},
+  //             ),
+  //           ],
+  //         );
+  //       }
+  //   );
+  // }
 
   void showMessage(message, body) {
     showDialog(
