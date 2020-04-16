@@ -25,7 +25,7 @@ class _registerState extends State<register> {
   TextEditingController mobileCtrl=new TextEditingController();
   TextEditingController studentidCtrl=new TextEditingController();
   TextEditingController departmentCtrl=new TextEditingController();
-  TextEditingController semesterCtrl=new TextEditingController();
+  //TextEditingController semesterCtrl=new TextEditingController();
   TextEditingController passCtrl=new TextEditingController();
   String name,email,mobile,password,studentid;
   String department,semester;int semesterid,departmentid;
@@ -92,7 +92,7 @@ class _registerState extends State<register> {
       pr.show();
       bool result;
       if(image != null){
-        result =await Auth().registerUser(name,studentid,mobile,email,password,departmentid,semesterid,image);
+        result =await Auth().registerUser(name,studentid,mobile,email,password,departmentid,image);
         pr.hide();
       if(result == true){
         //alertSucess("Notice", "User created successfully...");
@@ -334,10 +334,11 @@ class _registerState extends State<register> {
                         padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
                         child: TextFormField(
                           controller: passCtrl,
+                          obscureText: true,
                           decoration: new InputDecoration(
                             labelText: 'Password',
                             fillColor: Colors.white,
-                            icon: Icon(Icons.person),
+                            icon: Icon(Icons.lock),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
@@ -360,11 +361,12 @@ class _registerState extends State<register> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20,right: 20, bottom:0, top: 0),
+                        padding: EdgeInsets.only(left: 20,right: 20, bottom:10, top: 0),
                         child:DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Department',
                             fillColor: Colors.white,
+                            isDense: true,
                             icon: Icon(Icons.import_contacts),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
@@ -390,37 +392,37 @@ class _registerState extends State<register> {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 20,right: 20, bottom:10, top: 0),
-                        child: DropdownButtonFormField(
-                          decoration: new InputDecoration(
-                            labelText: 'Semester',
-                            fillColor: Colors.white,
-                            icon: Icon(Icons.school),
-                            border: UnderlineInputBorder(),
-                            //fillColor: Colors.green
-                          ),
-                          onChanged: (value){
-                            setState((){
-                              this.semester=value;
-                            });
-                            _setSemester(semester);
-                          },
-                          value: (semester != null)?semester:null,
-                          items: (semesters != null)?semesters.map((array){
-                            return DropdownMenuItem(
-                              value: array['name'].toString(), 
-                              child: Text(array['name']),
-                            );
-                          }).toList():null,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter your department';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(left: 20,right: 20, bottom:10, top: 0),
+                      //   child: DropdownButtonFormField(
+                      //     decoration: new InputDecoration(
+                      //       labelText: 'Semester',
+                      //       fillColor: Colors.white,
+                      //       icon: Icon(Icons.school),
+                      //       border: UnderlineInputBorder(),
+                      //       //fillColor: Colors.green
+                      //     ),
+                      //     onChanged: (value){
+                      //       setState((){
+                      //         this.semester=value;
+                      //       });
+                      //       _setSemester(semester);
+                      //     },
+                      //     value: (semester != null)?semester:null,
+                      //     items: (semesters != null)?semesters.map((array){
+                      //       return DropdownMenuItem(
+                      //         value: array['name'].toString(), 
+                      //         child: Text(array['name']),
+                      //       );
+                      //     }).toList():null,
+                      //     validator: (value) {
+                      //       if (value.isEmpty) {
+                      //         return 'Please enter your department';
+                      //       }
+                      //       return null;
+                      //     },
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 15),
                         child:

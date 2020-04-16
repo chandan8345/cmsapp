@@ -186,10 +186,12 @@ _submit() async{
               ),
               DropdownButtonFormField(
                           decoration: new InputDecoration(
+                            isDense: true,
                             labelText: 'Select Category',
                             fillColor: Colors.white,
                             icon: Icon(Icons.developer_board),
-                            border: UnderlineInputBorder(),
+                            border: UnderlineInputBorder(
+                            ),
                             //fillColor: Colors.green
                           ),
                           onChanged: (value){
@@ -215,6 +217,7 @@ _submit() async{
                         DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Select Department',
+                            isDense: true,
                             fillColor: Colors.white,
                             icon: Icon(Icons.import_contacts),
                             border: UnderlineInputBorder(),
@@ -243,6 +246,7 @@ _submit() async{
                         DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Select Counciller',
+                            isDense: true,
                             fillColor: Colors.white,
                             icon: Icon(Icons.school),
                             border: UnderlineInputBorder(),

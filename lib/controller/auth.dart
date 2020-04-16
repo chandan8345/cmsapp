@@ -12,7 +12,7 @@ class Auth{
   SharedPreferences sp;
 
   //Users
-  Future<bool> registerUser(String name,String studentid,String mobile,String email,String password,int department,int semester,File image) async{
+  Future<bool> registerUser(String name,String studentid,String mobile,String email,String password,int department,File image) async{
     var fileContent = image.readAsBytesSync();
     var base64image = base64.encode(fileContent);
     var response;
@@ -25,7 +25,7 @@ class Auth{
         "email" : email,
         "password" : password,
         "department" : department,
-        "semester" : semester,
+        //"semester" : semester,
         "image" : base64image
        });
       response = await dio.post(postURL, data: formData);

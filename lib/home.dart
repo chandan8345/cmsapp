@@ -142,6 +142,7 @@ class _HomeState extends State<Home> {
        others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
     pr.dismiss();
+    print(post);
     return null;
   }
 
@@ -245,7 +246,8 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+                child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
               ),
               SizedBox(
                 width: 10,
@@ -408,7 +410,8 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
               ),
               SizedBox(
                 width: 10,
@@ -589,7 +592,7 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               Text(post[item]['department']!=null?post[item]['department']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
-              Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
+              //Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('SEC A',style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               Text(post[item]['room']!=null?post[item]['room']:"",style: TextStyle(color:CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
               //Text('10:00 AM',style: TextStyle(color: CustomColors.PurpleDark,fontSize: 14,fontWeight: FontWeight.w600)),
@@ -634,7 +637,8 @@ class _HomeState extends State<Home> {
               ),
               new CircleAvatar(
                 backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+                child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
               ),
               SizedBox(
                 width: 10,

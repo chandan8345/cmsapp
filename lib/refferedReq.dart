@@ -145,6 +145,7 @@ _submit() async{
                             labelText: 'Select Counciller',
                             fillColor: Colors.white,
                             icon: Icon(Icons.school),
+                            isDense: true,
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
