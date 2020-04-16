@@ -105,7 +105,10 @@ final _formKey = GlobalKey<FormState>();
                 validator:  (value) {
                   if (value.isEmpty) {
                     return 'Solution summary is required';
-                  }else {
+                  }else if(value.length <= 25){
+                    return 'Summary atleast 25 character';
+                  }
+                  else {
                     return null;
                   }
                 },

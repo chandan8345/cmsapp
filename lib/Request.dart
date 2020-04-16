@@ -169,7 +169,10 @@ _submit() async{
                 validator:  (value) {
                   if (value.isEmpty) {
                     return 'Reason is required';
-                  }else {
+                  }else if(value.length <= 25){
+                    return 'Reason atleast 25 character';
+                  }
+                  else {
                     return null;
                   }
                 },
