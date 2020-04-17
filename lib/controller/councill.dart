@@ -11,10 +11,11 @@ class Councill{
       var student=await dio.get("http://cms.flatbasha.com/getStudent?id=$postingUser");
       List s=json.decode(student.toString());
       String st=s[0]['name'];
+      String sm=s[0]['mobile'];
       String tc=t[0]['name'];
       String tm=t[0]['mobile'];
       print(meetingDate);
-      var response = await dio.get("http://cms.flatbasha.com/createCouncilling?reason=$reason&categoryid=$categoryid&postinguserid=$postingUser&councillerid=$councillerid&meetingdate=$meetingDate&semesterid=$semesterid&departmentid=$departmentid&teacher=$tc&teachermobile=$tm&student=$st");
+      var response = await dio.get("http://cms.flatbasha.com/createCouncilling?reason=$reason&categoryid=$categoryid&postinguserid=$postingUser&councillerid=$councillerid&meetingdate=$meetingDate&semesterid=$semesterid&departmentid=$departmentid&teacher=$tc&studentmobile=$sm&teachermobile=$tm&student=$st");
     return response.toString();
     }
 

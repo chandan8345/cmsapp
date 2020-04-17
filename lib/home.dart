@@ -313,7 +313,7 @@ class _HomeState extends State<Home> {
               ):null,
               ),
                Container(
-                child: (role =='student')?NiceButton(
+                child: (role != 'student')?NiceButton(
                 radius: 50,
                 width: 60,
                 padding: EdgeInsets.all(5.0),
@@ -322,7 +322,7 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
-                    _initCall(post[item]['teachermobile']);
+                    _initCall(post[item]['studentmobile']);
                 },
               ):NiceButton(
                 radius: 50,
@@ -333,7 +333,7 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
-                    _initCall(post[item]['mobile']);
+                    _initCall(post[item]['teachermobile']);
                 },
               ),
               ),
@@ -469,7 +469,7 @@ class _HomeState extends State<Home> {
               ):null,
               ),
                 Container(
-                child: (role =='student')?NiceButton(
+                child: (role != 'student')?NiceButton(
                 radius: 50,
                 width: 60,
                 padding: EdgeInsets.all(5.0),
@@ -478,7 +478,8 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
-                    _initCall(post[item]['teachermobile']);
+                    _initCall(post[item]['studentmobile']);
+                    
                 },
               ):NiceButton(
                 radius: 50,
@@ -489,7 +490,7 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
-                    _initCall(post[item]['mobile']);
+                    _initCall(post[item]['teachermobile']);
                 },
               ),
               ),
@@ -689,7 +690,7 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
-                child: (role!='student')?NiceButton(
+                child: (role != 'student')?NiceButton(
                 radius: 50,
                 width: 60,
                 padding: EdgeInsets.all(5.0),
@@ -704,7 +705,7 @@ class _HomeState extends State<Home> {
               ):null,
               ),
                Container(
-                child: (role =='student')?NiceButton(
+                child: (role != 'student')?NiceButton(
                 radius: 50,
                 width: 60,
                 padding: EdgeInsets.all(5.0),
@@ -713,7 +714,7 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
-                    _initCall(post[item]['teachermobile']);
+                  _initCall(post[item]['studentmobile']);
                 },
               ):NiceButton(
                 radius: 50,
@@ -724,7 +725,7 @@ class _HomeState extends State<Home> {
                 fontSize: 14,
                 gradientColors: [CustomColors.OrangeIcon, CustomColors.YellowIcon],
                 onPressed: () {
-                    _initCall(post[item]['mobile']);
+                    _initCall(post[item]['teachermobile']);
                 },
               ),
               ),
