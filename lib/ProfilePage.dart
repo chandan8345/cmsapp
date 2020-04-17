@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cms/register.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +86,9 @@ class MapScreenState extends State<ProfilePage>{
     final String imgUrl = 'https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg';
     return new Stack(children: <Widget>[
       new Container(color: Colors.blue,),
-      new Image.network(imgUrl, fit: BoxFit.fill,),
+      new Image.network(
+        (sid != null) ? "http://cms.flatbasha.com/image/$sid.jpg" :
+                        "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill,),
       new BackdropFilter(
       filter: new ui.ImageFilter.blur(
       sigmaX: 6.0,
@@ -141,22 +142,59 @@ class MapScreenState extends State<ProfilePage>{
             ),
           ),
           //floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async{
-              sp=await SharedPreferences.getInstance();
-                                    await sp.clear();
-                                   Route route=MaterialPageRoute(builder: (context) => Onboarding());
-                                   Navigator.push(context, route);
-            },
-            child: Padding(
-              padding: EdgeInsets.all(3.0),
-              child: Text('Logout',style: TextStyle(fontSize: 12),),
-            ),
-            backgroundColor: Colors.green,
-          ),
+          floatingActionButton: 
+          Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      (role != 'student')?Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FloatingActionButton(
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.school,color: Colors.blueAccent,
+        ),
+        onPressed: () async {
+          Route route=MaterialPageRoute(builder: (context) => register());
+          Navigator.pop(context, route);
+        },
+        heroTag: null,
+      ),
+      ):SizedBox(),
+      Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FloatingActionButton(
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.power_settings_new,color: Colors.blueAccent,
+        ),
+        onPressed: () async {
+          sp=await SharedPreferences.getInstance();
+          await sp.clear();
+          Route route=MaterialPageRoute(builder: (context) => Onboarding());
+          Navigator.push(context, route);
+        },
+        heroTag: null,
+      ),
+      ),
+    ]
+  )
+          // FloatingActionButton(
+          //   onPressed: () async{
+          //     sp=await SharedPreferences.getInstance();
+          //                           await sp.clear();
+          //                          Route route=MaterialPageRoute(builder: (context) => Onboarding());
+          //                          Navigator.push(context, route);
+          //   },
+          //   child: Padding(
+          //     padding: EdgeInsets.all(3.0),
+          //     child: Text('Logout',style: TextStyle(fontSize: 12),),
+          //   ),
+          //   backgroundColor: Colors.green,
+          // ),
       )
     ],);
   }
+ 
 
   Widget rowCell(String count, String type) => new Expanded(child: new Column(children: <Widget>[
     new Text('$count',style: new TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),

@@ -243,11 +243,20 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 10,
               ),
-              new CircleAvatar(
-                backgroundColor: Colors.white,
-                child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
-                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+              CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 28.0,
+              child: 
+              ClipOval(
+               child: 
+               (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50)
+               ), 
               ),
+              // new CircleAvatar(
+              //   backgroundColor: Colors.white,
+              //   child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+              //   (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+              // ),
               SizedBox(
                 width: 10,
               ),
@@ -407,11 +416,20 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 10,
               ),
-              new CircleAvatar(
-                backgroundColor: Colors.white,
-                child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
-                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+              CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 28.0,
+              child: 
+              ClipOval(
+               child: 
+               (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50)
+               ),
               ),
+              // new CircleAvatar(
+              //   backgroundColor: Colors.white,
+              //   child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+              //   (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+              // ),
               SizedBox(
                 width: 10,
               ),
@@ -545,10 +563,18 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 10,
               ),
-              new CircleAvatar(
-                backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
+              CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 28.0,
+              child: ClipOval(
+               child: 
+               (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.asset('assets/images/photo.png'),
+               ), 
               ),
+              // new CircleAvatar(
+              //   backgroundColor: Colors.white,
+              //   child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.asset('assets/images/photo.png'),
+              // ),
               SizedBox(
                 width: 10,
               ),
@@ -569,10 +595,19 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 10,
               ),
-              new CircleAvatar(
-                backgroundColor: Colors.white,
-                child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
-              ),
+              CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 28.0,
+              child: 
+              ClipOval(
+               child: 
+               (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.asset('assets/images/photo.png'),
+               ),
+              ), 
+              // new CircleAvatar(
+              //   backgroundColor: Colors.white,
+              //   child: (post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.asset('assets/images/photo.png'),
+              // ),
               SizedBox(
                 width: 10,
               ),
@@ -635,11 +670,20 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: 10,
               ),
-              new CircleAvatar(
-                backgroundColor: Colors.white,
-                child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
-                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+              CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 28.0,
+              child: 
+              ClipOval(
+               child: 
+               (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,height: 50,width: 50)
+               ), 
               ),
+              // new CircleAvatar(
+              //   backgroundColor: Colors.red,
+              //   child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
+              //   (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+              // ),
               SizedBox(
                 width: 10,
               ),

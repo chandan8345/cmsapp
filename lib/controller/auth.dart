@@ -39,6 +39,35 @@ class Auth{
         return false;
       }
   }
+
+    Future<bool> registerCounciller(String name,String studentid,String mobile,String email,String password,int department,File image) async{
+    var fileContent = image.readAsBytesSync();
+    var base64image = base64.encode(fileContent);
+    var response;
+    //print(name+""+studentid+" "+mobile+" "+email+" "+password+" "+department+" "+semester+" "+base64image);
+    try{
+      FormData formData = new FormData.fromMap(<String, dynamic>{
+        "name" : name,
+        "studentid" : studentid,
+        "mobile" : mobile,
+        "email" : email,
+        "password" : password,
+        "department" : department,
+        //"semester" : semester,
+        "image" : base64image
+       });
+      response = await dio.post("http://cms.flatbasha.com/registerCounciller", data: formData);
+      print(response);
+      }catch (e){
+        print(e);
+     }
+     if(response.toString().contains("data saved with image") || response.toString().contains("data saved without image")){
+        return true;
+      }else{
+        return false;
+      }
+  }
+
   Future<bool> updateUser() async{
 
     return true;
