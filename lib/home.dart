@@ -142,7 +142,6 @@ class _HomeState extends State<Home> {
        others.showMessage(context, "Notice", "Please check your internet connection !!!");
     }
     pr.dismiss();
-    print(post);
     return null;
   }
 
@@ -247,7 +246,7 @@ class _HomeState extends State<Home> {
               new CircleAvatar(
                 backgroundColor: Colors.white,
                 child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
-                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
               ),
               SizedBox(
                 width: 10,
@@ -256,7 +255,7 @@ class _HomeState extends State<Home> {
                 child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 18,fontWeight: FontWeight.w300)),
               ),
               Icon(Icons.call_missed_outgoing,color: CustomColors.OrangeIcon,size: 18,),
-              Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.OrangeIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+              Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(
@@ -411,7 +410,7 @@ class _HomeState extends State<Home> {
               new CircleAvatar(
                 backgroundColor: Colors.white,
                 child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png'),
-                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
               ),
               SizedBox(
                 width: 10,
@@ -427,7 +426,7 @@ class _HomeState extends State<Home> {
               ),
               Column(
                 children: <Widget>[
-                  Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
+                  Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
                   //Text(post[item]['postingdate']!=null?" "+Jiffy(post[item]['postingdate']).jm:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w600)),
                 ],
               ),
@@ -555,8 +554,8 @@ class _HomeState extends State<Home> {
               Flexible(
                 child: Text(post[item]['reason']!=null?post[item]['reason']:"",style: TextStyle(color: Colors.black87,fontSize: 16,fontWeight: FontWeight.w300)),
               ),
-              Icon(Icons.call_missed_outgoing,color: CustomColors.GreenDark,size: 18,),
-              Text(post[item]['postingdate']!=null?""+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.GreenDark,fontSize: 14,fontWeight: FontWeight.w600)),
+              Icon(Icons.call_missed_outgoing,color: CustomColors.TrashRed,size: 18,),
+              Text(post[item]['postingdate']!=null?""+Jiffy(post[item]['postingdate']).format('MMM do yy'):"",style: TextStyle(color: CustomColors.TrashRed,fontSize: 14,fontWeight: FontWeight.w600)),
             ],
           ),
           Divider(
@@ -638,7 +637,7 @@ class _HomeState extends State<Home> {
               new CircleAvatar(
                 backgroundColor: Colors.white,
                 child: //(post != null)?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.asset('assets/images/photo.png')
-                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["userid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
+                (role != 'student')?Image.network("http://cms.flatbasha.com/image/"+post[item]["postinguserid"].toString()+".jpg",fit: BoxFit.fill,):Image.network("http://cms.flatbasha.com/image/"+post[item]["councillerid"].toString()+".jpg",fit: BoxFit.fill,)
               ),
               SizedBox(
                 width: 10,

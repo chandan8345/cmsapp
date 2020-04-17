@@ -32,6 +32,7 @@ class _AcceptReqState extends State<AcceptReq> {
   @override
   void initState(){
    super.initState();
+   pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
    _getUserData();
   }
 
@@ -53,6 +54,7 @@ class _AcceptReqState extends State<AcceptReq> {
   if(await others.checkConection() == true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
+      pr.update(message: "Please wait...");
       pr.show();
       var result =await Councill().acceptCouncill(comments, room, meetingDate, councillerId, postId);
       pr.dismiss();
@@ -77,8 +79,6 @@ class _AcceptReqState extends State<AcceptReq> {
 
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
-    pr.update(message: "Please wait...");
     return Scaffold(
        backgroundColor: Colors.white,
        appBar: fullAppbar(context,"Approve Form","approve the councill"),

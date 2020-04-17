@@ -113,7 +113,8 @@ _submit() async{
            this.categoryId=item['id'];
          });
       }
-    } 
+    }
+    print(categoryId);
   }
 
  _setCouncillerId(String value){
@@ -198,9 +199,10 @@ _submit() async{
                             setState((){
                               this.type=value;
                             });
-                            _setCategoryId(value);
+                            _setCategoryId(type);
+                            print(type);
                           },
-                          value: (type != null)?type:null,
+                          value: (types != null)?type:null,
                           items: (types != null)?types.map((array){
                             return DropdownMenuItem(
                               value: array['name'].toString(), 
@@ -209,7 +211,7 @@ _submit() async{
                           }).toList():null,
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please select the councilling type';
+                              return 'Please select councilling category';
                             }
                             return null;
                           },
