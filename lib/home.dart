@@ -40,7 +40,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     _welcome();
     _getPostRefresh();
   }
@@ -51,7 +50,7 @@ class _HomeState extends State<Home> {
   }
 
   _welcome() async{
-    others=new Others();
+    //others=new Others();
     sp=await SharedPreferences.getInstance();
     String r=sp.getString('role');
     setState(() {
@@ -105,6 +104,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<Null> _getPost() async{
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     if(await others.checkConection() == true){
     sp=await SharedPreferences.getInstance();
     int userid=sp.getInt('id');
@@ -146,6 +146,7 @@ class _HomeState extends State<Home> {
   }
 
   _removePost(int postId) async{
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     if(await others.checkConection() == true){
     pr.update(message: "Deleting...");
     pr.show();
@@ -459,7 +460,7 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Text(post[item]['category']!=null?post[item]['category']:"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               Text(post[item]['department']!=null?post[item]['department']:"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
-              Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).format('MMM do yy'):"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
+              //Text(post[item]['meetingdate']!=null?Jiffy(post[item]['meetingdate']).format('MMM do yy'):"",style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               //Text(post[item]['semester']!=null?post[item]['semester']:"",style: TextStyle(color: CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
               //Text('CALL',style: TextStyle(color:CustomColors.BlueIcon,fontSize: 14,fontWeight: FontWeight.w500)),
             ],

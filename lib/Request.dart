@@ -56,7 +56,9 @@ _submit() async{
       _formKey.currentState.save();
       pr.update(message: "Please wait...");
       pr.show();
-      var result =await Councill().createCouncill(reason, categoryId, semesterId, departmentId, councillerId, postingUserId, meetingDate);
+      var result =await Councill().createCouncill(reason, categoryId, semesterId, departmentId, councillerId, postingUserId, 
+      //meetingDate
+      );
       pr.dismiss();
       print(result);
       if(result.contains("create councill successfuly")){
@@ -277,48 +279,48 @@ _submit() async{
                         SizedBox(
                 height: 15,
               ),
-              TextFormField(
-                controller: dateCtrl,
-                onChanged: (val){
-                  setState(() {
-                    dateCtrl.text=val;
-                  });
-                },
-                autofocus: false,
-                decoration: new InputDecoration(
-                  labelText: 'Meeting Date Time',
-                  fillColor: Colors.white,
-                  icon: Icon(Icons.access_time),
-                  hintText: (meetingDate!=null)?formatDate(DateTime(meetingDate.year, meetingDate.month, meetingDate.day), [dd, '-', mm, '-', yyyy]).toString():"",
-                  border:  OutlineInputBorder(),
-                  //fillColor: Colors.green
-                ),
-                onTap: (){
-                  DatePicker.showDateTimePicker(context,
-                  showTitleActions: true,
-                              minTime: DateTime.now(),
-                              maxTime: DateTime(2050, 12, 12), onChanged: (date) {
-                              setState(() {
-                                this.meetingDate=date;
-                              });
-                          }, onConfirm: (date) {
-                            setState(() {
-                              this.meetingDate=date;
-                            });
-                          }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                validator: (value) {
-                  if (meetingDate == null) {
-                    return 'MeetingDate is required';
-                  }else {
-                    return null;
-                  }
-                },
-                style: new TextStyle(
-                  fontFamily: "Poppins",
-                ),
-              ),
-                                      SizedBox(
+              // TextFormField(
+              //   controller: dateCtrl,
+              //   onChanged: (val){
+              //     setState(() {
+              //       dateCtrl.text=val;
+              //     });
+              //   },
+              //   autofocus: false,
+              //   decoration: new InputDecoration(
+              //     labelText: 'Meeting Date Time',
+              //     fillColor: Colors.white,
+              //     icon: Icon(Icons.access_time),
+              //     hintText: (meetingDate!=null)?formatDate(DateTime(meetingDate.year, meetingDate.month, meetingDate.day), [dd, '-', mm, '-', yyyy]).toString():"",
+              //     border:  OutlineInputBorder(),
+              //     //fillColor: Colors.green
+              //   ),
+              //   onTap: (){
+              //     DatePicker.showDateTimePicker(context,
+              //     showTitleActions: true,
+              //                 minTime: DateTime.now(),
+              //                 maxTime: DateTime(2050, 12, 12), onChanged: (date) {
+              //                 setState(() {
+              //                   this.meetingDate=date;
+              //                 });
+              //             }, onConfirm: (date) {
+              //               setState(() {
+              //                 this.meetingDate=date;
+              //               });
+              //             }, currentTime: DateTime.now(), locale: LocaleType.en);
+              //   },
+              //   validator: (value) {
+              //     if (meetingDate == null) {
+              //       return 'MeetingDate is required';
+              //     }else {
+              //       return null;
+              //     }
+              //   },
+              //   style: new TextStyle(
+              //     fontFamily: "Poppins",
+              //   ),
+              // ),
+              SizedBox(
                 height: 25,
               ),
                         RaisedButton(

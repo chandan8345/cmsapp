@@ -68,6 +68,15 @@ class Auth{
       }
   }
 
+  Future<bool> logoutUser(int id) async{
+      var response = await dio.get("http://cms.flatbasha.com/logoutUser?id=$id");
+      if(response.toString().contains("done")){
+        return true;
+      }else{
+        return false;
+      }
+  }
+
   Future<bool> updateUser() async{
 
     return true;
@@ -83,11 +92,5 @@ class Auth{
     p.hide();
     return false;
     }
-  }
-  Future<bool> logoutUser() async{
-    sp=await SharedPreferences.getInstance();
-    await sp.clear();
-    
-    return true;
   }
 }

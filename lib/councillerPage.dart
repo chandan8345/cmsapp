@@ -135,20 +135,74 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
                 child:
                 Column(
                   children: <Widget>[
-                    Align(
-                      alignment: Alignment.center,
-                      child: CircleAvatar(
-                        radius: 60,
-                        child: ClipOval(
-                          child: SizedBox(
-                            width: 120.0,
-                            height: 120.0,
-                            child: (image != null) ? Image.file(image,fit: BoxFit.fill,):
-                            Image.network("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill,),
+                  //   Align(
+                  //     alignment: Alignment.center,
+                  //     child: 
+                  //     CircleAvatar(
+                  //       radius: 60,
+                  //       child: ClipOval(
+                  //         child: SizedBox(
+                  //           width: 120.0,
+                  //           height: 120.0,
+                  //           child: (image != null) ? Image.file(image,fit: BoxFit.fill,):
+                  //           Image.network("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",fit: BoxFit.fill,),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  //  Padding(
+                  //   padding: EdgeInsets.only(top: 00.0),
+                  //   child: IconButton(
+                  //     icon: Icon(
+                  //       Icons.camera,
+                  //       size: 30.0,
+                  //     ),
+                  //     onPressed: () {
+                  //       getImage();
+                  //     },
+                  //   ),
+                  // ),
+                Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: CircleAvatar(
+                      radius: 65,
+                      backgroundColor: Colors.transparent,
+                      child: ClipOval(
+                        child: new SizedBox(
+                          width: 150.0,
+                          height: 150.0,
+                          child: (image!=null)?Image.file(
+                            image,
+                            fit: BoxFit.fill,
+                          ):Image.network(
+                            "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",
+                            fit: BoxFit.fill,
                           ),
                         ),
                       ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 95.0,left: 95.0),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.camera_alt,
+                        size: 25.0,
+                      ),
+                      onPressed: () {
+                        getImage();
+                      },
+                    ),
+                  ),
+                    ],
+                  ),
+                ],
+              ),
                   ],
                 ),
               ),
@@ -192,7 +246,7 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
                         child: TextFormField(
                           controller: studentidCtrl,
                           decoration: new InputDecoration(
-                            labelText: 'Staff ID',
+                            labelText: 'Staff ID', 
                             fillColor: Colors.white,
                             prefixText: '',
                             icon: Icon(Icons.account_balance_wallet),
@@ -424,11 +478,11 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    InkWell(
-                      onTap: getImage,
-                      child:
-                      roundedRectButton("Get Photo", signInGradients, false),
-                    ),
+                    // InkWell(
+                    //   onTap: getImage,
+                    //   child:
+                    //   roundedRectButton("Get Photo", signInGradients, false),
+                    // ),
                     InkWell(
                       onTap: _submit,
                       child:

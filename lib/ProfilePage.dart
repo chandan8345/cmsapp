@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'package:cms/register.dart';
+import 'package:cms/controller/auth.dart';
+import 'package:cms/controller/onscreen.dart';
+import 'package:cms/councillerPage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
-
 import 'onboarding.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,7 +18,8 @@ class MapScreenState extends State<ProfilePage>{
   bool _status = true;SharedPreferences sp;
   final FocusNode myFocusNode = FocusNode();
   String name,department,semester,mobile,role,id;
-  List today,waiting,pending,settled;int sid;
+  List today,waiting,pending,settled,users;int sid,s=0;
+  Auth auth=new Auth();OnScreen onScreen=new OnScreen();
 
   @override
   void initState() {
@@ -40,13 +42,20 @@ class MapScreenState extends State<ProfilePage>{
       this.mobile=m;
       this.semester=s;
       this.department=d;
-      //this.id=i;
       this.sid=i;
     });
+    _getUsers(sid);
     _today();
     _waiting();
     _pending();
     _settled();
+  }
+
+  _getUsers(id) async{
+    List a=await onScreen.getActiveUsers(id);
+    setState(() {
+      this.users=a;
+    });
   }
 
      Future _today() async {
@@ -69,7 +78,6 @@ class MapScreenState extends State<ProfilePage>{
         setState(() {
     this.pending = json.decode(r3.toString());
         });
-        print(pending[0]['total']);
   }
     Future _settled() async{
     Dio dio = new Dio();
@@ -109,7 +117,9 @@ class MapScreenState extends State<ProfilePage>{
           // drawer: new Drawer(child: new Container(),),
           backgroundColor: Colors.transparent,
           body:
-          new Center(
+          Column(
+            children: <Widget>[
+              new Center(
             child: new Column(
               children: <Widget>[
                 new SizedBox(height: _height/12,),
@@ -141,6 +151,34 @@ class MapScreenState extends State<ProfilePage>{
               ],
             ),
           ),
+          // CategoryHorizontal(),
+          // Padding(
+          // padding: EdgeInsets.only(top: 10.0,bottom: 20.0),
+          // child: (users  != null && 1<users.length)?Text('(^_^) Active Councillers (~.~)',style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic,fontSize: 16.0),):SizedBox()
+          // ),
+          Container(
+          height: 110.0,
+           child: (users != null)?ListView.builder(
+           scrollDirection: Axis.horizontal,
+           itemCount: (users != null) ? users.length : 0,
+           itemBuilder: (BuildContext context,int index)=> 
+           Category(
+             imgCaption: users[index]['name'],
+             imgLocation: "http://cms.flatbasha.com/image/"+users[index]["id"].toString()+".jpg",
+           ),
+          ):
+      ListView(
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          // Category(
+          //   imgCaption: 'demoz',
+          //   imgLocation: 'assets/images/collaboration.png',
+          // ),
+        ],
+      ),
+    ),
+            ],
+          ),
           //floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
           floatingActionButton: 
           Row(
@@ -154,8 +192,8 @@ class MapScreenState extends State<ProfilePage>{
           Icons.school,color: Colors.blueAccent,
         ),
         onPressed: () async {
-          Route route=MaterialPageRoute(builder: (context) => register());
-          Navigator.pop(context, route);
+          Route route=MaterialPageRoute(builder: (context) => CouncillerPage());
+          Navigator.push(context, route);
         },
         heroTag: null,
       ),
@@ -167,7 +205,8 @@ class MapScreenState extends State<ProfilePage>{
         child: Icon(
           Icons.power_settings_new,color: Colors.blueAccent,
         ),
-        onPressed: () async {
+        onPressed: () async {  
+          var a = auth.logoutUser(sid);
           sp=await SharedPreferences.getInstance();
           await sp.clear();
           Route route=MaterialPageRoute(builder: (context) => Onboarding());
@@ -200,4 +239,66 @@ class MapScreenState extends State<ProfilePage>{
     new Text('$count',style: new TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
     new Text(type,style: new TextStyle(color: Colors.white, fontWeight: FontWeight.normal,fontSize: 12))
   ],));
+}
+
+class Category extends StatelessWidget {
+  final String imgLocation;
+  final String imgCaption;
+  Category({
+    this.imgCaption,
+    this.imgLocation
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return
+      Container(
+      child:
+      InkWell(
+        onTap: (){},
+        child:
+        // Container(
+        //   width: 120.0,
+        //   height: 120.0,
+        //   child: ListTile(
+        //     title: Image.network(imgLocation),
+        //     subtitle: Text(imgCaption,textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12)),
+        //   ),
+        // ),
+      Padding(
+        padding: EdgeInsets.only(left:10.0),
+        child:Column(
+        children: <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: 0.0),
+        child: 
+        Container(
+        width: 85.0,
+        height: 75.0,
+        child:
+      CircleAvatar(
+       backgroundColor: Colors.white,
+       radius: 0.0,
+       child: 
+       ClipOval(
+       child:
+           Image.network(imgLocation,fit: BoxFit.fill,height: 70,width: 70)
+        ),
+       ),
+        ),
+      ),
+      SizedBox(
+        height: 5,
+      ),
+        Text(imgCaption,textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12),softWrap: true,),
+      SizedBox(
+        height: 2,
+      ),
+        Text('(Online)',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 10),softWrap: true,),
+        ],
+      ),
+      ),
+      )
+      );
+  }
 }

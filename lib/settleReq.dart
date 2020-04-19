@@ -30,6 +30,7 @@ final _formKey = GlobalKey<FormState>();
   void initState(){
    super.initState();
    _getUserData();
+   pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
   }
 
     @override
@@ -78,7 +79,6 @@ final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
        backgroundColor: Colors.white,
        appBar: fullAppbar(context,"Settle Form","Settle the councill"),
