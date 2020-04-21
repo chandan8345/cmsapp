@@ -119,7 +119,7 @@ _submit() async{
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
                   hintText: 'Write down comments for refferd',
-                  border:  OutlineInputBorder(),
+                  border:  UnderlineInputBorder(),
                   //fillColor: Colors.green
                 ),
                 validator:  (value) {
@@ -145,7 +145,7 @@ _submit() async{
                             labelText: 'Select Counciller',
                             fillColor: Colors.white,
                             icon: Icon(Icons.school),
-                            isDense: true,
+                            isDense: false,
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),

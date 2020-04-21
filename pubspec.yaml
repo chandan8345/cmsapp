@@ -37,7 +37,6 @@ dependencies:
   date_format: ^1.0.8
   jiffy: ^3.0.1
   call_number: ^0.0.1
-  snack: ^1.0.4
   fluttertoast: ^4.0.1
 
 dev_dependencies:

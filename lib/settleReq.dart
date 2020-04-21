@@ -30,7 +30,6 @@ final _formKey = GlobalKey<FormState>();
   void initState(){
    super.initState();
    _getUserData();
-   pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
   }
 
     @override
@@ -39,6 +38,7 @@ final _formKey = GlobalKey<FormState>();
   }
 
   _submit() async{
+  pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
   Others others=new Others();
   if(await others.checkConection() ==true){
    if(_formKey.currentState.validate()){
@@ -99,7 +99,7 @@ final _formKey = GlobalKey<FormState>();
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
                   hintText: 'Write down solutions...',
-                  border:  OutlineInputBorder(),
+                  border:  UnderlineInputBorder(),
                   //fillColor: Colors.green
                 ),
                 validator:  (value) {

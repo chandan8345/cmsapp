@@ -95,11 +95,11 @@ class _AcceptReqState extends State<AcceptReq> {
             TextFormField(
                 controller: commentsCtrl,
                 decoration: new InputDecoration(
-                  labelText: 'Wtite down comments...',
+                  labelText: 'Wtite down comments',
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
                   hintText: 'Write down comments',
-                  border:  OutlineInputBorder(),
+                  border:  UnderlineInputBorder(),
                   //fillColor: Colors.green
                 ),
                 validator:  (value) {

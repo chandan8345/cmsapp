@@ -166,7 +166,7 @@ _submit() async{
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
                   hintText: 'Write down your reason',
-                  border:  OutlineInputBorder(),
+                  border:  UnderlineInputBorder(),
                   //fillColor: Colors.green
                 ),
                 validator:  (value) {
@@ -189,7 +189,7 @@ _submit() async{
               ),
               DropdownButtonFormField(
                           decoration: new InputDecoration(
-                            isDense: true,
+                            isDense: false,
                             labelText: 'Select Category',
                             fillColor: Colors.white,
                             icon: Icon(Icons.developer_board),
@@ -221,7 +221,7 @@ _submit() async{
                         DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Select Department',
-                            isDense: true,
+                            isDense: false,
                             fillColor: Colors.white,
                             icon: Icon(Icons.import_contacts),
                             border: UnderlineInputBorder(),
@@ -250,7 +250,7 @@ _submit() async{
                         DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Select Counciller',
-                            isDense: true,
+                            isDense: false,
                             fillColor: Colors.white,
                             icon: Icon(Icons.school),
                             border: UnderlineInputBorder(),
@@ -266,7 +266,7 @@ _submit() async{
                           items: (councillers != null)?councillers.map((array){
                             return DropdownMenuItem(
                               value: array['name'].toString(), 
-                              child: Text("Mr. "+array['name']),
+                              child: Text(array['name']),
                             );
                           }).toList():null,
                           validator: (value) {
