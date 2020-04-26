@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cms/ProfileUpdate.dart';
 import 'package:cms/controller/auth.dart';
 import 'package:cms/controller/onscreen.dart';
 import 'package:cms/councillerPage.dart';
@@ -198,6 +199,20 @@ class MapScreenState extends State<ProfilePage>{
         heroTag: null,
       ),
       ):SizedBox(),
+       Padding(
+        padding: EdgeInsets.all(10.0),
+        child: FloatingActionButton(
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.camera_front,color: Colors.blueAccent,
+        ),
+        onPressed: () async {
+          Route route=MaterialPageRoute(builder: (context) => ProfileUpdate());
+          Navigator.push(context, route);
+        },
+        heroTag: null,
+      ),
+      ),
       Padding(
         padding: EdgeInsets.all(10.0),
         child: FloatingActionButton(
