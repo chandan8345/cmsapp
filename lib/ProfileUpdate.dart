@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cms/controller/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controller/Others.dart';
+import 'onboarding.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileUpdate extends StatefulWidget {
@@ -17,6 +17,8 @@ class ProfileUpdate extends StatefulWidget {
 class _ProfileUpdateState extends State<ProfileUpdate> {
   bool hidePassword = true;final _formKey = GlobalKey<FormState>();
   TextEditingController nameCtrl=new TextEditingController();
+  TextEditingController newPassCtrl=new TextEditingController();
+  TextEditingController oldPassCtrl=new TextEditingController();
   TextEditingController emailCtrl=new TextEditingController();
   TextEditingController mobileCtrl=new TextEditingController();
   TextEditingController studentidCtrl=new TextEditingController();
@@ -24,22 +26,23 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
   //TextEditingController semesterCtrl=new TextEditingController();
   TextEditingController passCtrl=new TextEditingController();
   static Pattern pattern =r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  String name,email,department,semester,mobile,role,id,password,studentid;
+  String name,email,department,semester,mobile,role,id,password,oldpassword,newpassword,studentid;
   int sid,departmentid;ProgressDialog pr;
   SharedPreferences sp;
-  File image;
+  File image;Auth auth=new Auth();
   RegExp regex = new RegExp(pattern);
   List posts,departments,semesters;
 
     @override
   void initState() {
     super.initState();
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     _welcome();
     _Others();
   }
 
-    void toast(String text) {
-    Fluttertoast.showToast(
+  void toast(String text) {
+  Fluttertoast.showToast(
         msg: text,
         backgroundColor: Colors.red,
         toastLength: Toast.LENGTH_SHORT,
@@ -48,24 +51,77 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
   }
 
   Future _submit() async{
-    Others others=new Others();
+  Others others=new Others();
   if(await others.checkConection()== true){
    if(_formKey.currentState.validate()){
       _formKey.currentState.save();
+      pr.update(message: "Please wait");
       pr.show();
       bool result;
       if(image != null){
-        result =await Auth().registerCounciller(name,studentid,mobile,email,password,departmentid,image);
-        pr.hide();
-      if(result == true){
+        if(newPassCtrl.text.length > 0){
+        result =await Auth().updateUserWithImage(sid,nameCtrl.text,studentidCtrl.text,mobileCtrl.text,emailCtrl.text,newPassCtrl.text,image);
+        pr.dismiss();
+        if(result == true){
         //alertSucess("Notice", "User created successfully...");
-        toast("Register successfully");
-      }else{
+        toast("Profile Update successfully");
+          var a = auth.logoutUser(sid);
+          sp=await SharedPreferences.getInstance();
+          await sp.clear();
+          Route route=MaterialPageRoute(builder: (context) => Onboarding());
+          Navigator.push(context, route);
+        }else{
         //alertError("Notice", "Something went wrong...");
         toast("Something went wrong");
-      }
+        } 
+        }else{
+        result =await Auth().updateUserWithImage(sid,nameCtrl.text,studentidCtrl.text,mobileCtrl.text,emailCtrl.text,oldPassCtrl.text,image);
+        pr.dismiss();
+        if(result == true){
+        //alertSucess("Notice", "User created successfully...");
+        toast("Profile Update successfully");
+          var a = auth.logoutUser(sid);
+          sp=await SharedPreferences.getInstance();
+          await sp.clear();
+          Route route=MaterialPageRoute(builder: (context) => Onboarding());
+          Navigator.push(context, route);
+        }else{
+        //alertError("Notice", "Something went wrong...");
+        toast("Something went wrong");
+        }
+        }
       }else{
-        getImage();
+        if(newPassCtrl.text.length > 0){
+        result =await Auth().updateUserWithoutImage(sid,nameCtrl.text,studentidCtrl.text,mobileCtrl.text,emailCtrl.text,newPassCtrl.text);
+        pr.dismiss();
+        if(result == true){
+        //alertSucess("Notice", "User created successfully...");
+        toast("Profile Update successfully");
+          var a = auth.logoutUser(sid);
+          sp=await SharedPreferences.getInstance();
+          await sp.clear();
+          Route route=MaterialPageRoute(builder: (context) => Onboarding());
+          Navigator.push(context, route);
+        }else{
+        //alertError("Notice", "Something went wrong...");
+        toast("Something went wrong");
+        } 
+        }else{
+        result =await Auth().updateUserWithoutImage(sid,nameCtrl.text,studentidCtrl.text,mobileCtrl.text,emailCtrl.text,oldPassCtrl.text);
+        pr.dismiss();
+        if(result == true){
+        //alertSucess("Notice", "User created successfully...");
+        toast("Profile Update successfully");
+          var a = auth.logoutUser(sid);
+          sp=await SharedPreferences.getInstance();
+          await sp.clear();
+          Route route=MaterialPageRoute(builder: (context) => Onboarding());
+          Navigator.push(context, route);
+        }else{
+        //alertError("Notice", "Something went wrong...");
+        toast("Something went wrong");
+        }
+        }
       }
     }}else{
       others.showMessage(context, "Notice", "Please check your internet connection !!!");
@@ -82,21 +138,24 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
     sp=await SharedPreferences.getInstance();
     String r=sp.getString('role');
     String n=sp.getString('name');
-    String s=sp.getString('semester');
     String d=sp.getString('department');
     String m=sp.getString('mobile');
     String si=sp.getString('studentid');
     String e=sp.getString('email').toString();
     int i=sp.getInt('id');
     setState(() {
-      this.role=r;
+      nameCtrl.text=n;
+      mobileCtrl.text=m;
+      studentidCtrl.text=si;
+      emailCtrl.text=e;
+      // this.role=r;
       this.name=n;
-      this.mobile=m;
-      this.semester=s;
-      this.department=d;
-      this.studentid=si;
+      // this.mobile=m;
+      // this.department=d;
+      // this.studentid=si;
+      this.password=sp.getString('password').toString();
       this.sid=i;
-      this.email=e;
+      // this.email=e;
     });
     
   }
@@ -155,33 +214,43 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                       Text(
                         'Welcome $name',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
+                            fontSize: 20, fontWeight: FontWeight.w500,fontStyle: FontStyle.italic),
                       ),
                       SizedBox(
                         height: 14,
                       ),
+                      Row(
+                        children: <Widget>[
                       Text(
-                        'you can update here',
-                        style: TextStyle(color: Colors.black54),
+                        'tap to upload image',
+                        style: TextStyle(color: Colors.black54,fontStyle: FontStyle.italic),
+                      ),
+                      InkWell(
+                        child: Icon(Icons.person,color: Colors.blue,),
+                        onTap: (){
+                          getImage();
+                        },
+                      ),
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 0,right: 0, bottom: 0, top: 0),
                         child: TextFormField(
                           controller: nameCtrl,
                           decoration: new InputDecoration(
-                            labelText: '$name',
+                            labelText: 'Name',
                             fillColor: Colors.white,
                             icon: Icon(Icons.person,color: Colors.black,),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter your name';
-                            }else {
-                              return null;
-                            }
-                          },
+                          // validator: (value) {
+                          //   if (value.isEmpty) {
+                          //     return 'Please enter your name';
+                          //   }else {
+                          //     return null;
+                          //   }
+                          // },
                           keyboardType: TextInputType.text,
                           style: new TextStyle(
                             fontFamily: "Poppins",
@@ -198,27 +267,27 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         child: TextFormField(
                           controller: studentidCtrl,
                           decoration: new InputDecoration(
-                            labelText: '$studentid', 
+                            labelText: 'Student/Staff ID', 
                             fillColor: Colors.white,
                             prefixText: '',
                             icon: Icon(Icons.account_balance_wallet,color: Colors.black,),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter staff id';
-                            }else {
-                              return null;
-                            }
-                          },
+                          // validator: (value) {
+                          //   if (value.isEmpty) {
+                          //     return 'Please enter staff id';
+                          //   }else {
+                          //     return null;
+                          //   }
+                          // },
                           keyboardType: TextInputType.phone,
                           style: new TextStyle(
                             fontFamily: "Poppins",
                           ),
                           onChanged: (value){
                             setState(() {
-                              //this.studentid=value;
+                              this.studentid=value;
                             });
                           },
                         ),
@@ -228,7 +297,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         child: TextFormField(
                           controller: mobileCtrl,
                           decoration: new InputDecoration(
-                            labelText: '$mobile',
+                            labelText: 'Mobile No',
                             fillColor: Colors.white,
                             prefixText: '+88 ',
                             icon: Icon(Icons.phone,color: Colors.black,),
@@ -236,9 +305,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                             //fillColor: Colors.green
                           ),
                           validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter mobile no';
-                            }else if(value.length != 11){
+                            if (value.isNotEmpty && value.length != 11) {
                               return 'Mobile no must be 11 Digits';
                             }else {
                               return null;
@@ -260,16 +327,14 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         child: TextFormField(
                           controller: emailCtrl,
                           decoration: new InputDecoration(
-                            labelText: '$email',
+                            labelText: 'Email',
                             fillColor: Colors.white,
                             icon: Icon(Icons.alternate_email),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
                           validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter email address';
-                            }else if(!regex.hasMatch(value)){
+                            if (value.isNotEmpty && !regex.hasMatch(value)) {
                               return 'Please enter valid email';
                             }else{
                               return null;
@@ -289,7 +354,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                       Padding(
                         padding: EdgeInsets.only(left: 0,right: 0, bottom: 0, top: 0),
                         child: TextFormField(
-                          controller: passCtrl,
+                          controller: oldPassCtrl,
                           obscureText: true,
                           decoration: new InputDecoration(
                             labelText: 'Old Password',
@@ -300,8 +365,11 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please enter secure code';
-                            }else {
+                              return 'Please enter old password';
+                            }else if(value != password){
+                              return 'wrong old password';
+                            }
+                            else {
                               return null;
                             }
                           },
@@ -311,7 +379,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                           ),
                           onChanged: (value){
                             setState(() {
-                              this.password=value;
+                              this.oldpassword=value;
                             });
                           },
                         ),
@@ -319,7 +387,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                       Padding(
                         padding: EdgeInsets.only(left: 0,right: 0, bottom: 0, top: 0),
                         child: TextFormField(
-                          controller: passCtrl,
+                          controller: newPassCtrl,
                           obscureText: true,
                           decoration: new InputDecoration(
                             labelText: 'New Password',
@@ -328,20 +396,20 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter secure code';
-                            }else {
-                              return null;
-                            }
-                          },
+                          // validator: (value) {
+                          //   if (value != password) {
+                          //     return 'Please enter secure code';
+                          //   }else {
+                          //     return null;
+                          //   }
+                          // },
                           keyboardType: TextInputType.text,
                           style: new TextStyle(
                             fontFamily: "Poppins",
                           ),
                           onChanged: (value){
                             setState(() {
-                              this.password=value;
+                              this.newpassword=value;
                             });
                           },
                         ),
@@ -378,17 +446,20 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                       //     },
                       //   ),
                       // ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Padding(
                 padding: EdgeInsets.only(left: 0),
                 child:  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    InkWell(
-                      onTap: getImage,
-                      child:
-                      roundedRectButton("Get Photo", signInGradients, false),
-                    ),
+                    // InkWell(
+                    //   onTap: getImage,
+                    //   child:
+                    //   roundedRectButton("Get Photo", signInGradients, false),
+                    // ),
                     InkWell(
                       onTap: _submit,
                       child:
