@@ -226,7 +226,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                         style: TextStyle(color: Colors.black54,fontStyle: FontStyle.italic),
                       ),
                       InkWell(
-                        child: Icon(Icons.person,color: Colors.blue,),
+                        child: Icon(Icons.camera_alt,color: Colors.blue,),
                         onTap: (){
                           getImage();
                         },
@@ -329,7 +329,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                           decoration: new InputDecoration(
                             labelText: 'Email',
                             fillColor: Colors.white,
-                            icon: Icon(Icons.alternate_email),
+                            icon: Icon(Icons.email,color: Colors.black,),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),

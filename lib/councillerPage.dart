@@ -303,37 +303,37 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
                           },
                         ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
-                      //   child: TextFormField(
-                      //     controller: emailCtrl,
-                      //     decoration: new InputDecoration(
-                      //       labelText: 'Email',
-                      //       fillColor: Colors.white,
-                      //       icon: Icon(Icons.alternate_email),
-                      //       border: UnderlineInputBorder(),
-                      //       //fillColor: Colors.green
-                      //     ),
-                      //     validator: (value) {
-                      //       if (value.isEmpty) {
-                      //         return 'Please enter email address';
-                      //       }else if(!regex.hasMatch(value)){
-                      //         return 'Please enter valid email';
-                      //       }else{
-                      //         return null;
-                      //       }
-                      //     },
-                      //     keyboardType: TextInputType.emailAddress,
-                      //     style: new TextStyle(
-                      //       fontFamily: "Poppins",
-                      //     ),
-                      //     onChanged: (value){
-                      //       setState(() {
-                      //         this.email=value;
-                      //       });
-                      //     },
-                      //   ),
-                      // ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
+                        child: TextFormField(
+                          controller: emailCtrl,
+                          decoration: new InputDecoration(
+                            labelText: 'Email',
+                            fillColor: Colors.white,
+                            icon: Icon(Icons.alternate_email),
+                            border: UnderlineInputBorder(),
+                            //fillColor: Colors.green
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter email address';
+                            }else if(!regex.hasMatch(value)){
+                              return 'Please enter valid email';
+                            }else{
+                              return null;
+                            }
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          style: new TextStyle(
+                            fontFamily: "Poppins",
+                          ),
+                          onChanged: (value){
+                            setState(() {
+                              this.email=value;
+                            });
+                          },
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.only(left: 20,right: 20, bottom: 0, top: 0),
                         child: TextFormField(
