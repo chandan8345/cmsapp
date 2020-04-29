@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cms/controller/auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -207,26 +208,55 @@ class _registerState extends State<register> {
                     children: <Widget>[
                   Align(
                     alignment: Alignment.center,
-                    child: CircleAvatar(
-                      radius: 65,
-                      backgroundColor: Colors.transparent,
-                      child: ClipOval(
-                        child: new SizedBox(
-                          width: 150.0,
-                          height: 150.0,
-                          child: (image!=null)?Image.file(
-                            image,
-                            fit: BoxFit.fill,
-                          ):Image.network(
-                            "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: 
+                    // CircleAvatar(
+                    //   radius: 65,
+                    //   backgroundColor: Colors.transparent,
+                    //   child: 
+                    //   ClipOval(
+                    //     child: new SizedBox(
+                    //       width: 150.0,
+                    //       height: 150.0,
+                    //       child: (image!=null)?Image.file(
+                    //         image,
+                    //         fit: BoxFit.fill,
+                    //       ):Image.network(
+                    //         "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",
+                    //         fit: BoxFit.fill,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    AvatarGlow(
+    startDelay: Duration(milliseconds: 1000),
+    glowColor: Colors.black,
+    endRadius: 90.0,
+    duration: Duration(milliseconds: 2000),
+    repeat: true,
+    showTwoGlows: true,
+    repeatPauseDuration: Duration(milliseconds: 100),
+    child: Material(
+      elevation: 8.0,
+      shape: CircleBorder(),
+      child: CircleAvatar(
+        radius: 70,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 70.0,
+          backgroundImage:(image!=null)?Image.file(
+                             image):NetworkImage("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",),
+        ),
+        )
+        //child: Image.asset('assets/images/flutter.png',height: 60,),
+        //shape: BoxShape.circle
+      ),
+    shape: BoxShape.circle,
+    animate: true,
+    curve: Curves.fastOutSlowIn,
+     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 95.0,left: 95.0),
+                    padding: EdgeInsets.only(top: 115.0,left: 130.0),
                     child: IconButton(
                       icon: Icon(
                         Icons.camera_alt,

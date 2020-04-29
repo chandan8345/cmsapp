@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
 import 'onboarding.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -109,13 +110,6 @@ class MapScreenState extends State<ProfilePage>{
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),)),
       new Scaffold(
-          // appBar: new AppBar(
-          //   title: new Text(''),
-          //   centerTitle: false,
-          //   elevation: 0.0,
-          //   backgroundColor: Colors.transparent,
-          // ),
-          // drawer: new Drawer(child: new Container(),),
           backgroundColor: Colors.transparent,
           body:
           Column(
@@ -124,12 +118,46 @@ class MapScreenState extends State<ProfilePage>{
             child: new Column(
               children: <Widget>[
                 new SizedBox(height: _height/12,),
-                new CircleAvatar(radius:_width<_height? _width/4:_height/4,
-                backgroundImage: NetworkImage(
+              // CircleAvatar(
+              // backgroundColor: Colors.white,
+              // radius: 100.0,
+              //     child:
+              //     new CircleAvatar(radius:_width<_height? _width/4:_height/4,
+              //   backgroundImage: NetworkImage(
+              //     (sid != null) ? "http://cms.flatbasha.com/image/$sid.jpg" :
+              //           "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",
+              //   ),),
+              //   ),
+              AvatarGlow(
+    startDelay: Duration(milliseconds: 1000),
+    glowColor: Colors.white,
+    endRadius: 90.0,
+    duration: Duration(milliseconds: 2000),
+    repeat: true,
+    showTwoGlows: true,
+    repeatPauseDuration: Duration(milliseconds: 100),
+    child: Material(
+      elevation: 8.0,
+      shape: CircleBorder(),
+      child: CircleAvatar(
+        radius: 70,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 69.0,
+          backgroundImage: NetworkImage(
                   (sid != null) ? "http://cms.flatbasha.com/image/$sid.jpg" :
                         "https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",
-                ),),
-                new SizedBox(height: _height/25.0,),
+                ),
+        ),
+        //child: Image.asset('assets/images/flutter.png',height: 60,),
+        //shape: BoxShape.circle
+      ),
+    ),
+    shape: BoxShape.circle,
+    animate: true,
+    curve: Curves.fastOutSlowIn,
+  ),
+                new SizedBox(height: 5,),
                 new Text('$name', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: _width/15, color: Colors.white),),
                 new Padding(padding: new EdgeInsets.only(top: 5,bottom: 10),
                   child:new Text('$role',

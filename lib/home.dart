@@ -14,7 +14,7 @@ import 'package:cms/settleReq.dart';
 import 'package:cms/refferedReq.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:jiffy/jiffy.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 
 
 class Home extends StatefulWidget {
@@ -244,7 +244,7 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               CircleAvatar(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.black45,
               radius: 28.0,
               child: 
               ClipOval(
@@ -417,7 +417,7 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               CircleAvatar(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.black45,
               radius: 28.0,
               child: 
               ClipOval(
@@ -564,7 +564,7 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               CircleAvatar(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.black45,
               radius: 28.0,
               child: ClipOval(
                child: 
@@ -596,7 +596,7 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               CircleAvatar(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.black45,
               radius: 28.0,
               child: 
               ClipOval(
@@ -671,7 +671,7 @@ class _HomeState extends State<Home> {
                 width: 10,
               ),
               CircleAvatar(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.black45,
               radius: 28.0,
               child: 
               ClipOval(

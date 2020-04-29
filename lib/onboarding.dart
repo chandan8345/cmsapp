@@ -70,7 +70,7 @@ class _OnboardingState extends State<Onboarding> {
                           fontWeight: FontWeight.w400,
                           color: Colors.green),
                     ),
-                    SizedBox(height: 15),
+                    SizedBox(height: 20),
                     Text(
                       "cms provides students overcome challenges and become more competent and confident in both their work and their relationships with others. ",
                       style: TextStyle(
@@ -78,7 +78,7 @@ class _OnboardingState extends State<Onboarding> {
                           fontWeight: FontWeight.w400,
                           color: CustomColors.TextBody,
                           fontFamily: 'opensans'),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.justify,
                     ),
                   ],
                 ),
