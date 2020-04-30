@@ -1,4 +1,3 @@
-import 'package:call_number/call_number.dart';
 import 'package:cms/accept.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
@@ -14,7 +13,7 @@ import 'package:cms/settleReq.dart';
 import 'package:cms/refferedReq.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 
 class Home extends StatefulWidget {
@@ -57,16 +56,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-  _initCall(String mobile) async {
-    await new CallNumber().callNumber('+88' + mobile);
-  }
-
-  // _getCounciller() async{
-  //   List c=await Others().getCounciller(0);
-  //   setState(() {
-  //     this.councillers=c;
-  //   });
-  // }
+    _initCall(String mobile) async{
+     bool res = await FlutterPhoneDirectCaller.callNumber('+88' + mobile);
+    }
 
     Future<Null> _getPostRefresh() async{
     if(await others.checkConection() == true){
