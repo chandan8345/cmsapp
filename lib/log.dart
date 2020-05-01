@@ -5,7 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-//import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 import 'package:cms/register.dart'; 
 import 'package:cms/home.dart';
 

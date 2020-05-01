@@ -13,7 +13,6 @@ SharedPreferences sp;
     sp.setString('password', user[0]['password']);
     sp.setString('role', user[0]['role']);
     sp.setString('studentid', user[0]['studentid']);
-    sp.setInt('semesterid', user[0]['semesterid']);
     sp.setInt('departmentid', user[0]['departmentid']);
     print('sucess store');
   }
@@ -28,7 +27,6 @@ SharedPreferences sp;
     user['email']=sp.getString('email').toString();
     user['role']=sp.getString('role').toString();
     user['password']=sp.getString('password').toString();
-    user['semester']=sp.getInt('semesterid').toString();
     user['department']=sp.getInt('departmentid').toString();
     return user;
   }

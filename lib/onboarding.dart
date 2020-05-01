@@ -13,7 +13,7 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int log=1;SharedPreferences sp;
+  int log=1;SharedPreferences sp;int departmentid;
 
   @override
   void initState(){
@@ -23,8 +23,9 @@ class _OnboardingState extends State<Onboarding> {
 
   _welcome() async{
     sp=await SharedPreferences.getInstance();
-    String role=sp.getString('role');
-    role==null?_memberShip():_homE();
+    this.departmentid=sp.getInt('departmentid');
+    departmentid==null?_memberShip():_homE();
+    print(departmentid);
   }
 
   _homE(){
