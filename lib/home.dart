@@ -3,8 +3,8 @@ import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:cms/appBars.dart';
 import 'package:cms/util.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:nice_button/nice_button.dart';
 import 'package:cms/controller/onscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +14,7 @@ import 'package:cms/refferedReq.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-
+import 'ProfilePage.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -24,13 +24,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
   final refreshKey = new GlobalKey<RefreshIndicatorState>();
+  TextEditingController searchCtrl=new TextEditingController();
   OnScreen display=new OnScreen();
   int bottomNavigationBarIndex = 0;
-  String postStatus="today";
+  String postStatus="today",history;
   int councillerid,userid;
   DateTime meetingDate;
   SharedPreferences sp;
-  List post;String role;List councillers;
+  List post;String role;List councillers,unfiltered;
   Others others=new Others();
   ProgressDialog pr;
   //ProgressDialog _progressDialog = ProgressDialog();
@@ -45,6 +46,27 @@ class _HomeState extends State<Home> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  _search(String search){
+    var exist=search.length>0?true:false;
+    if(exist){
+      var filterdData=[];
+      for(int i=0;i<unfiltered.length;i++){
+        String reason = unfiltered[i]['reason'].toLowerCase();
+        //String solution = unfiltered[i]['solution'].toLowerCase();
+        if(reason.contains(search.toLowerCase())){
+          filterdData.add(unfiltered[i]);
+        }
+      }
+      setState(() {
+        this.post=filterdData;
+      });
+    }else{
+      setState(() {
+        this.post=this.unfiltered;
+      });
+    }
   }
 
   _welcome() async{
@@ -69,21 +91,25 @@ class _HomeState extends State<Home> {
         List a=await display.getToday(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else if(postStatus == "waiting"){
         List a=await display.getWaiting(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else if(postStatus == "accepted"){
         List a=await display.getPending(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else if(postStatus == "settled"){
         List a=await display.getSettled(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else{
       empty();
@@ -111,21 +137,24 @@ class _HomeState extends State<Home> {
         List a=await display.getToday(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else if(postStatus == "waiting"){
         List a=await display.getWaiting(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else if(postStatus == "accepted"){
         List a=await display.getPending(userid,role);
         setState(() {
-          this.post=a;
+          this.unfiltered=a;
         });
     }else if(postStatus == "settled"){
         List a=await display.getSettled(userid,role);
         setState(() {
           this.post=a;
+          this.unfiltered=a;
         });
     }else{
       empty();
@@ -188,7 +217,89 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Initializing...',dismissAfter: Duration(seconds: 1));
         return Scaffold(
-          appBar: fullAppbar(context,"Northern University Bangladesh","Counselling Management System"),
+          appBar: //fullAppbar(context,"Northern University Bangladesh","Counselling Management System",),
+          PreferredSize(
+    preferredSize: Size.fromHeight(70.0),
+    child: GradientAppBar(
+      flexibleSpace: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          CustomPaint(
+            painter: CircleOne(),
+          ),
+          CustomPaint(
+            painter: CircleTwo(),
+          ),
+        ],
+      ),
+      title: Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              //'$name',
+              'Northern University Bangladesh',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              //'$sort',
+              'Counselling Management System',
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
+            ),
+          ],
+        ),
+      ),
+      actions: 'Northern University Bangladesh'=="Northern University Bangladesh"?(<Widget>[
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
+          child: InkWell(
+            onTap: (){
+                        showDialog(context: context,builder: (context){
+                          return AlertDialog(
+                            title: TextFormField(
+                                        controller: searchCtrl,
+                                        decoration: new InputDecoration(
+                                        labelText: 'Search Here',
+                                        fillColor: Colors.black,
+                                        //icon: Icon(Icons.border_color),
+                                        hintText: '',
+                                        border:  UnderlineInputBorder(),
+                                        suffixIcon: IconButton(
+                                          //icon: Text('Go',style: TextStyle(fontSize: 14,color: Colors.red,),),
+                                          icon: Icon(Icons.check,color: Colors.red,),
+                                          onPressed: (){
+                                           _search(searchCtrl.text);
+                                           Navigator.pop(context);
+                                        }),
+                                      ),
+                            ),
+                          );
+                        });
+            },
+            child: Icon(Icons.search),
+          ),//Image.asset('assets/images/photo.png'),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
+          child: InkWell(
+            onTap: (){
+               Route route=MaterialPageRoute(builder: (context) => ProfilePage());
+                                Navigator.push(context, route);
+            },
+            child: Icon(Icons.dashboard),
+          ),//Image.asset('assets/images/photo.png'),
+        ),
+      ]):null,
+      elevation: 0,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [CustomColors.HeaderBlueDark, CustomColors.HeaderBlueLight],
+      ),
+    ),
+  ),
           body: RefreshIndicator(
             child:
             (post != null)? post.length != 0?listView():empty():empty(),
@@ -1446,4 +1557,110 @@ class _HomeState extends State<Home> {
   }
   
   class SearchChoices {
+}
+
+Widget fullAppbar(BuildContext context,String name,String sort) {
+  return PreferredSize(
+    preferredSize: Size.fromHeight(70.0),
+    child: GradientAppBar(
+      flexibleSpace: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          CustomPaint(
+            painter: CircleOne(),
+          ),
+          CustomPaint(
+            painter: CircleTwo(),
+          ),
+        ],
+      ),
+      title: Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              '$name',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              '$sort',
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
+            ),
+          ],
+        ),
+      ),
+      actions: name=="Northern University Bangladesh"?(<Widget>[
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
+          child: InkWell(
+            onTap: (){
+            },
+            child: Icon(Icons.search),
+          ),//Image.asset('assets/images/photo.png'),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
+          child: InkWell(
+            onTap: (){
+               Route route=MaterialPageRoute(builder: (context) => ProfilePage());
+                                Navigator.push(context, route);
+            },
+            child: Icon(Icons.dashboard),
+          ),//Image.asset('assets/images/photo.png'),
+        ),
+      ]):null,
+      elevation: 0,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [CustomColors.HeaderBlueDark, CustomColors.HeaderBlueLight],
+      ),
+    ),
+  );
+}
+
+
+
+class CircleOne extends CustomPainter {
+  Paint _paint;
+
+  CircleOne() {
+    _paint = Paint()
+      ..color = CustomColors.HeaderCircle
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.fill;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawCircle(Offset(28.0, 0.0), 99.0, _paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class CircleTwo extends CustomPainter {
+  Paint _paint;
+
+  CircleTwo() {
+    _paint = Paint()
+      ..color = CustomColors.HeaderCircle
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.fill;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawCircle(Offset(-30, 20), 50.0, _paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
 }

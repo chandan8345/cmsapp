@@ -40,6 +40,15 @@ Widget fullAppbar(BuildContext context,String name,String sort) {
           margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
           child: InkWell(
             onTap: (){
+             
+            },
+            child: Icon(Icons.search),
+          ),//Image.asset('assets/images/photo.png'),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
+          child: InkWell(
+            onTap: (){
                Route route=MaterialPageRoute(builder: (context) => ProfilePage());
                                 Navigator.push(context, route);
             },
@@ -53,73 +62,136 @@ Widget fullAppbar(BuildContext context,String name,String sort) {
         end: Alignment.bottomRight,
         colors: [CustomColors.HeaderBlueDark, CustomColors.HeaderBlueLight],
       ),
-//      bottom: PreferredSize(
-//        preferredSize: Size.fromHeight(10),
-//        child: Container(
-//          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-//          padding: EdgeInsets.fromLTRB(15, 5, 15, 0),
-//          decoration: BoxDecoration(
-//            color: CustomColors.HeaderGreyLight,
-//            borderRadius: BorderRadius.circular(5.0),
-//          ),
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//            children: <Widget>[
-//              Column(
-//                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                crossAxisAlignment: CrossAxisAlignment.start,
-//                children: <Widget>[
-//                  Text(
-//                    'Today Reminder',
-//                    style: TextStyle(
-//                        color: Colors.white,
-//                        fontSize: 17,
-//                        fontWeight: FontWeight.w600),
-//                  ),
-//                  SizedBox(
-//                    height: 3,
-//                  ),
-//                  Text(
-//                    'Meeting with client',
-//                    style: TextStyle(
-//                        color: Colors.white,
-//                        fontSize: 10,
-//                        fontWeight: FontWeight.w300),
-//                  ),
-//                  SizedBox(
-//                    height: 3,
-//                  ),
-//                  Text(
-//                    '13.00 PM',
-//                    style: TextStyle(
-//                        color: Colors.white,
-//                        fontSize: 10,
-//                        fontWeight: FontWeight.w300),
-//                  ),
-//                ],
-//              ),
-//              Container(
-//                width: MediaQuery.of(context).size.width / 3.0,
-//              ),
-//              Image.asset(
-//                'assets/images/bell-left.png',
-//                scale: 1.3,
-//              ),
-//              Container(
-//                margin: EdgeInsets.only(bottom: 80),
-//                child: Icon(
-//                  Icons.clear,
-//                  color: Colors.white,
-//                  size: 18.0,
-//                ),
-//              ),
-//            ],
-//          ),
-//        ),
-//      ),
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(10),
+      //   child: Container(
+      //     color: Colors.transparent,
+      //     child: Padding(
+      //       padding: EdgeInsets.only(left: 15,right: 15,bottom: 5,top: 0),
+      //       child: Container(
+      //        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      //        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+      //        decoration: BoxDecoration(
+      //        color: CustomColors.HeaderGreyLight,
+      //        borderRadius: BorderRadius.circular(5.0),),
+      //        child: TextFormField(
+      //             decoration: new InputDecoration(
+      //             labelText: '',
+      //             fillColor: Colors.white,
+                  
+      //             //icon: Icon(Icons.search,color: Colors.white,),
+      //             hintText: 'Search Here',
+      //             suffixIcon: IconButton(
+      //                 icon: Icon(Icons.search,color: Colors.white,),
+      //                 onPressed: () {
+                       
+      //                 }),
+      //             //border:  OutlineInputBorder(),
+      //             //fillColor: Colors.green
+      //           ),
+      //        ),
+      //       )
+      //     ),
+      //   ),
+      // ),
+    //  bottom: PreferredSize(
+    //    preferredSize: Size.fromHeight(10),
+    //    child: Container(
+    //      margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+    //      padding: EdgeInsets.fromLTRB(15, 5, 15, 0),
+    //      decoration: BoxDecoration(
+    //        color: CustomColors.HeaderGreyLight,
+    //        borderRadius: BorderRadius.circular(5.0),
+    //      ),
+    //      child: Row(
+    //        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //        children: <Widget>[
+    //          Column(
+    //            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //            crossAxisAlignment: CrossAxisAlignment.start,
+    //            children: <Widget>[
+    //              TextFormField(
+    //            // controller: reasonCtrl,
+    //             decoration: new InputDecoration(
+    //               labelText: 'Reason',
+    //               fillColor: Colors.white,
+    //               icon: Icon(Icons.border_color),
+    //               hintText: 'Write down your reason',
+    //               border:  UnderlineInputBorder(),
+    //               //fillColor: Colors.green
+    //             ),
+    //             validator:  (value) {
+    //               if (value.isEmpty) {
+    //                 return 'Reason is required';
+    //               }else if(value.length <= 25){
+    //                 return 'Reason atleast 25 character';
+    //               }
+    //               else {
+    //                 return null;
+    //               }
+    //             },
+    //             keyboardType: TextInputType.text,
+    //             style: new TextStyle(
+    //               fontFamily: "Poppins",
+    //             ),
+    //             onSaved: (String val){
+    //               //this.reason=val;
+    //             },
+    //           ),
+    //             //  Text(
+    //             //    'Today Reminder',
+    //             //    style: TextStyle(
+    //             //        color: Colors.white,
+    //             //        fontSize: 17,
+    //             //        fontWeight: FontWeight.w600),
+    //             //  ),
+    //             //  SizedBox(
+    //             //    height: 3,
+    //             //  ),
+    //             //  Text(
+    //             //    'Meeting with client',
+    //             //    style: TextStyle(
+    //             //        color: Colors.white,
+    //             //        fontSize: 10,
+    //             //        fontWeight: FontWeight.w300),
+    //             //  ),
+    //             //  SizedBox(
+    //             //    height: 3,
+    //             //  ),
+    //             //  Text(
+    //             //    '13.00 PM',
+    //             //    style: TextStyle(
+    //             //        color: Colors.white,
+    //             //        fontSize: 10,
+    //             //        fontWeight: FontWeight.w300),
+    //             //  ),
+    //            ],
+    //          ),
+    //          Container(
+    //            width: MediaQuery.of(context).size.width / 3.0,
+    //          ),
+    //         //  Image.asset(
+    //         //    'assets/images/bell-left.png',
+    //         //    scale: 1.3,
+    //         //  ),
+    //          Container(
+    //            margin: EdgeInsets.only(bottom: 80),
+    //            child: Icon(
+    //              Icons.clear,
+    //              color: Colors.white,
+    //              size: 18.0,
+    //            ),
+    //          ),
+    //        ],
+    //      ),
+    //    ),
+    //  ),
 //boot
     ),
   );
+}
+
+class PopupDialog {
 }
 
 Widget emptyAppbar() {
