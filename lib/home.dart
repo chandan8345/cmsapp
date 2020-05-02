@@ -148,6 +148,7 @@ class _HomeState extends State<Home> {
     }else if(postStatus == "accepted"){
         List a=await display.getPending(userid,role);
         setState(() {
+          this.post=a;
           this.unfiltered=a;
         });
     }else if(postStatus == "settled"){
@@ -1517,11 +1518,11 @@ class _HomeState extends State<Home> {
               flex: 8,
               child: Hero(
                 tag: 'Clipboard',
-                child: Image.asset('assets/images/Clipboard-empty.png'),
+                child: Image.asset('assets/images/Clipboard.png'),
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Column(
                 children: <Widget>[
                   Text(
