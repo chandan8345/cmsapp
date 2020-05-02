@@ -265,10 +265,10 @@ class _HomeState extends State<Home> {
                                         fillColor: Colors.black,
                                         //icon: Icon(Icons.border_color),
                                         hintText: '',
-                                        border:  UnderlineInputBorder(),
+                                        border:  OutlineInputBorder(),
                                         suffixIcon: IconButton(
                                           //icon: Text('Go',style: TextStyle(fontSize: 14,color: Colors.red,),),
-                                          icon: Icon(Icons.check,color: Colors.red,),
+                                          icon: Icon(Icons.search,color: Colors.blue,),
                                           onPressed: (){
                                            _search(searchCtrl.text);
                                            Navigator.pop(context);
