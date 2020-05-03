@@ -3,11 +3,11 @@ import 'package:cms/appBars.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
 import 'package:cms/util.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+//import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:date_format/date_format.dart';
+//import 'package:date_format/date_format.dart';
 //import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
 
 class Request extends StatefulWidget {
@@ -80,6 +80,7 @@ _submit() async{
     setState(() {
       this.councillers=c;
     });
+    //print(councillers);
   }
 
    _setDepartment(String value){
@@ -237,12 +238,13 @@ _submit() async{
                           onChanged: (value){
                             setState((){
                               this.department=value;
+                              this.counciller=null;
                             });
                             _setDepartment(department);
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please select department for get counciller';
+                              return 'select department to get counciller';
                             }
                             return null;
                           },
