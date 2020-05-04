@@ -79,7 +79,7 @@ class _OnboardingState extends State<Onboarding> {
                           fontWeight: FontWeight.w400,
                           color: CustomColors.TextBody,
                           fontFamily: 'opensans'),
-                      textAlign: TextAlign.justify,
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),

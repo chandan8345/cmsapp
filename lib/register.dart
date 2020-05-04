@@ -432,7 +432,7 @@ class _registerState extends State<register> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20,right: 20, bottom:10, top: 0),
+                        padding: EdgeInsets.only(left: 23,right: 20, bottom:10, top: 0),
                         child:DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Department',
