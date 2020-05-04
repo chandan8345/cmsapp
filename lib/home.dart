@@ -252,8 +252,8 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      actions: 'Northern University Bangladesh'=="Northern University Bangladesh"?(<Widget>[
-        Container(
+      actions: <Widget>[
+        post != null ? post.length > 0 ? Container(
           margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
           child: InkWell(
             onTap: (){
@@ -281,7 +281,7 @@ class _HomeState extends State<Home> {
             },
             child: Icon(Icons.search),
           ),//Image.asset('assets/images/photo.png'),
-        ),
+        ):SizedBox():SizedBox(),
         Container(
           margin: EdgeInsets.fromLTRB(0, 10, 20, 0),
           child: InkWell(
@@ -292,7 +292,7 @@ class _HomeState extends State<Home> {
             child: Icon(Icons.dashboard),
           ),//Image.asset('assets/images/photo.png'),
         ),
-      ]):null,
+      ],
       elevation: 0,
       gradient: LinearGradient(
         begin: Alignment.topLeft,
