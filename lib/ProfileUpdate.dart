@@ -188,7 +188,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: new BoxDecoration(
-          image: new DecorationImage(image: 
+          image: new DecorationImage(image:
           image != null? FileImage(image): new NetworkImage("http://cms.flatbasha.com/image/$sid.jpg"),
       fit: BoxFit.cover)),
         child: Column(

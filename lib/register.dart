@@ -243,8 +243,7 @@ class _registerState extends State<register> {
         backgroundColor: Colors.white,
         child: CircleAvatar(
           radius: 70.0,
-          backgroundImage:(image!=null)?Image.file(
-                             image):NetworkImage("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",),
+          backgroundImage:(image != null)?FileImage(image):NetworkImage("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",),
         ),
         )
         //child: Image.asset('assets/images/flutter.png',height: 60,),
