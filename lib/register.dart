@@ -178,7 +178,7 @@ class _registerState extends State<register> {
         children: <Widget>[
           Padding(
             padding:
-            EdgeInsets.only(top: MediaQuery.of(context).size.height / 10.0),
+            EdgeInsets.only(top: MediaQuery.of(context).size.height / 25.0),
           ),
           Column(
             children: <Widget>[

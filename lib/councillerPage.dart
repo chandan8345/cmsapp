@@ -125,7 +125,7 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
         children: <Widget>[
           Padding(
             padding:
-            EdgeInsets.only(top: MediaQuery.of(context).size.height / 10.0),
+            EdgeInsets.only(top: MediaQuery.of(context).size.height / 25.0),
           ),
           Column(
             children: <Widget>[
@@ -202,7 +202,7 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
         backgroundColor: Colors.white,
         child: CircleAvatar(
           radius: 70.0,
-          backgroundImage:(image!=null)?Image.file(
+          backgroundImage:(image!=null)?FileImage(
                              image):NetworkImage("https://i7.pngguru.com/preview/136/22/549/user-profile-computer-icons-girl-customer-avatar.jpg",),
         ),
         )
@@ -215,7 +215,7 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
      ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 95.0,left: 95.0),
+                    padding: EdgeInsets.only(top: 115.0,left: 130.0),
                     child: IconButton(
                       icon: Icon(
                         Icons.camera_alt,
@@ -337,7 +337,7 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
                           decoration: new InputDecoration(
                             labelText: 'Email',
                             fillColor: Colors.white,
-                            icon: Icon(Icons.alternate_email),
+                            icon: Icon(Icons.email),
                             border: UnderlineInputBorder(),
                             //fillColor: Colors.green
                           ),
@@ -392,7 +392,7 @@ pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20,right: 20, bottom:10, top: 0),
+                        padding: EdgeInsets.only(left: 23,right: 20, bottom:10, top: 0),
                         child:DropdownButtonFormField(
                           decoration: new InputDecoration(
                             labelText: 'Department',
