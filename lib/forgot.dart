@@ -1,25 +1,23 @@
 import 'package:cms/controller/Others.dart';
-import 'package:cms/forgot.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/controller/auth.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:cms/register.dart'; 
-import 'package:cms/home.dart';
 
-class Log extends StatefulWidget {
-  Log({Key key}) : super(key:key);
+class Forgot extends StatefulWidget {
+Forgot({Key key}) : super(key:key);
   @override
-  _LogState createState() => _LogState();  
+  _ForgotState createState() => _ForgotState();  
 }
 
-class _LogState extends State<Log> {
+class _ForgotState extends State<Forgot> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController mobileCtrl=new TextEditingController();
-  TextEditingController passwordCtrl=new TextEditingController();
-  var mobile,password,message,body,cr;
+  TextEditingController emailCtrl=new TextEditingController();
+  static Pattern pattern =r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  RegExp regex = new RegExp(pattern);
+  String mobile,email,message,body,cr;
   ProgressDialog pr;
   Auth login=new Auth();
   Others others=new Others();
@@ -30,14 +28,14 @@ class _LogState extends State<Log> {
       _formKey.currentState.save();
       pr.update(message:"Please Wait...");
       pr.show();
-      bool result=await login.loginUser(mobileCtrl.text,passwordCtrl.text,pr);
-      if(result == true){
-      Route route=MaterialPageRoute(builder: (context) => Home());
-      Navigator.push(context, route);
+      List a=await Auth().forgotPassword(mobile);
+      print(a.length);
+      if(a.length != 0){
+       toast("Congrats, Please check your email");
       }else{
-        //alertError("Alert", "Sorry, you are invalid, register then try...");
-        toast("Sorry, Register then try again");
+        toast("Sorry, Something went wrong");
       }
+      pr.dismiss();
    }}else{
      others.showMessage(context, "Notice", "Please check your internet connection !!!");
    }
@@ -74,31 +72,28 @@ return Scaffold(
                         child:
                         Column(
                           children: <Widget>[
-                            Text('SIGN IN',textAlign: TextAlign.start,style: TextStyle(color: Colors.orange,fontSize: 25),),
+                            Text('Recover Account',textAlign: TextAlign.start,style: TextStyle(color: Colors.orange,fontSize: 25),),
                             Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.only(left: 20,right: 20, bottom: 5, top: 0),
+                                    padding: EdgeInsets.only(left: 20,right: 20, bottom:20 , top: 20),
                                     child: TextFormField(
                                       controller: mobileCtrl,
+                                      //obscureText: true,
                                       decoration: new InputDecoration(
-                                        labelText: 'Mobile',
+                                        labelText: 'Registered Mobile',
                                         fillColor: Colors.white,
                                         prefixText: '+88 ',
-                                        icon: Icon(Icons.phone),
-                                        border: UnderlineInputBorder(),
-                                        //fillColor: Colors.green
+                                        icon: Icon(Icons.lock),
+                                        border:UnderlineInputBorder(),
                                       ),
-                                      validator:  (value) {
+                                      //fillColor: Colors.green
+                                      validator:(value) {
                                         if (value.isEmpty) {
-                                          return 'Please enter mobile no';
-                                        }else if(value.length != 11){
-                                          return 'Mobile no must be 11 Digits';
-                                        }else {
-                                          return null;
+                                          return 'please enter registered mobile no';
                                         }
+                                        return null;
                                       },
-                                      keyboardType: TextInputType.phone,
                                       style: new TextStyle(
                                         fontFamily: "Poppins",
                                       ),
@@ -107,66 +102,28 @@ return Scaffold(
                                       },
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 20,right: 20, bottom:20 , top: 0),
-                                    child: TextFormField(
-                                      controller: passwordCtrl,
-                                      obscureText: true,
-                                      decoration: new InputDecoration(
-                                        labelText: 'Password',
-                                        fillColor: Colors.white,
-                                        icon: Icon(Icons.lock),
-                                        border:UnderlineInputBorder(),
-                                      ),
-                                      //fillColor: Colors.green
-                                      validator:(value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter password';
-                                        }
-                                        return null;
-                                      },
-                                      style: new TextStyle(
-                                        fontFamily: "Poppins",
-                                      ),
-                                      onSaved: (String val){
-                                        this.password=val;
-                                      },
-                                    ),
-                                  ),
                                 ]),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 15),
+                        padding: EdgeInsets.only(bottom: 20),
                         child:
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                             InkWell(
+                        Center(
+                            child:
+                            InkWell(
                               onTap: (){
-                                Route route=MaterialPageRoute(builder: (context) => register());
-                                Navigator.push(context, route);
                               },
-                              child: Text("Create Account  ",style: TextStyle(color: Colors.blue),),
-                              ),
-                             InkWell(
-                              onTap: (){
-                                Route route=MaterialPageRoute(builder: (context) => Forgot());
-                                Navigator.push(context, route);
-                              },
-                              child: Text("  Forgot Password",style: TextStyle(color: Colors.deepOrange),),
-                              )
-                              ],
-                            ),
+                              child: Text("password will be send to your provided email",style: TextStyle(color: Colors.deepOrange),),
+                            )
+                        ),
                       ),
                       Center(
                         child:
                         InkWell(
                           onTap: _submit,
                           child:
-                          roundedRectButton("Submit ", signInGradients, false),
+                          roundedRectButton("Send Email ", signInGradients, false),
                         ),
                       )
                     ],

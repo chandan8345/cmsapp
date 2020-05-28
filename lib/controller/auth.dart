@@ -66,6 +66,12 @@ class Auth{
         return false;
       }
   }
+  
+  Future<List> forgotPassword(String mobile) async{
+      var response = await dio.get("http://cms.flatbasha.com/forgotPassword?mobile=$mobile");
+      List s=json.decode(response.toString());
+      return s;
+  }
 
   Future<bool> logoutUser(int id) async{
       var response = await dio.get("http://cms.flatbasha.com/logoutUser?id=$id");
