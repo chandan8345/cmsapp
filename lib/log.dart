@@ -33,7 +33,8 @@ class _LogState extends State<Log> {
       bool result=await login.loginUser(mobileCtrl.text,passwordCtrl.text,pr);
       if(result == true){
       Route route=MaterialPageRoute(builder: (context) => Home());
-      Navigator.push(context, route);
+      //Navigator.push(context, route);
+      Navigator.pushReplacement(context,route);
       }else{
         //alertError("Alert", "Sorry, you are invalid, register then try...");
         toast("Sorry, Register then try again");
@@ -151,6 +152,7 @@ return Scaffold(
                               },
                               child: Text("Create Account  ",style: TextStyle(color: Colors.blue),),
                               ),
+                              Text("|",style: TextStyle(color: Colors.black),),
                              InkWell(
                               onTap: (){
                                 Route route=MaterialPageRoute(builder: (context) => Forgot());

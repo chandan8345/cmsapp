@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cms/accept.dart';
 import 'package:cms/controller/Others.dart';
 import 'package:cms/controller/councill.dart';
+//import 'package:flip_box_bar/flip_box_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:cms/util.dart';
@@ -25,6 +28,7 @@ class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
   final refreshKey = new GlobalKey<RefreshIndicatorState>();
   TextEditingController searchCtrl=new TextEditingController();
+  ScrollController _controller = new ScrollController();
   OnScreen display=new OnScreen();
   int bottomNavigationBarIndex = 0;
   String postStatus="today",history;
@@ -216,6 +220,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     //_progressDialog.showProgressDialog(context,textToBeDisplayed: 'Initializing...',dismissAfter: Duration(seconds: 1));
         return Scaffold(
           appBar: //fullAppbar(context,"Northern University Bangladesh","Counselling Management System",),
@@ -303,14 +308,98 @@ class _HomeState extends State<Home> {
   ),
           body: RefreshIndicator(
             child:
-            (post != null)? post.length != 0?listView():empty():empty(),
+            (post != null)? post.length != 0?
+            Stack(
+              children: <Widget>[
+                listView(),
+                Positioned(
+                  top: size.height-290,
+                  left: size.width-70,
+                  child: ClipOval(
+                  child: Material(
+                  color: Colors.black12, // button color
+                  child: InkWell(
+                  splashColor: Colors.blue, // inkwell color
+                  child: SizedBox(width: 56, height: 56, child: Icon(Icons.keyboard_arrow_up,color: Colors.black,)),
+                  onTap: () {
+                    Timer(
+                    Duration(seconds: 1),
+                    () => _controller.jumpTo(_controller.position.minScrollExtent),
+                    );
+                  },
+                  ),
+  ),
+)
+                ),
+                Positioned(
+                  top: size.height-230,
+                  left: size.width-70,
+                  child: ClipOval(
+                  child: Material(
+                  color: Colors.black12, // button color
+                  child: InkWell(
+                  splashColor: Colors.blue, // inkwell color
+                  child: SizedBox(width: 56, height: 56, child: Icon(Icons.keyboard_arrow_down,color: Colors.black,)),
+                  onTap: () {
+                    Timer(
+                    Duration(seconds: 1),
+                    () => _controller.jumpTo(_controller.position.maxScrollExtent),
+                    );
+                  },
+                  ),
+  ),
+)
+                )
+              ],
+            ):empty():empty(),
             onRefresh: _getPostRefresh,
             key: refreshKey,
             color: CustomColors.BlueDark,
           ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (role == 'student')? fabView() : null,
-      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
+      bottomNavigationBar: (role == 'student')?BottomNavTab1(bottomNavigationBarIndex) : BottomNavTab2(bottomNavigationBarIndex),
+//       bottomNavigationBar: FlipBoxBar(
+//               selectedIndex: bottomNavigationBarIndex,
+//               items: [
+//                 (role == 'student')?FlipBarItem(icon: Icon(Icons.library_add,color:Colors.white,), text: Text("Request",style: TextStyle(color: Colors.white),), frontColor: Colors.blue, backColor: Colors.blueAccent):null,
+//                 FlipBarItem(icon: Icon(Icons.airline_seat_recline_normal,color:Colors.white,), text: Text("Today",style: TextStyle(color: Colors.white),), frontColor: Colors.teal, backColor: Colors.tealAccent),
+//                 FlipBarItem(icon: Icon(Icons.record_voice_over,color:Colors.white,), text: Text("Waiting",style: TextStyle(color: Colors.white),), frontColor: Colors.orange, backColor: Colors.orangeAccent),
+//                 FlipBarItem(icon: Icon(Icons.streetview,color:Colors.white,), text: Text("Pending",style: TextStyle(color: Colors.white),), frontColor: Colors.purple, backColor: Colors.purpleAccent),
+//                 FlipBarItem(icon: Icon(Icons.thumbs_up_down,color:Colors.white,), text: Text("Settled",style: TextStyle(color: Colors.white),), frontColor: Colors.pink, backColor: Colors.pinkAccent),
+//               ],
+//               onIndexChanged: (newIndex){
+//                 print(newIndex);
+//                 switch(newIndex){
+//                   case 0:
+//                   Route route=MaterialPageRoute(builder: (context) => Request());
+//                   Navigator.push(context, route);
+//                   break;
+//                   case 1:
+//                     this.postStatus="waiting";
+//                     this.bottomNavigationBarIndex=1;
+//                     _getPost();
+//                   break;
+//                   case 2:
+//                     this.postStatus="accepted";
+//                     this.bottomNavigationBarIndex=2;
+//                     _getPost();
+//                   break;
+//                   case 3:
+//                     this.postStatus="settled";
+//                     this.bottomNavigationBarIndex=3;
+//                     _getPost();
+//                   break;
+//                   case 4:
+//                     this.postStatus="today";
+//                     this.bottomNavigationBarIndex=4;
+//                     _getPost();
+//                   break;
+//                 }
+//               },
+// ),
+      //(role == 'student')?BottomNavTab1(bottomNavigationBarIndex):BottomNavTab2(bottomNavigationBarIndex),
     );
   }
   
@@ -319,6 +408,7 @@ class _HomeState extends State<Home> {
       child: Padding(
         padding: EdgeInsets.only(top: 10),
         child: (post != null)?ListView.builder(
+          controller: _controller,
           itemCount: (post != null) ? post.length : 0,
           itemBuilder: (BuildContext context,int index){
             if(postStatus == "today"){
@@ -1515,14 +1605,14 @@ class _HomeState extends State<Home> {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex: 8,
+              flex: 3,//8
               child: Hero(
                 tag: 'Clipboard',
                 child: Image.asset('assets/images/Clipboard.png'),
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,//2
               child: Column(
                 children: <Widget>[
                   Text(
@@ -1621,7 +1711,6 @@ Widget fullAppbar(BuildContext context,String name,String sort) {
     ),
   );
 }
-
 
 
 class CircleOne extends CustomPainter {
