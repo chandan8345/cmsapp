@@ -312,15 +312,16 @@ class _HomeState extends State<Home> {
             Stack(
               children: <Widget>[
                 listView(),
+                post!=null?post.length>3?
                 Positioned(
-                  top: size.height-290,
-                  left: size.width-70,
+                  top: size.height-270,
+                  left: size.width-60,
                   child: ClipOval(
                   child: Material(
                   color: Colors.black12, // button color
                   child: InkWell(
                   splashColor: Colors.blue, // inkwell color
-                  child: SizedBox(width: 56, height: 56, child: Icon(Icons.keyboard_arrow_up,color: Colors.black,)),
+                  child: SizedBox(width: 46, height: 46, child: Icon(Icons.keyboard_arrow_up,color: Colors.black,)),
                   onTap: () {
                     Timer(
                     Duration(seconds: 1),
@@ -328,18 +329,19 @@ class _HomeState extends State<Home> {
                     );
                   },
                   ),
-  ),
-)
-                ),
+                  ),
+                  )
+                ):SizedBox():SizedBox(),
+                post!=null?post.length>3?
                 Positioned(
-                  top: size.height-230,
-                  left: size.width-70,
+                  top: size.height-220,
+                  left: size.width-60,
                   child: ClipOval(
                   child: Material(
                   color: Colors.black12, // button color
                   child: InkWell(
                   splashColor: Colors.blue, // inkwell color
-                  child: SizedBox(width: 56, height: 56, child: Icon(Icons.keyboard_arrow_down,color: Colors.black,)),
+                  child: SizedBox(width: 46, height: 46, child: Icon(Icons.keyboard_arrow_down,color: Colors.black,)),
                   onTap: () {
                     Timer(
                     Duration(seconds: 1),
@@ -349,7 +351,7 @@ class _HomeState extends State<Home> {
                   ),
   ),
 )
-                )
+                ):SizedBox():SizedBox(),
               ],
             ):empty():empty(),
             onRefresh: _getPostRefresh,
@@ -1428,6 +1430,7 @@ class _HomeState extends State<Home> {
           child:InkWell(
             onTap: (){
               setState(() {
+                this.post=null;
                 this.bottomNavigationBarIndex=0;
                 this.postStatus="today";
               });
@@ -1446,6 +1449,7 @@ class _HomeState extends State<Home> {
             child: InkWell(
               onTap: (){
                 setState(() {
+                  this.post=null;
                   this.bottomNavigationBarIndex=1;
                   this.postStatus="waiting";
                 });
@@ -1471,6 +1475,7 @@ class _HomeState extends State<Home> {
     child:InkWell(
       onTap: (){
         setState(() {
+          this.post=null;
           this.bottomNavigationBarIndex=2;
           this.postStatus="accepted";
         });
@@ -1490,6 +1495,7 @@ class _HomeState extends State<Home> {
           child:InkWell(
             onTap: () async {
               setState(() {
+                this.post=null;
                 this.bottomNavigationBarIndex=3;
                 this.postStatus="settled";
               });
@@ -1520,6 +1526,7 @@ class _HomeState extends State<Home> {
           child:InkWell(
             onTap: (){
               setState(() {
+                this.post=null;
                 this.bottomNavigationBarIndex=0;
                 this.postStatus="today";
               });
@@ -1538,6 +1545,7 @@ class _HomeState extends State<Home> {
             child: InkWell(
               onTap: (){
                 setState(() {
+                  this.post=null;
                   this.bottomNavigationBarIndex=1;
                   this.postStatus="waiting";
                 });
@@ -1560,6 +1568,7 @@ class _HomeState extends State<Home> {
     child:InkWell(
       onTap: (){
         setState(() {
+          this.post=null;
           this.bottomNavigationBarIndex=2;
           this.postStatus="accepted";
         });
@@ -1579,6 +1588,7 @@ class _HomeState extends State<Home> {
           child:InkWell(
             onTap: (){
               setState(() {
+                this.post=null;
                 this.bottomNavigationBarIndex=3;
                 this.postStatus="settled";
               });
