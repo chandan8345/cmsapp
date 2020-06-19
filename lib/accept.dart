@@ -227,7 +227,7 @@ class _AcceptReqState extends State<AcceptReq> {
                         const EdgeInsets.fromLTRB(20, 10, 20, 10),
                         child: Center(
                           child: const Text(
-                            'Submit Request',
+                            'Submit',
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500),
