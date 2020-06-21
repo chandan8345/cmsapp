@@ -251,7 +251,7 @@ class _HomeState extends State<Home> {
             ),
             Text(
               //'$sort',
-              'Counselling Management System',
+              'Counseling Management System',
               style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
             ),
           ],

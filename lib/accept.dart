@@ -58,8 +58,8 @@ class _AcceptReqState extends State<AcceptReq> {
       pr.show();
       var result =await Councill().acceptCouncill(comments, room, meetingDate, councillerId, postId);
       pr.dismiss();
-      if(result.contains("accept councill successfuly")){
-        toast("councill accepted");
+      if(result.contains("accept counsel successfuly")){
+        toast("counseling accepted");
         Navigator.pop(context);
       }else{
         toast("Something Went Wrong");
@@ -81,7 +81,7 @@ class _AcceptReqState extends State<AcceptReq> {
   Widget build(BuildContext context) {
     return Scaffold(
        backgroundColor: Colors.white,
-       appBar: fullAppbar(context,"Approve Form","approve the councill"),
+       appBar: fullAppbar(context,"Approve Form","approve the counsel"),
        body: 
        ListView(
          children: <Widget>[
@@ -95,7 +95,7 @@ class _AcceptReqState extends State<AcceptReq> {
             TextFormField(
                 controller: commentsCtrl,
                 decoration: new InputDecoration(
-                  labelText: 'Wtite down comments',
+                  labelText: 'Comments',
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
                   hintText: 'Write down comments',
@@ -126,7 +126,7 @@ class _AcceptReqState extends State<AcceptReq> {
                   labelText: 'Room No',
                   fillColor: Colors.white,
                   icon: Icon(Icons.event_seat),
-                  hintText: 'Room no for councill',
+                  hintText: 'Room no for counseling',
                   border:  OutlineInputBorder(),
                   //fillColor: Colors.green
                 ),

@@ -61,7 +61,7 @@ _submit() async{
       );
       pr.dismiss();
       print(result);
-      if(result.contains("create councill successfuly")){
+      if(result.contains("create counsel successfuly")){
         //alertSucess("Alert","Your Councill Request Submited.");
         toast("Your request submitted");
         Navigator.pop(context);
@@ -149,7 +149,7 @@ _submit() async{
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     return Scaffold(
        backgroundColor: Colors.white,
-       appBar: fullAppbar(context,"Create Request","add new councill"),
+       appBar: fullAppbar(context,"Create Request","add new counsel"),
        body: 
        ListView(
          children: <Widget>[
@@ -214,7 +214,7 @@ _submit() async{
                           }).toList():null,
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please select councilling category';
+                              return 'Please select counseling category';
                             }
                             return null;
                           },
@@ -244,14 +244,14 @@ _submit() async{
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'select department to get counciller';
+                              return 'select department to get counselor';
                             }
                             return null;
                           },
                         ),
                         DropdownButtonFormField(
                           decoration: new InputDecoration(
-                            labelText: 'Select Counciller',
+                            labelText: 'Select Counselor',
                             isDense: false,
                             fillColor: Colors.white,
                             icon: Icon(Icons.school),
@@ -273,7 +273,7 @@ _submit() async{
                           }).toList():null,
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please select the counciller';
+                              return 'Please select the counselor';
                             }
                             return null;
                           },

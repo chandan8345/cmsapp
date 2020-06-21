@@ -47,7 +47,7 @@ final _formKey = GlobalKey<FormState>();
       pr.show();
       var result =await Councill().settledCouncill(summary, councillerId, postId);
       pr.dismiss();
-      if(result.contains("settled councill successfuly")){
+      if(result.contains("settled counsel successfuly")){
        // alertSucess("Alert","Councill Settled Already.");
        toast("Thanks for settled");
        Navigator.pop(context);
@@ -81,7 +81,7 @@ final _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
     return Scaffold(
        backgroundColor: Colors.white,
-       appBar: fullAppbar(context,"Settle Form","Settle the councill"),
+       appBar: fullAppbar(context,"Settle Form","Settle the case"),
        body: 
        ListView(
          children: <Widget>[
@@ -95,7 +95,7 @@ final _formKey = GlobalKey<FormState>();
             TextFormField(
                 controller: commentsCtrl,
                 decoration: new InputDecoration(
-                  labelText: 'Wtite down solution',
+                  labelText: 'Solutions',
                   fillColor: Colors.white,
                   icon: Icon(Icons.border_color),
                   hintText: 'Write down solutions...',

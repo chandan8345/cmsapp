@@ -48,7 +48,7 @@ _submit() async{
       var result =await Councill().referredCouncill(comments, refferedId, postId);
       pr.dismiss();
       print(result);
-      if(result.contains("reffered councill successfuly")){
+      if(result.contains("reffered counsel successfuly")){
         //alertSucess("Alert","Your Councill Reffered Submited.");
         toast("Refferd successfully");
         Navigator.pop(context);
@@ -142,7 +142,7 @@ _submit() async{
               ),
                       DropdownButtonFormField(
                           decoration: new InputDecoration(
-                            labelText: 'Select Counciller',
+                            labelText: 'Select Counselor',
                             fillColor: Colors.white,
                             icon: Icon(Icons.school),
                             isDense: false,
@@ -164,7 +164,7 @@ _submit() async{
                           }).toList():null,
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please select the counciller';
+                              return 'Please select the counselor';
                             }
                             return null;
                           },

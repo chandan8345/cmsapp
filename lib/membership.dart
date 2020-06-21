@@ -47,7 +47,7 @@ class _MembershipState extends State<Membership> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      'Counselling Management System',
+                      'Counseling Management System',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
