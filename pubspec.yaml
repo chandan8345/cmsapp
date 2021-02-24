@@ -1,7 +1,7 @@
 name: cms
 description: Northern University Bangladesh
 
-version: 1.0.0+8
+version: 1.0.0+10
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -23,7 +23,7 @@ dependencies:
   curved_navigation_bar: ^0.1.2
   nice_button: ^0.1.7
   image_picker: ^0.6.3+1
-  flutter_datetime_picker: ^1.3.4
+  flutter_datetime_picker: ^1.5.0
   date_format: ^1.0.8
   jiffy: ^3.0.1
   flutter_phone_direct_caller: ^1.0.1

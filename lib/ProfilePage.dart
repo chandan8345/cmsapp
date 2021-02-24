@@ -160,7 +160,7 @@ class MapScreenState extends State<ProfilePage>{
                 new SizedBox(height: 5,),
                 new Text('$name', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: _width/15, color: Colors.white),),
                 new Padding(padding: new EdgeInsets.only(top: 5,bottom: 10),
-                  child:new Text('$role',
+                  child:new Text(role!='student'?'Counselor':'Student',
                     style: new TextStyle(fontWeight: FontWeight.normal, fontSize: _width/25,color: Colors.white),textAlign: TextAlign.center,) ,),
                 new Divider(height: _height/30,color: Colors.white,),
                 new Row(

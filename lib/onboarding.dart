@@ -90,7 +90,7 @@ class _OnboardingState extends State<Onboarding> {
                     //if (log == 0) Login(),
                     //if (log == 0) Width(),
                     //if (log == 0) Register(),
-                    if (log != 0) Welcome(),
+                    log != 0? Welcome():SizedBox(),
                 ],
                 )
               ),

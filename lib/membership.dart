@@ -69,9 +69,9 @@ class _MembershipState extends State<Membership> {
               Expanded(
                 child: Row(
                   children: <Widget>[
-                    if (log == 0) Login(),
-                    if (log == 0) Width(),
-                    if (log == 0) Register(),
+                    log!=0?SizedBox():Login(),
+                    log!=0? SizedBox():Width(),
+                    log!=0? SizedBox():Register(),
                     ///if (log != 0) Welcome(),
                 ],
                 )
