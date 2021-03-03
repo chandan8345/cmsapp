@@ -18,7 +18,6 @@ class _OnboardingState extends State<Onboarding> {
   @override
   void initState(){
     super.initState();
-    //getUserData();
   }
 
   _welcome() async{

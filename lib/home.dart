@@ -172,7 +172,7 @@ class _HomeState extends State<Home> {
     return null;
   }
 
-  _removePost(int postId) async{
+  _removePost(String postId) async{
     pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     if(await others.checkConection() == true){
     pr.update(message: "Deleting...");

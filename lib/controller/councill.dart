@@ -40,7 +40,7 @@ class Councill{
       return response.toString();
     }
 
-    Future removeCouncill(int postId)async{
+    Future removeCouncill(String postId) async{
       var response =await dio.get("http://cms.flatbasha.com/removePost?id=$postId");
       return response.toString();
     }
